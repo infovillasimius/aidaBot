@@ -1,0 +1,308 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "aida query",
+      "intents": [
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "HowManyIntent",
+          "slots": [
+            {
+              "name": "subject",
+              "type": "AIDA_Query_Subject"
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object"
+            },
+            {
+              "name": "verb",
+              "type": "Aida_verbs"
+            },
+            {
+              "name": "instance_of_querable_object",
+              "type": "Aida_instance"
+            },
+            {
+              "name": "prep",
+              "type": "Aida_prepositions"
+            }
+          ],
+          "samples": [
+            "How many {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects} ",
+            "How many {subject}  {verb} {prep} {queryable_objects}",
+            "How many {subject} {prep} {queryable_objects} {verb} {instance_of_querable_object} "
+          ]
+        },
+        {
+          "name": "WhoAreIntent",
+          "slots": [
+            {
+              "name": "who_which",
+              "type": "Aida_who_which"
+            },
+            {
+              "name": "number",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "subject",
+              "type": "AIDA_Query_Subject"
+            },
+            {
+              "name": "prep",
+              "type": "Aida_prepositions"
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object"
+            },
+            {
+              "name": "instance",
+              "type": "Aida_instance"
+            },
+            {
+              "name": "order",
+              "type": "Aida_order"
+            }
+          ],
+          "samples": [
+            "{who_which} are the top {number} {subject} {prep} {queryable_objects} with {queryable_objects} {instance} by {order}",
+            "{who_which} are the top {number} {subject} {prep} {queryable_objects} {instance} by {order}"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "id": "5",
+              "name": {
+                "value": "citations"
+              }
+            },
+            {
+              "id": "4",
+              "name": {
+                "value": "organizations"
+              }
+            },
+            {
+              "id": "3",
+              "name": {
+                "value": "conferences"
+              }
+            },
+            {
+              "id": "2",
+              "name": {
+                "value": "papers",
+                "synonyms": [
+                  "scientific articles",
+                  "research papers",
+                  "conference papers",
+                  "academic papers",
+                  "academic publications",
+                  "texts",
+                  "writings"
+                ]
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "authors",
+                "synonyms": [
+                  "scholars",
+                  "writers"
+                ]
+              }
+            }
+          ],
+          "name": "AIDA_Query_Subject"
+        },
+        {
+          "values": [
+            {
+              "id": "6",
+              "name": {
+                "value": "industrial sectors",
+                "synonyms": [
+                  "industrial sector"
+                ]
+              }
+            },
+            {
+              "id": "5",
+              "name": {
+                "value": "papers",
+                "synonyms": [
+                  "paper"
+                ]
+              }
+            },
+            {
+              "id": "4",
+              "name": {
+                "value": "authors",
+                "synonyms": [
+                  "author"
+                ]
+              }
+            },
+            {
+              "id": "3",
+              "name": {
+                "value": "organizations",
+                "synonyms": [
+                  "organization"
+                ]
+              }
+            },
+            {
+              "id": "2",
+              "name": {
+                "value": "conferences",
+                "synonyms": [
+                  "conference"
+                ]
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "topics",
+                "synonyms": [
+                  "topic",
+                  "subject"
+                ]
+              }
+            }
+          ],
+          "name": "Aida_Queryable_object"
+        },
+        {
+          "values": [
+            {
+              "id": "1",
+              "name": {
+                "value": "are",
+                "synonyms": [
+                  "there is",
+                  "is",
+                  "there are"
+                ]
+              }
+            },
+            {
+              "id": "2",
+              "name": {
+                "value": "have",
+                "synonyms": [
+                  "has"
+                ]
+              }
+            }
+          ],
+          "name": "Aida_verbs"
+        },
+        {
+          "values": [
+            {
+              "id": "2",
+              "name": {
+                "value": "as"
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "in"
+              }
+            }
+          ],
+          "name": "Aida_prepositions"
+        },
+        {
+          "values": [
+            {
+              "id": "1",
+              "name": {
+                "value": "xxx"
+              }
+            }
+          ],
+          "name": "Aida_instance"
+        },
+        {
+          "values": [
+            {
+              "id": "3",
+              "name": {
+                "value": "year"
+              }
+            },
+            {
+              "id": "2",
+              "name": {
+                "value": "publications",
+                "synonyms": [
+                  "number of publications",
+                  "publication"
+                ]
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "citations",
+                "synonyms": [
+                  "number of citations",
+                  "citation"
+                ]
+              }
+            }
+          ],
+          "name": "Aida_order"
+        },
+        {
+          "values": [
+            {
+              "id": "2",
+              "name": {
+                "value": "which"
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "who"
+              }
+            }
+          ],
+          "name": "Aida_who_which"
+        }
+      ]
+    }
+  },
+  "version": "7"
+}

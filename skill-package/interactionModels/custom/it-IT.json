@@ -1,0 +1,351 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "aida query",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "HowManyIntent",
+          "slots": [
+            {
+              "name": "subject",
+              "type": "AIDA_Query_Subject"
+            },
+            {
+              "name": "verb",
+              "type": "Aida_verbs"
+            },
+            {
+              "name": "instance_of_querable_object",
+              "type": "Aida_instance"
+            },
+            {
+              "name": "prep",
+              "type": "Aida_prepositions"
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object"
+            }
+          ],
+          "samples": [
+            "Quanti {subject} {prep} {queryable_objects} {verb} {instance_of_querable_object}",
+            "Quanti {subject}  {verb} {prep} {queryable_objects}",
+            "Quanti {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects}"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "WhoAreIntent",
+          "slots": [
+            {
+              "name": "who_which",
+              "type": "Aida_who_which"
+            },
+            {
+              "name": "number",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "subject",
+              "type": "AIDA_Query_Subject"
+            },
+            {
+              "name": "prep",
+              "type": "Aida_prepositions"
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object"
+            },
+            {
+              "name": "instance",
+              "type": "Aida_instance"
+            },
+            {
+              "name": "order",
+              "type": "Aida_order"
+            },
+            {
+              "name": "verb",
+              "type": "Aida_verbs"
+            }
+          ],
+          "samples": [
+            "{who_which} {verb} i primi {number} {subject} {prep} {queryable_objects} {instance} per {order}",
+            "{who_which} {verb} i primi {number} {subject} {prep} {queryable_objects} con {queryable_objects} {instance} per {order}"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "id": "1",
+              "name": {
+                "value": "xxx"
+              }
+            }
+          ],
+          "name": "Aida_instance"
+        },
+        {
+          "values": [
+            {
+              "id": "1",
+              "name": {
+                "value": "citazioni",
+                "synonyms": [
+                  "numero di citazioni",
+                  "citazione"
+                ]
+              }
+            },
+            {
+              "id": "2",
+              "name": {
+                "value": "pubblicazioni",
+                "synonyms": [
+                  "numero di pubblicazioni"
+                ]
+              }
+            },
+            {
+              "id": "3",
+              "name": {
+                "value": "anno"
+              }
+            }
+          ],
+          "name": "Aida_order"
+        },
+        {
+          "values": [
+            {
+              "id": "1",
+              "name": {
+                "value": "in",
+                "synonyms": [
+                  "frai",
+                  "trai",
+                  "tra le",
+                  "tra",
+                  "tra i",
+                  "fra i",
+                  "fra",
+                  "nelle",
+                  "nel",
+                  "negli",
+                  "nei"
+                ]
+              }
+            },
+            {
+              "id": "2",
+              "name": {
+                "value": "come",
+                "synonyms": [
+                  "per"
+                ]
+              }
+            }
+          ],
+          "name": "Aida_prepositions"
+        },
+        {
+          "values": [
+            {
+              "id": "1",
+              "name": {
+                "value": "autori",
+                "synonyms": [
+                  "docente",
+                  "professore",
+                  "accademico",
+                  "ricercatore",
+                  "ricercatori",
+                  "autore"
+                ]
+              }
+            },
+            {
+              "id": "2",
+              "name": {
+                "value": "articoli",
+                "synonyms": [
+                  "lavoro",
+                  "scritto",
+                  "scritti",
+                  "paper",
+                  "articolo",
+                  "papers"
+                ]
+              }
+            },
+            {
+              "id": "3",
+              "name": {
+                "value": "conferenze",
+                "synonyms": [
+                  "conferenza"
+                ]
+              }
+            },
+            {
+              "id": "4",
+              "name": {
+                "value": "organizzazioni",
+                "synonyms": [
+                  "organizzazione"
+                ]
+              }
+            },
+            {
+              "id": "5",
+              "name": {
+                "value": "citazioni",
+                "synonyms": [
+                  "citazione"
+                ]
+              }
+            }
+          ],
+          "name": "AIDA_Query_Subject"
+        },
+        {
+          "values": [
+            {
+              "id": "1",
+              "name": {
+                "value": "titoli",
+                "synonyms": [
+                  "argomenti",
+                  "topics",
+                  "topic",
+                  "titolo",
+                  "argomento"
+                ]
+              }
+            },
+            {
+              "id": "2",
+              "name": {
+                "value": "conferenze",
+                "synonyms": [
+                  "conferenza"
+                ]
+              }
+            },
+            {
+              "id": "3",
+              "name": {
+                "value": "organizzazioni",
+                "synonyms": [
+                  "organizzazione"
+                ]
+              }
+            },
+            {
+              "id": "4",
+              "name": {
+                "value": "autori",
+                "synonyms": [
+                  "ricercatore",
+                  "ricercatori",
+                  "autore"
+                ]
+              }
+            },
+            {
+              "id": "5",
+              "name": {
+                "value": "articoli",
+                "synonyms": [
+                  "papers",
+                  "paper",
+                  "lavoro",
+                  "lavori",
+                  "articolo"
+                ]
+              }
+            },
+            {
+              "id": "6",
+              "name": {
+                "value": "settori industriali",
+                "synonyms": [
+                  "settore industriale"
+                ]
+              }
+            }
+          ],
+          "name": "Aida_Queryable_object"
+        },
+        {
+          "values": [
+            {
+              "id": "2",
+              "name": {
+                "value": "ha",
+                "synonyms": [
+                  "hanno"
+                ]
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "sono",
+                "synonyms": [
+                  "c\u0027è",
+                  "è",
+                  "ci sono"
+                ]
+              }
+            }
+          ],
+          "name": "Aida_verbs"
+        },
+        {
+          "values": [
+            {
+              "id": "2",
+              "name": {
+                "value": "quali",
+                "synonyms": [
+                  "quale"
+                ]
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "chi"
+              }
+            }
+          ],
+          "name": "Aida_who_which"
+        }
+      ]
+    }
+  },
+  "version": "3"
+}
