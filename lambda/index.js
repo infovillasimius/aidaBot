@@ -43,7 +43,7 @@ const HowManyIntentHandler = {
         var prep_slot_id = 0 
         var queryable_objects_slot_id = 0
         var verb_slot_id = 0
-        var instance_value = ""
+        var instance_value = "zero"
         
         if (typeof subject !== 'undefined') {
             subject_slot_id = subject_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;

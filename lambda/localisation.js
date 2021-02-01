@@ -9,7 +9,7 @@ module.exports = {
             REFLECTOR_MSG: 'You just triggered {{intent}}',
             FALLBACK_MSG: 'Sorry, I don\'t know about that. Please try again.',
             ERROR_MSG: 'Sorry, there was an error. Please try again.',
-            QUERY_TYPE_1_MSG: 'You asked for a query like: How many... with subject i d {{sub}}, preposition i d {{prep}}, object i d {{obj}}, verb i d {{ver}} and instance {{inst}}}'
+            QUERY_TYPE_1_MSG: 'You asked for a query like: How many... with subject {{sub}}, preposition {{prep}}, object {{obj}}, verb {{ver}} and instance {{inst}}}'
         }
     }, 
     'it' : {
@@ -22,7 +22,7 @@ module.exports = {
             REFLECTOR_MSG: 'Hai invocato l\'intento {{intent}}',
             FALLBACK_MSG: 'Perdonami, penso di non aver capito bene. Riprova.',
             ERROR_MSG: 'Scusa, c\'è stato un errore. Riprova.',
-            QUERY_TYPE_1_MSG: 'Hai chiesto una query di tipo: Quanti sono... con i d soggetto {{sub}}, i d preposizione {{prep}}, i d oggetto {{obj}}, i d verbo {{ver}} e istanza {{inst}}'
+            QUERY_TYPE_1_MSG: 'Hai chiesto una query di tipo: Quanti sono... con soggetto {{sub}}, preposizione {{prep}}, oggetto {{obj}}, verbo {{ver}} e istanza {{inst}}'
         }
     }
     
