@@ -1,16 +1,18 @@
 /* *
- * This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK (v2).
- * Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
- * session persistence, api calls, and more.
+ * Querying AIDA database from an Alexa skill 
  * */
 const Alexa = require('ask-sdk-core');
+const i18n = require('i18next');
+const axios = require('axios');
+const api = require('./api');
+const languageStrings = require('./localisation');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome, you can say Hello or Help. Which would you like to try?';
+        const speakOutput = handlerInput.t('WELCOME_MSG');
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -19,10 +21,65 @@ const LaunchRequestHandler = {
     }
 };
 
-const HelloWorldIntentHandler = {
+const HowManyIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HowManyIntent';
+    },
+    handle(handlerInput) {
+        const subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
+        const prep = Alexa.getSlotValue(handlerInput.requestEnvelope, 'prep');
+        const queryable_objects = Alexa.getSlotValue(handlerInput.requestEnvelope, 'queryable_objects');
+        const verb = Alexa.getSlotValue(handlerInput.requestEnvelope, 'verb');
+        const instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance_of_querable_object');
+        
+        const subject_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'subject');
+        const prep_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'prep');
+        const queryable_objects_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'queryable_objects');
+        const verb_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'verb');
+        const instance_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'instance_of_querable_object');
+        
+        var subject_slot_id = 0
+        var prep_slot_id = 0 
+        var queryable_objects_slot_id = 0
+        var verb_slot_id = 0
+        var instance_value = ""
+        
+        if (typeof subject !== 'undefined') {
+            subject_slot_id = subject_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
+        }
+        
+        if (typeof prep !== 'undefined') {
+            prep_slot_id = prep_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
+        }
+        
+        if (typeof queryable_objects !== 'undefined') {
+            queryable_objects_slot_id = queryable_objects_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
+        }
+        
+        if (typeof verb !== 'undefined') {
+            verb_slot_id = verb_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
+        }
+        
+        if (typeof instance !== 'undefined') {
+            instance_value = instance;
+        }
+        
+        //const speakOutput = " " + subject_slot_id + " " + prep_slot_id + " " + queryable_objects_slot_id + " " + verb_slot_id + " " + instance_value;
+        
+        const speakOutput = handlerInput.t('QUERY_TYPE_1_MSG', {sub: subject_slot_id, prep: prep_slot_id, obj:queryable_objects_slot_id, ver: verb_slot_id, inst: instance_value}); 
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .getResponse();
+    }
+};
+
+const WhoAreIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'WhoAreIntent';
     },
     handle(handlerInput) {
         const subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
@@ -46,7 +103,7 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'You can say hello to me! How can I help?';
+        const speakOutput = handlerInput.t('HELP_MSG');
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -62,7 +119,7 @@ const CancelAndStopIntentHandler = {
                 || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speakOutput = 'Goodbye!';
+        const speakOutput = handlerInput.t('GOODBYE_MSG');
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -80,7 +137,7 @@ const FallbackIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.FallbackIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'Sorry, I don\'t know about that. Please try again.';
+        const speakOutput = handlerInput.t('FALLBACK_MSG');
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -114,7 +171,7 @@ const IntentReflectorHandler = {
     },
     handle(handlerInput) {
         const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
-        const speakOutput = `You just triggered ${intentName}`;
+        const speakOutput = handlerInput.t('REFLECTOR_MSG', {intent: intentName});
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -132,7 +189,7 @@ const ErrorHandler = {
         return true;
     },
     handle(handlerInput, error) {
-        const speakOutput = 'Sorry, I had trouble doing what you asked. Please try again.';
+        const speakOutput = handlerInput.t('ERROR_MSG');
         console.log(`~~~~ Error handled: ${JSON.stringify(error)}`);
 
         return handlerInput.responseBuilder
@@ -140,6 +197,18 @@ const ErrorHandler = {
             .reprompt(speakOutput)
             .getResponse();
     }
+};
+
+const LocalisationRequestInterceptor = {
+  process(handlerInput){
+      i18n.init({
+          lng: Alexa.getLocale(handlerInput.requestEnvelope),
+            resources: languageStrings,
+            returnObjects: true
+      }).then((t) => {
+          handlerInput.t = (...args) => t(...args);
+      });
+  }  
 };
 
 /**
@@ -150,12 +219,15 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
-        HelloWorldIntentHandler,
+        HowManyIntentHandler,
+        WhoAreIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler)
+    .addRequestInterceptors(
+        LocalisationRequestInterceptor)
     .addErrorHandlers(
         ErrorHandler)
     .withCustomUserAgent('sample/hello-world/v1.2')

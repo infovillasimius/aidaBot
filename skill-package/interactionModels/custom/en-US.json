@@ -192,6 +192,7 @@
               "name": {
                 "value": "topics",
                 "synonyms": [
+                  "a topic",
                   "topic",
                   "subject"
                 ]
@@ -304,5 +305,5 @@
       ]
     }
   },
-  "version": "7"
+  "version": "9"
 }
