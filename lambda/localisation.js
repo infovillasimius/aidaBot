@@ -9,7 +9,7 @@ module.exports = {
             REFLECTOR_MSG: 'You just triggered {{intent}}',
             FALLBACK_MSG: 'Sorry, I don\'t know about that. Please try again.',
             ERROR_MSG: 'Sorry, there was an error. Please try again.',
-            QUERY_TYPE_1_MSG: 'You asked for a query like: How many... with subject {{sub}}, preposition {{prep}}, object {{obj}}, verb {{ver}} and instance {{inst}}}'
+            QUERY_TYPE_1_MSG: 'You asked for a query like: How many... with subject {{sub}}, preposition {{prep}}, object {{obj}}, verb {{ver}} and instance {{inst}}'
         }
     }, 
     'it' : {
