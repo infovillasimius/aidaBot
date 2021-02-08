@@ -279,16 +279,6 @@
                   "nothing"
                 ]
               }
-            },
-            {
-              "name": {
-                "value": "xxx xxx"
-              }
-            },
-            {
-              "name": {
-                "value": "xxx"
-              }
             }
           ],
           "name": "Aida_instance"
@@ -393,8 +383,9 @@
               "name": "instance_of_querable_object",
               "type": "Aida_instance",
               "elicitationRequired": true,
-              "confirmationRequired": false,
+              "confirmationRequired": true,
               "prompts": {
+                "confirmation": "Confirm.Slot.1108637306909.578473241183",
                 "elicitation": "Elicit.Slot.431606579565.363230508419"
               }
             },
@@ -497,7 +488,11 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "If you want to search a particular instance of {queryable_objects} please tell it me now otherwise tell me no or nothing or nobody"
+            "value": "Please tell me the instance of {queryable_objects} you want to search or tell me no if you don\u0027t want any"
+          },
+          {
+            "type": "PlainText",
+            "value": "If you want to search a particular instance of {queryable_objects} please tell it me now otherwise tell me no"
           }
         ]
       },
@@ -513,8 +508,21 @@
             "value": "do you want to query Aida database for {subject} in {queryable_objects} and for {instance_of_querable_object} instance in particular?"
           }
         ]
+      },
+      {
+        "id": "Confirm.Slot.1108637306909.578473241183",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Is it {instance_of_querable_object} ?"
+          },
+          {
+            "type": "PlainText",
+            "value": "did you say {instance_of_querable_object} ?"
+          }
+        ]
       }
     ]
   },
-  "version": "24"
+  "version": "31"
 }
