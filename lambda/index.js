@@ -3,6 +3,7 @@
  * */
 const Alexa = require('ask-sdk-core');
 const i18n = require('i18next');
+const sprintf = require('i18next-sprintf-postprocessor'); 
 const axios = require('axios');
 const api = require('./api');
 const languageStrings = require('./localisation');
@@ -24,9 +25,10 @@ const LaunchRequestHandler = {
 const HowManyIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HowManyIntent';
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HowManyIntent'
+            && handlerInput.requestEnvelope.request.intent.confirmationStatus === 'CONFIRMED'; 
     },
-    handle(handlerInput) {
+    async handle(handlerInput) {
         const subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
         const prep = Alexa.getSlotValue(handlerInput.requestEnvelope, 'prep');
         const queryable_objects = Alexa.getSlotValue(handlerInput.requestEnvelope, 'queryable_objects');
@@ -48,30 +50,60 @@ const HowManyIntentHandler = {
         if (typeof subject !== 'undefined') {
             subject_slot_id = subject_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
         }
-        
         if (typeof prep !== 'undefined') {
             prep_slot_id = prep_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
         }
-        
         if (typeof queryable_objects !== 'undefined') {
             queryable_objects_slot_id = queryable_objects_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
         }
-        
         if (typeof verb !== 'undefined') {
             verb_slot_id = verb_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
         }
-        
         if (typeof instance !== 'undefined') {
             instance_value = instance;
         }
         
-        //const speakOutput = " " + subject_slot_id + " " + prep_slot_id + " " + queryable_objects_slot_id + " " + verb_slot_id + " " + instance_value;
+        //const speakOutput = handlerInput.t('QUERY_TYPE_1_MSG', {sub: subject_slot_id, prep: prep_slot_id, obj:queryable_objects_slot_id, ver: verb_slot_id, inst: instance_value}); 
         
-        const speakOutput = handlerInput.t('QUERY_TYPE_1_MSG', {sub: subject_slot_id, prep: prep_slot_id, obj:queryable_objects_slot_id, ver: verb_slot_id, inst: instance_value}); 
+        var url='cmd=how&sub='+subject_slot_id+'&obj='+queryable_objects_slot_id+'&ins='+instance_value;
+        var speak='';
+        
+        try{
+            speak=await api.AccessApi(url);
+        } catch(error){
+            console.log(error);
+        }
+        
+        var message='';
+        
+        if (speak.result==='ok'){
+            message=handlerInput.t('QUERY_1_MSG', {num: speak.hits , sub:subject, obj:queryable_objects, inst:instance_value})
+        } else {
+            message=handlerInput.t('NO_QUERY_MSG');
+        }
+        
+        var speakOutput = message;
+        
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(handlerInput.t('REPROMPT_END_MSG'))
+            .getResponse();
+    }
+};
+
+const DeniedHowManyIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HowManyIntent'
+            && handlerInput.requestEnvelope.request.intent.confirmationStatus === 'DENIED';
+    },
+    handle(handlerInput) {
+        
+        const speakOutput = handlerInput.t('REPROMPT_MSG'); 
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .reprompt()
             .getResponse();
     }
 };
@@ -199,6 +231,7 @@ const ErrorHandler = {
     }
 };
 
+/*
 const LocalisationRequestInterceptor = {
   process(handlerInput){
       i18n.init({
@@ -209,6 +242,27 @@ const LocalisationRequestInterceptor = {
           handlerInput.t = (...args) => t(...args);
       });
   }  
+}; */
+
+const LocalisationRequestInterceptor = {
+    process(handlerInput) {
+        const localisationClient = i18n.init({
+            lng: Alexa.getLocale(handlerInput.requestEnvelope),
+            resources: languageStrings,
+            returnObjects: true
+        });
+        localisationClient.localise = function localise() {
+            const args = arguments;
+            const value = i18n.t(...args);
+            if (Array.isArray(value)) {
+                return value[Math.floor(Math.random() * value.length)];
+            }
+            return value;
+        };
+        handlerInput.t = function translate(...args) {
+            return localisationClient.localise(...args);
+        }
+    }
 };
 
 /**
@@ -220,6 +274,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
         HowManyIntentHandler,
+        DeniedHowManyIntentHandler,
         WhoAreIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,

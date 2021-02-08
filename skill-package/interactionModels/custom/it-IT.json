@@ -20,18 +20,15 @@
           "slots": [
             {
               "name": "subject",
-              "type": "AIDA_Query_Subject",
-              "samples": [
-                "Quanti {subject}",
-                "{subject}"
-              ]
+              "type": "AIDA_Query_Subject"
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object"
             },
             {
               "name": "verb",
-              "type": "Aida_verbs",
-              "samples": [
-                "{verb}"
-              ]
+              "type": "Aida_verbs"
             },
             {
               "name": "instance_of_querable_object",
@@ -40,20 +37,16 @@
             {
               "name": "prep",
               "type": "Aida_prepositions"
-            },
-            {
-              "name": "queryable_objects",
-              "type": "Aida_Queryable_object",
-              "samples": [
-                "{queryable_objects}"
-              ]
             }
           ],
           "samples": [
-            "Quanti",
             "Quanti {subject} {prep} {queryable_objects} {verb} {instance_of_querable_object}",
-            "Quanti {subject}  {verb} {prep} {queryable_objects}",
-            "Quanti {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects}"
+            "Quanti {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects}",
+            "Quanti {subject} {instance_of_querable_object} {queryable_objects}",
+            "Quanti {subject} {queryable_objects} {instance_of_querable_object}",
+            "Quanti {subject} {queryable_objects}",
+            "Quanti {subject}",
+            "Quanti"
           ]
         },
         {
@@ -371,179 +364,7 @@
           "name": "Aida_who_which"
         }
       ]
-    },
-    "dialog": {
-      "intents": [
-        {
-          "name": "HowManyIntent",
-          "confirmationRequired": false,
-          "prompts": {},
-          "slots": [
-            {
-              "name": "subject",
-              "type": "AIDA_Query_Subject",
-              "elicitationRequired": true,
-              "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.154833239592.691640632019"
-              },
-              "validations": [
-                {
-                  "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.803679535450.158873228384.456118080252"
-                }
-              ]
-            },
-            {
-              "name": "verb",
-              "type": "Aida_verbs",
-              "elicitationRequired": true,
-              "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.1140900313689.1358698356233"
-              },
-              "validations": [
-                {
-                  "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.1307059460299.848976518473.1070523781317"
-                }
-              ]
-            },
-            {
-              "name": "instance_of_querable_object",
-              "type": "Aida_instance",
-              "elicitationRequired": false,
-              "confirmationRequired": false,
-              "prompts": {}
-            },
-            {
-              "name": "prep",
-              "type": "Aida_prepositions",
-              "elicitationRequired": false,
-              "confirmationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.1140900313689.58584665009.325577097947"
-                }
-              ]
-            },
-            {
-              "name": "queryable_objects",
-              "type": "Aida_Queryable_object",
-              "elicitationRequired": true,
-              "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.1140900313689.1176116668500"
-              },
-              "validations": [
-                {
-                  "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.1140900313689.1176116668500.301816001232"
-                }
-              ]
-            }
-          ],
-          "delegationStrategy": "ALWAYS"
-        }
-      ],
-      "delegationStrategy": "ALWAYS"
-    },
-    "prompts": [
-      {
-        "id": "Elicit.Slot.154833239592.691640632019",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Cosa cerchi?"
-          },
-          {
-            "type": "PlainText",
-            "value": "Cosa vuoi che cerchi nel database?"
-          },
-          {
-            "type": "PlainText",
-            "value": "Cosa vorresti che cercassi?"
-          },
-          {
-            "type": "PlainText",
-            "value": "Quale è l\u0027oggetto della ricerca?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.803679535450.158873228384.456118080252",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Scusa, ma il valore immesso per il soggetto della ricerca non è ammesso... riprova"
-          },
-          {
-            "type": "PlainText",
-            "value": "Scusa, valore non ammesso... riprova"
-          },
-          {
-            "type": "PlainText",
-            "value": "Scusa, ma non posso effettuare una ricerca su quanto mi hai chiesto... Riprova"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.1307059460299.848976518473.1070523781317",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Valore non ammesso per il parametro di ricerca... verbo"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Intent.1140900313689",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "hai chiesto quanti {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects} ?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.1140900313689.1358698356233",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Puoi dirmi il verbo da usare nella formulazione della query?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.1140900313689.58584665009.325577097947",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "La preposizione usata non è tra quelle ammesse... Ripetere prego"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.1140900313689.1176116668500",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Tra quali oggetti del database vuoi cercare?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.1140900313689.1176116668500.301816001232",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Oggetto non corretto... ripetere"
-          }
-        ]
-      }
-    ]
+    }
   },
-  "version": "17"
+  "version": "34"
 }

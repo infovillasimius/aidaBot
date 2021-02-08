@@ -4,24 +4,32 @@ module.exports = {
             WELCOME_MSG: 'Welcome, you can ask to perform a query on the data contained in the AIDA database or ask for Help. Which would you like to try?',
             HELLO_MSG: 'Hello',
             OK_MSG: 'Ok',
-            HELP_MSG: 'you can ask, for example, how many papers have machine learning as a topic',
-            GOODBYE_MSG: 'Goodbye!',
+            HELP_MSG: ['you can ask, for example, how many papers have machine learning as a topic','You can ask a query starting with how many or starting with who/which'],
+            GOODBYE_MSG: ['Goodbye!','Bye!','See you later'],
             REFLECTOR_MSG: 'You just triggered {{intent}}',
             FALLBACK_MSG: 'Sorry, I don\'t know about that. Please try again.',
             ERROR_MSG: 'Sorry, there was an error. Please try again.',
+            QUERY_1_MSG: ['I found {{num}} {{sub}}','The query got {{num}} hits','The query got {{num}} {{sub}} with {{inst}} as instance of {{obj}}'],
+            REPROMPT_MSG: 'So, what would you like to ask?',
+            NO_QUERY_MSG: ['Sorry, you asked for a query that is not yet implemented','Sorry, you asked for a not yet implemented query', 'Sorry, query not yet implemented'],
+            REPROMPT_END_MSG: ['You could ask me for another query or tell me stop to quit', "You can ask me to run another query or say stop to quit", "Ask me for another query or tell me stop to quit"],
             QUERY_TYPE_1_MSG: 'You asked for a query like: How many... with subject {{sub}}, preposition {{prep}}, object {{obj}}, verb {{ver}} and instance {{inst}}'
         }
     }, 
     'it' : {
         translation:{
             WELCOME_MSG: 'Buongiorno, puoi chiedere di eseguire una query sui dati contenuti nel database AIDA o chiedermi aiuto. Cosa preferisci fare?',
-            HELLO_MSG: 'Ciao',
-            OK_MSG: 'Ok',
-            HELP_MSG: 'Per esempio, puoi chiedere quanti papers hanno machine learning come argomento',
-            GOODBYE_MSG: 'Arrivederci!',
+            HELLO_MSG: ['Ciao','Buongiorno'],
+            OK_MSG: ['Ok','Perfetto','Va bene','Benissimo'],
+            HELP_MSG: ['Per esempio, puoi chiedere quanti papers hanno machine learning come argomento','Puoi chiedermi quanti papers ha scritto un determinato ricercatore'],
+            GOODBYE_MSG: ['Arrivederci!','Addio','A più tardi','Ci vediamo'],
             REFLECTOR_MSG: 'Hai invocato l\'intento {{intent}}',
             FALLBACK_MSG: 'Perdonami, penso di non aver capito bene. Riprova.',
             ERROR_MSG: 'Scusa, c\'è stato un errore. Riprova.',
+            QUERY_1_MSG: ['Ho trovato {{num}} {{sub}}', 'La query ha ottenuto {{num}} corrispondenze','la query ha ottenuto {{num}} {{sub}} con {{inst}} come istanza di {{obj}}'],
+            REPROMPT_MSG: 'Quindi, cosa vorresti chiedere?',
+            NO_QUERY_MSG: ['Mi dispiace, hai chiesto una query non ancora implementata','Scusa, la query richiesta non è stata ancora implementata','Mi dispiace, non so ancora eseguire la query, che mi hai chiesto'],
+            REPROMPT_END_MSG: ['Puoi chiedere di eseguire un\'altra query o dire stop per uscire','Chiedimi un\'altra query o dimmi stop per uscire'],
             QUERY_TYPE_1_MSG: 'Hai chiesto una query di tipo: Quanti sono... con soggetto {{sub}}, preposizione {{prep}}, oggetto {{obj}}, verbo {{ver}} e istanza {{inst}}'
         }
     }

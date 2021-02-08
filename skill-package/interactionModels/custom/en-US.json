@@ -28,11 +28,20 @@
           "slots": [
             {
               "name": "subject",
-              "type": "AIDA_Query_Subject"
+              "type": "AIDA_Query_Subject",
+              "samples": [
+                "how many {subject}",
+                "{subject}"
+              ]
             },
             {
               "name": "queryable_objects",
-              "type": "Aida_Queryable_object"
+              "type": "Aida_Queryable_object",
+              "samples": [
+                "In {queryable_objects}",
+                "Among {queryable_objects}",
+                "{queryable_objects}"
+              ]
             },
             {
               "name": "verb",
@@ -40,7 +49,16 @@
             },
             {
               "name": "instance_of_querable_object",
-              "type": "Aida_instance"
+              "type": "Aida_instance",
+              "samples": [
+                "she\u0027s {instance_of_querable_object}",
+                "he\u0027s {instance_of_querable_object}",
+                "it is {instance_of_querable_object}",
+                "{instance_of_querable_object}"
+              ],
+              "multipleValues": {
+                "enabled": true
+              }
             },
             {
               "name": "prep",
@@ -48,6 +66,11 @@
             }
           ],
           "samples": [
+            "How many {subject} {instance_of_querable_object} {queryable_objects}",
+            "How many {subject}  {queryable_objects} {instance_of_querable_object}",
+            "How many {subject}  {prep} {queryable_objects}",
+            "How many {subject}",
+            "How many",
             "How many {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects} ",
             "How many {subject}  {verb} {prep} {queryable_objects}",
             "How many {subject} {prep} {queryable_objects} {verb} {instance_of_querable_object} "
@@ -246,12 +269,23 @@
         {
           "values": [
             {
+              "id": "1",
+              "name": {
+                "value": "no",
+                "synonyms": [
+                  "anything",
+                  "no one",
+                  "nobody",
+                  "nothing"
+                ]
+              }
+            },
+            {
               "name": {
                 "value": "xxx xxx"
               }
             },
             {
-              "id": "1",
               "name": {
                 "value": "xxx"
               }
@@ -308,7 +342,179 @@
           "name": "Aida_who_which"
         }
       ]
-    }
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "HowManyIntent",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.565616277486"
+          },
+          "slots": [
+            {
+              "name": "subject",
+              "type": "AIDA_Query_Subject",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.873103626831.1555890016131"
+              },
+              "validations": [
+                {
+                  "type": "hasEntityResolutionMatch",
+                  "prompt": "Slot.Validation.873103626831.1555890016131.1469452802536"
+                }
+              ]
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.361003181124.670097050010"
+              },
+              "validations": [
+                {
+                  "type": "hasEntityResolutionMatch",
+                  "prompt": "Slot.Validation.361003181124.670097050010.1144934147735"
+                }
+              ]
+            },
+            {
+              "name": "verb",
+              "type": "Aida_verbs",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "instance_of_querable_object",
+              "type": "Aida_instance",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.431606579565.363230508419"
+              }
+            },
+            {
+              "name": "prep",
+              "type": "Aida_prepositions",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ],
+          "delegationStrategy": "ALWAYS"
+        }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.873103626831.1555890016131",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "What do you want to query?"
+          },
+          {
+            "type": "PlainText",
+            "value": "What is the subject of the query?"
+          },
+          {
+            "type": "PlainText",
+            "value": "What do you want to look for?"
+          },
+          {
+            "type": "PlainText",
+            "value": "What are you looking for?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.873103626831.1555890016131.1469452802536",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Sorry, value not allowed... you can choose among authors, papers, conferences, organizations and citations"
+          },
+          {
+            "type": "PlainText",
+            "value": "Sorry, but I can\u0027t search what you asked for ... Please try again"
+          },
+          {
+            "type": "PlainText",
+            "value": "Sorry, value not allowed ... try again"
+          },
+          {
+            "type": "PlainText",
+            "value": "Sorry, but the value entered for the query subject is not allowed ... try again"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.361003181124.670097050010",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Where do you want to search {subject} or what kind of property the {subject} should have?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Among which database objects do you want to specify the property to search?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Among which objects do you want to search or what is the property the {subject} should have?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Among what do you want to search?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.361003181124.670097050010.1144934147735",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Input not allowed... you can say  industrial sectors, papers, authors, organizations, conferences, topics"
+          },
+          {
+            "type": "PlainText",
+            "value": "Incorrect object ... try again"
+          },
+          {
+            "type": "PlainText",
+            "value": "Incorrect object ... repeat"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.431606579565.363230508419",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "If you want to search a particular instance of {queryable_objects} please tell it me now otherwise tell me no or nothing or nobody"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.565616277486",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Do you want to know how many {subject} with {instance_of_querable_object} as instance of {queryable_objects} there are in Aida database?"
+          },
+          {
+            "type": "PlainText",
+            "value": "do you want to query Aida database for {subject} in {queryable_objects} and for {instance_of_querable_object} instance in particular?"
+          }
+        ]
+      }
+    ]
   },
-  "version": "10"
+  "version": "24"
 }

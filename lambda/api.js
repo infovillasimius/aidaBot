@@ -5,6 +5,7 @@ module.exports = {
     AccessApi(url){
         var config = {
             timeout: 4000, // timeout api call before we reach Alexa's 8 sec timeout, or set globally via axios.defaults.timeout
+            headers: {'Accept': 'application/json'}
             };
         
         async function getR(url,config) {
