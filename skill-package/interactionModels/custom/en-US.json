@@ -35,19 +35,6 @@
               ]
             },
             {
-              "name": "queryable_objects",
-              "type": "Aida_Queryable_object",
-              "samples": [
-                "In {queryable_objects}",
-                "Among {queryable_objects}",
-                "{queryable_objects}"
-              ]
-            },
-            {
-              "name": "verb",
-              "type": "Aida_verbs"
-            },
-            {
               "name": "instance_of_querable_object",
               "type": "Aida_instance",
               "samples": [
@@ -57,27 +44,37 @@
                 "{instance_of_querable_object}"
               ],
               "multipleValues": {
-                "enabled": true
+                "enabled": false
               }
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object"
+            },
+            {
+              "name": "verb",
+              "type": "Aida_verbs"
             },
             {
               "name": "prep",
               "type": "Aida_prepositions"
+            },
+            {
+              "name": "item",
+              "type": "AMAZON.SearchQuery"
             }
           ],
           "samples": [
-            "How many {subject} {instance_of_querable_object} {queryable_objects}",
-            "How many {subject}  {queryable_objects} {instance_of_querable_object}",
+            "How many {subject} are there in {queryable_objects}",
+            "How many {subject} in {queryable_objects} are {instance_of_querable_object}",
             "How many {subject}  {prep} {queryable_objects}",
             "How many {subject}",
             "How many",
-            "How many {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects} ",
-            "How many {subject}  {verb} {prep} {queryable_objects}",
-            "How many {subject} {prep} {queryable_objects} {verb} {instance_of_querable_object} "
+            "How many {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects} "
           ]
         },
         {
-          "name": "WhoAreIntent",
+          "name": "WhoAreTheTopIntent",
           "slots": [
             {
               "name": "who_which",
@@ -109,8 +106,40 @@
             }
           ],
           "samples": [
-            "{who_which} are the top {number} {subject} {prep} {queryable_objects} with {queryable_objects} {instance} by {order}",
+            "{who_which} are the top {number}",
+            "{who_which} are the top",
+            "{who_which} are the top {number} {subject} {prep} {queryable_objects} with  {instance} by {order}",
             "{who_which} are the top {number} {subject} {prep} {queryable_objects} {instance} by {order}"
+          ]
+        },
+        {
+          "name": "FreeQueryIntent",
+          "slots": [
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery",
+              "samples": [
+                "{query}"
+              ]
+            }
+          ],
+          "samples": [
+            "who have {query}",
+            "who has {query}",
+            "who are {query}",
+            "Who is {query}"
+          ]
+        },
+        {
+          "name": "FindItemIntent",
+          "slots": [
+            {
+              "name": "author",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "What about {author}"
           ]
         }
       ],
@@ -231,6 +260,8 @@
               "name": {
                 "value": "are",
                 "synonyms": [
+                  "are there",
+                  "is there",
                   "there is",
                   "is",
                   "there are"
@@ -269,12 +300,22 @@
         {
           "values": [
             {
+              "name": {
+                "value": "xx xx"
+              }
+            },
+            {
+              "name": {
+                "value": "xxx xxx xxx"
+              }
+            },
+            {
               "id": "1",
               "name": {
                 "value": "no",
                 "synonyms": [
+                  "anyone",
                   "anything",
-                  "no one",
                   "nobody",
                   "nothing"
                 ]
@@ -337,10 +378,8 @@
       "intents": [
         {
           "name": "HowManyIntent",
-          "confirmationRequired": true,
-          "prompts": {
-            "confirmation": "Confirm.Intent.565616277486"
-          },
+          "confirmationRequired": false,
+          "prompts": {},
           "slots": [
             {
               "name": "subject",
@@ -358,13 +397,20 @@
               ]
             },
             {
-              "name": "queryable_objects",
-              "type": "Aida_Queryable_object",
+              "name": "instance_of_querable_object",
+              "type": "Aida_instance",
               "elicitationRequired": true,
               "confirmationRequired": false,
               "prompts": {
-                "elicitation": "Elicit.Slot.361003181124.670097050010"
-              },
+                "elicitation": "Elicit.Slot.431606579565.363230508419"
+              }
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {},
               "validations": [
                 {
                   "type": "hasEntityResolutionMatch",
@@ -377,17 +423,13 @@
               "type": "Aida_verbs",
               "elicitationRequired": false,
               "confirmationRequired": false,
-              "prompts": {}
-            },
-            {
-              "name": "instance_of_querable_object",
-              "type": "Aida_instance",
-              "elicitationRequired": true,
-              "confirmationRequired": true,
-              "prompts": {
-                "confirmation": "Confirm.Slot.1108637306909.578473241183",
-                "elicitation": "Elicit.Slot.431606579565.363230508419"
-              }
+              "prompts": {},
+              "validations": [
+                {
+                  "type": "hasEntityResolutionMatch",
+                  "prompt": "Slot.Validation.9773793625.726583605904.866137367178"
+                }
+              ]
             },
             {
               "name": "prep",
@@ -397,7 +439,96 @@
               "prompts": {}
             }
           ],
-          "delegationStrategy": "ALWAYS"
+          "delegationStrategy": "SKILL_RESPONSE"
+        },
+        {
+          "name": "WhoAreTheTopIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "who_which",
+              "type": "Aida_who_which",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "number",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "subject",
+              "type": "AIDA_Query_Subject",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "prep",
+              "type": "Aida_prepositions",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "instance",
+              "type": "Aida_instance",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "order",
+              "type": "Aida_order",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ]
+        },
+        {
+          "name": "FreeQueryIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": true,
+              "confirmationRequired": true,
+              "prompts": {
+                "confirmation": "Confirm.Slot.425908480158.345991497763",
+                "elicitation": "Elicit.Slot.425908480158.345991497763"
+              }
+            }
+          ]
+        },
+        {
+          "name": "FindItemIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "author",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.992205532477.1452459867108"
+              }
+            }
+          ]
         }
       ],
       "delegationStrategy": "ALWAYS"
@@ -488,11 +619,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Please tell me the instance of {queryable_objects} you want to search or tell me no if you don\u0027t want any"
-          },
-          {
-            "type": "PlainText",
-            "value": "If you want to search a particular instance of {queryable_objects} please tell it me now otherwise tell me no"
+            "value": "Among the {subject} what are you searching for?"
           }
         ]
       },
@@ -501,11 +628,11 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Do you want to know how many {subject} with {instance_of_querable_object} as instance of {queryable_objects} there are in Aida database?"
+            "value": "Do you want to know how many {subject} with {instance_of_querable_object}  there are in Aida database?"
           },
           {
             "type": "PlainText",
-            "value": "do you want to query Aida database for {subject} in {queryable_objects} and for {instance_of_querable_object} instance in particular?"
+            "value": "do you want to query Aida database for {subject} and for {instance_of_querable_object} item in particular?"
           }
         ]
       },
@@ -521,8 +648,44 @@
             "value": "did you say {instance_of_querable_object} ?"
           }
         ]
+      },
+      {
+        "id": "Elicit.Slot.425908480158.345991497763",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Who or which do you want me to search for?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.425908480158.345991497763",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Did you say {query} ?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.992205532477.1452459867108",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Which one do you choose?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.9773793625.726583605904.866137367178",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "verb error ... try again"
+          }
+        ]
       }
     ]
   },
-  "version": "31"
+  "version": "55"
 }

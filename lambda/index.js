@@ -22,6 +22,209 @@ const LaunchRequestHandler = {
     }
 };
 
+
+const StartedInProgressHowManyIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === "IntentRequest"
+      && handlerInput.requestEnvelope.request.intent.name === "HowManyIntent"
+      && handlerInput.requestEnvelope.request.dialogState !== 'COMPLETED';
+  },
+  handle(handlerInput) {
+    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+    sessionAttributes.queryable_objects = "";
+    handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+    return handlerInput.responseBuilder
+      .speak()
+      .addDelegateDirective()
+      .getResponse();
+  }
+};
+
+
+const CompletedHowManyIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === "IntentRequest"
+      && handlerInput.requestEnvelope.request.intent.name === "HowManyIntent"
+      && handlerInput.requestEnvelope.request.dialogState === 'COMPLETED'
+      && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
+  },
+  handle(handlerInput) {
+    let subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
+    const instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance_of_querable_object');
+    return handlerInput.responseBuilder
+        .speak(handlerInput.t('INTENT_CONFIRMATION_2_MSG', {sub: handlerInput.t(subject), inst: instance}))
+        .addConfirmIntentDirective()
+      .getResponse();
+  }
+};
+
+
+/*
+
+const CoffeeGivenOrderIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === "IntentRequest"
+      && handlerInput.requestEnvelope.request.intent.name === "OrderIntent"
+      && handlerInput.requestEnvelope.request.intent.slots.drink.value 
+      && handlerInput.requestEnvelope.request.intent.slots.drink.value === 'coffee'
+      && !handlerInput.requestEnvelope.request.intent.slots.coffeeRoast.value
+  },
+  handle(handlerInput) {
+    return handlerInput.responseBuilder
+      .speak('Which roast would you like light, medium, medium-dark, or dark?')
+      .reprompt('Would you like a light, medium, medium-dark, or dark roast?')
+      .addElicitSlotDirective('coffeeRoast')
+      .getResponse();
+  }
+};
+
+const TeaGivenOrderIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === "IntentRequest"
+      && handlerInput.requestEnvelope.request.intent.name === "OrderIntent"
+      && handlerInput.requestEnvelope.request.intent.slots.drink.value
+      && handlerInput.requestEnvelope.request.intent.slots.drink.value === 'tea'
+      && !handlerInput.requestEnvelope.request.intent.slots.teaType.value
+  },
+  handle(handlerInput) {
+    return handlerInput.responseBuilder
+      .speak("Which would you like black, green, oolong, or white tea?")
+      .reprompt("Would you like a black, green, oolong, or white tea?")
+      .addElicitSlotDirective('teaType')
+      .getResponse();
+  }
+};
+
+const CompletedOrderIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === "IntentRequest"
+        && handlerInput.requestEnvelope.request.intent.name === "OrderIntent"
+        && handlerInput.requestEnvelope.request.dialogState === "COMPLETED";
+  },
+  handle(handlerInput){
+
+    const drink = handlerInput.requestEnvelope.request.intent.slots.drink.value;
+    let type; 
+
+    if (drink === 'coffee') {
+        type = handlerInput.requestEnvelope.request.intent.slots.coffeeRoast.value;
+    } else if (drink === 'tea') {
+        type = handlerInput.requestEnvelope.request.intent.slots.teaType.value;
+    } else {
+        type = 'water';
+    }
+
+    const speechText = `It looks like you want ${type} ${drink}`;
+    return handlerInput.responseBuilder
+        .speak(speechText)
+        .getResponse();
+  }
+};
+
+*/
+
+
+
+
+
+
+/**
+ * Handler esecuted when instance_of_querable_object slot has a valid value and it isn't 'no'
+ * and queryable_objects slot is not filled
+ * It finds value for query object with a request to the database server
+ */
+const InProgressHowManyIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HowManyIntent'
+            && handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value
+            && handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value !== 'no'
+            && !handlerInput.requestEnvelope.request.intent.slots.queryable_objects.value
+            && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
+    },
+    async handle(handlerInput) {
+        let subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
+        const subject_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'subject');
+         if (typeof subject !== 'undefined') {
+            subject = subject_slot.resolutions.resolutionsPerAuthority[0].values[0].value.name;
+        }
+        let updatedIntent = handlerInput.requestEnvelope.request.intent;
+        
+        const instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance_of_querable_object');
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        if (sessionAttributes.queryable_objects && sessionAttributes.queryable_objects !==''){
+            return handlerInput.responseBuilder
+            .addDelegateDirective()
+            .getResponse();
+        } 
+        
+        var url='cmd=fnd&ins='+instance;
+        var speak='';
+        
+        try{
+            speak=await api.AccessApi(url);
+        } catch(error){
+            console.log(error);
+        }
+        
+         var message='';
+        
+        if (speak.result==='ok'){
+            sessionAttributes.queryable_objects = speak;
+            handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+        } else {
+            message=handlerInput.t('NO_QUERY_MSG');
+        }
+        
+        var speakOutput = message;
+        
+        return handlerInput.responseBuilder
+            .speak(handlerInput.t('INTENT_CONFIRMATION_2_MSG', {sub: handlerInput.t(subject), inst: instance}))
+            .addConfirmIntentDirective()
+            .getResponse();
+    }
+};
+
+
+
+
+/**
+ * Handler esecuted when instance_of_querable_object slot has a valid value and it is 'no'
+ * and queryable_objects slot is not filled
+ * It finds value for query object with a request to the database server
+ */
+const InProgressWithNoInstanceHowManyIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HowManyIntent'
+            && handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value
+            && (handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value==='no'
+            || handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value==='nothing'
+            || handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value==='anyone'
+            || handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value==='anything'
+            || handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value==='nobody')
+            && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
+    },
+    async handle(handlerInput) {
+        const object = Alexa.getSlotValue(handlerInput.requestEnvelope, 'queryable_objects');
+        
+        if (!handlerInput.requestEnvelope.request.intent.slots.queryable_objects.value){
+            return handlerInput.responseBuilder
+            .speak(handlerInput.t('OBJ_MSG'))
+            .reprompt(handlerInput.t('OBJ_REPROMPT_MSG'))
+            .addElicitSlotDirective('queryable_objects')
+            .getResponse();
+        } 
+        
+        return handlerInput.responseBuilder
+            .speak(handlerInput.t('INTENT_CONFIRMATION_1_MSG', {obj: handlerInput.t(object)}))
+            .addConfirmIntentDirective()
+            .getResponse();
+    }
+};
+
+
+
 const HowManyIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -29,41 +232,39 @@ const HowManyIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.confirmationStatus === 'CONFIRMED'; 
     },
     async handle(handlerInput) {
-        const subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
-        const prep = Alexa.getSlotValue(handlerInput.requestEnvelope, 'prep');
-        const queryable_objects = Alexa.getSlotValue(handlerInput.requestEnvelope, 'queryable_objects');
-        const verb = Alexa.getSlotValue(handlerInput.requestEnvelope, 'verb');
-        const instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance_of_querable_object');
-        
+        let subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
         const subject_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'subject');
-        const prep_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'prep');
+        let queryable_objects = Alexa.getSlotValue(handlerInput.requestEnvelope, 'queryable_objects');
         const queryable_objects_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'queryable_objects');
-        const verb_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'verb');
+        const instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance_of_querable_object');
         const instance_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'instance_of_querable_object');
         
         var subject_slot_id = 0
-        var prep_slot_id = 0 
         var queryable_objects_slot_id = 0
-        var verb_slot_id = 0
-        var instance_value = "zero"
+        var instance_value = 0
+        
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        let obj = sessionAttributes.queryable_objects;
+        
+        if(obj && obj!=='undefined' && obj.obj_id){
+            queryable_objects_slot_id = obj.obj_id
+            queryable_objects = obj.object
+        }
         
         if (typeof subject !== 'undefined') {
             subject_slot_id = subject_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
-        }
-        if (typeof prep !== 'undefined') {
-            prep_slot_id = prep_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
-        }
-        if (typeof queryable_objects !== 'undefined') {
-            queryable_objects_slot_id = queryable_objects_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
-        }
-        if (typeof verb !== 'undefined') {
-            verb_slot_id = verb_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
-        }
-        if (typeof instance !== 'undefined') {
-            instance_value = instance;
+            subject = subject_slot.resolutions.resolutionsPerAuthority[0].values[0].value.name;
         }
         
-        //const speakOutput = handlerInput.t('QUERY_TYPE_1_MSG', {sub: subject_slot_id, prep: prep_slot_id, obj:queryable_objects_slot_id, ver: verb_slot_id, inst: instance_value}); 
+        if (typeof queryable_objects !== 'undefined' && queryable_objects_slot_id===0) {
+            queryable_objects_slot_id = queryable_objects_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
+        }
+        
+        if(instance_slot.resolutions && instance_slot.resolutions.resolutionsPerAuthority && instance_slot.resolutions.resolutionsPerAuthority[0].status.code==='ER_SUCCESS_MATCH'){
+            instance_value = 'no'
+        } else {
+            instance_value = instance
+        }
         
         var url='cmd=how&sub='+subject_slot_id+'&obj='+queryable_objects_slot_id+'&ins='+instance_value;
         var speak='';
@@ -74,15 +275,36 @@ const HowManyIntentHandler = {
             console.log(error);
         }
         
+        var s = subject.substring(subject.length - 1, subject.length);
+        var s1 = queryable_objects.substring(queryable_objects.length - 1, queryable_objects.length);
+        
+        if(speak.hits === '1' && s==='s'){
+            subject = subject.substring(0, subject.length - 1);
+        } 
+
+        if (s !== 's' && speak.hits !== '1'){
+            subject=subject+'s'
+        }
+        
         var message='';
+        var msg;
+        
+        if (instance_value==='no'){
+            msg ='QUERY_2_MSG'
+        } else {
+            msg ='QUERY_1_MSG'
+        }
         
         if (speak.result==='ok'){
-            message=handlerInput.t('QUERY_1_MSG', {num: speak.hits , sub:subject, obj:queryable_objects, inst:instance_value})
+            message=handlerInput.t(msg, {num: speak.hits , sub:handlerInput.t(subject), obj:handlerInput.t(speak.object), inst:instance_value})
         } else {
             message=handlerInput.t('NO_QUERY_MSG');
         }
         
         var speakOutput = message;
+        
+        sessionAttributes.queryable_objects ="";
+        handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
         
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -111,9 +333,10 @@ const DeniedHowManyIntentHandler = {
 const WhoAreIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'WhoAreIntent';
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'WhoAreTheTopIntent';
     },
     handle(handlerInput) {
+        /*
         const subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
         const verb = Alexa.getSlotValue(handlerInput.requestEnvelope, 'verb');
         const verb_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'verb');
@@ -121,10 +344,27 @@ const WhoAreIntentHandler = {
         
         const nome = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance_of_querable_object');
         const speakOutput = "you said: how many "+subject+" " + verb+ id;
-
+        */
         return handlerInput.responseBuilder
-            .speak(speakOutput)
+            .speak('if you say so!')
             //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .getResponse();
+    }
+};
+
+const FreeQueryIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'FreeQueryIntent';
+    },
+    handle(handlerInput) {
+        
+        const query = Alexa.getSlotValue(handlerInput.requestEnvelope, 'query');
+
+        
+        return handlerInput.responseBuilder
+            .speak('if you say so!')
+            .reprompt()
             .getResponse();
     }
 };
@@ -231,19 +471,6 @@ const ErrorHandler = {
     }
 };
 
-/*
-const LocalisationRequestInterceptor = {
-  process(handlerInput){
-      i18n.init({
-          lng: Alexa.getLocale(handlerInput.requestEnvelope),
-            resources: languageStrings,
-            returnObjects: true
-      }).then((t) => {
-          handlerInput.t = (...args) => t(...args);
-      });
-  }  
-}; */
-
 const LocalisationRequestInterceptor = {
     process(handlerInput) {
         const localisationClient = i18n.init({
@@ -273,7 +500,11 @@ const LocalisationRequestInterceptor = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
+        InProgressWithNoInstanceHowManyIntentHandler,
+        InProgressHowManyIntentHandler,
+        StartedInProgressHowManyIntentHandler,
         HowManyIntentHandler,
+        CompletedHowManyIntentHandler,
         DeniedHowManyIntentHandler,
         WhoAreIntentHandler,
         HelpIntentHandler,
@@ -285,5 +516,5 @@ exports.handler = Alexa.SkillBuilders.custom()
         LocalisationRequestInterceptor)
     .addErrorHandlers(
         ErrorHandler)
-    .withCustomUserAgent('sample/hello-world/v1.2')
+    .withCustomUserAgent('Aida_Query')
     .lambda();

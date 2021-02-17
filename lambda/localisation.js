@@ -9,11 +9,21 @@ module.exports = {
             REFLECTOR_MSG: 'You just triggered {{intent}}',
             FALLBACK_MSG: 'Sorry, I don\'t know about that. Please try again.',
             ERROR_MSG: 'Sorry, there was an error. Please try again.',
-            QUERY_1_MSG: ['I found {{num}} {{sub}}','The query got {{num}} hits','The query got {{num}} {{sub}} with {{inst}} as instance of {{obj}}'],
+            QUERY_1_MSG: ['I found {{num}} {{sub}} with {{inst}} among the {{obj}}', 'The query got {{num}} {{sub}} with {{inst}} among the {{obj}}'],
+            QUERY_2_MSG: ['I found {{num}} different {{sub}} among the {{obj}}', 'The query got {{num}} different {{sub}} among the {{obj}}'],
             REPROMPT_MSG: 'So, what would you like to ask?',
             NO_QUERY_MSG: ['Sorry, you asked for a query that is not yet implemented','Sorry, you asked for a not yet implemented query', 'Sorry, query not yet implemented'],
             REPROMPT_END_MSG: ['You could ask me for another query or tell me stop to quit', "You can ask me to run another query or say stop to quit", "Ask me for another query or tell me stop to quit"],
-            QUERY_TYPE_1_MSG: 'You asked for a query like: How many... with subject {{sub}}, preposition {{prep}}, object {{obj}}, verb {{ver}} and instance {{inst}}'
+            INTENT_CONFIRMATION_1_MSG: 'do you want to query Aida database for {{obj}}',
+            INTENT_CONFIRMATION_2_MSG: ['do you want to query Aida database for {{sub}} and for {{inst}} item in particular?', 'Do you want to know how many {{sub}} with {{inst}} there are in Aida database?'],
+            OBJ_MSG: 'Among which objects do you want to search',
+            OBJ_REPROMPT_MSG: 'you can choose among authors, papers, conferences, organizations and citations',
+            conferences: 'conferences',
+            authors: 'authors',
+            organizations:'organizations',
+            topics:'topics',
+            papers:'papers'
+            
         }
     }, 
     'it' : {
