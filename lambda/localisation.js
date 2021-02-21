@@ -10,19 +10,21 @@ module.exports = {
             FALLBACK_MSG: 'Sorry, I don\'t know about that. Please try again.',
             ERROR_MSG: 'Sorry, there was an error. Please try again.',
             QUERY_1_MSG: ['I found {{num}} {{sub}} with {{inst}} among the {{obj}}', 'The query got {{num}} {{sub}} with {{inst}} among the {{obj}}'],
-            QUERY_2_MSG: ['I found {{num}} different {{sub}} among the {{obj}}', 'The query got {{num}} different {{sub}} among the {{obj}}'],
+            QUERY_2_MSG: ['I found {{num}} different {{sub}} {{prep}} {{obj}}', 'The query got {{num}} different {{sub}} {{prep}} {{obj}}'],
             REPROMPT_MSG: 'So, what would you like to ask?',
             NO_QUERY_MSG: ['Sorry, you asked for a query that is not yet implemented','Sorry, you asked for a not yet implemented query', 'Sorry, query not yet implemented'],
             REPROMPT_END_MSG: ['You could ask me for another query or tell me stop to quit', "You can ask me to run another query or say stop to quit", "Ask me for another query or tell me stop to quit"],
-            INTENT_CONFIRMATION_1_MSG: 'do you want to query Aida database for {{obj}}',
-            INTENT_CONFIRMATION_2_MSG: ['do you want to query Aida database for {{sub}} and for {{inst}} item in particular?', 'Do you want to know how many {{sub}} with {{inst}} there are in Aida database?'],
+            INTENT_CONFIRMATION_1_MSG: 'do you want to query Aida database for {{sub}} among {{obj}}',
+            INTENT_CONFIRMATION_2_MSG: ['do you want to query Aida database for {{sub}} and for {{inst}} items in particular?', 'Do you want to know how many {{sub}} with {{inst}} there are in Aida database?'],
             OBJ_MSG: 'Among which objects do you want to search',
             OBJ_REPROMPT_MSG: 'you can choose among authors, papers, conferences, organizations and citations',
             conferences: 'conferences',
             authors: 'authors',
             organizations:'organizations',
             topics:'topics',
-            papers:'papers'
+            papers:'papers',
+            TOO_GENERIC_MSG:'Your search for {{item}} got too many results. You need to try again and to be more specific. What are you looking for?',
+            NO_RESULT_MSG:'Your search for {{item}} got no result. You need to try again. what could I search for you?'
             
         }
     }, 
@@ -40,7 +42,6 @@ module.exports = {
             REPROMPT_MSG: 'Quindi, cosa vorresti chiedere?',
             NO_QUERY_MSG: ['Mi dispiace, hai chiesto una query non ancora implementata','Scusa, la query richiesta non è stata ancora implementata','Mi dispiace, non so ancora eseguire la query, che mi hai chiesto'],
             REPROMPT_END_MSG: ['Puoi chiedere di eseguire un\'altra query o dire stop per uscire','Chiedimi un\'altra query o dimmi stop per uscire'],
-            QUERY_TYPE_1_MSG: 'Hai chiesto una query di tipo: Quanti sono... con soggetto {{sub}}, preposizione {{prep}}, oggetto {{obj}}, verbo {{ver}} e istanza {{inst}}'
         }
     }
     

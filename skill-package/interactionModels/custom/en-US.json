@@ -65,6 +65,7 @@
             }
           ],
           "samples": [
+            "I want {item}",
             "How many {subject} are there in {queryable_objects}",
             "How many {subject} in {queryable_objects} are {instance_of_querable_object}",
             "How many {subject}  {prep} {queryable_objects}",
@@ -437,6 +438,13 @@
               "elicitationRequired": false,
               "confirmationRequired": false,
               "prompts": {}
+            },
+            {
+              "name": "item",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
             }
           ],
           "delegationStrategy": "SKILL_RESPONSE"
@@ -687,5 +695,5 @@
       }
     ]
   },
-  "version": "55"
+  "version": "56"
 }

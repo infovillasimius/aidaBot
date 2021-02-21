@@ -59,75 +59,6 @@ const CompletedHowManyIntentHandler = {
 };
 
 
-/*
-
-const CoffeeGivenOrderIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === "IntentRequest"
-      && handlerInput.requestEnvelope.request.intent.name === "OrderIntent"
-      && handlerInput.requestEnvelope.request.intent.slots.drink.value 
-      && handlerInput.requestEnvelope.request.intent.slots.drink.value === 'coffee'
-      && !handlerInput.requestEnvelope.request.intent.slots.coffeeRoast.value
-  },
-  handle(handlerInput) {
-    return handlerInput.responseBuilder
-      .speak('Which roast would you like light, medium, medium-dark, or dark?')
-      .reprompt('Would you like a light, medium, medium-dark, or dark roast?')
-      .addElicitSlotDirective('coffeeRoast')
-      .getResponse();
-  }
-};
-
-const TeaGivenOrderIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === "IntentRequest"
-      && handlerInput.requestEnvelope.request.intent.name === "OrderIntent"
-      && handlerInput.requestEnvelope.request.intent.slots.drink.value
-      && handlerInput.requestEnvelope.request.intent.slots.drink.value === 'tea'
-      && !handlerInput.requestEnvelope.request.intent.slots.teaType.value
-  },
-  handle(handlerInput) {
-    return handlerInput.responseBuilder
-      .speak("Which would you like black, green, oolong, or white tea?")
-      .reprompt("Would you like a black, green, oolong, or white tea?")
-      .addElicitSlotDirective('teaType')
-      .getResponse();
-  }
-};
-
-const CompletedOrderIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === "IntentRequest"
-        && handlerInput.requestEnvelope.request.intent.name === "OrderIntent"
-        && handlerInput.requestEnvelope.request.dialogState === "COMPLETED";
-  },
-  handle(handlerInput){
-
-    const drink = handlerInput.requestEnvelope.request.intent.slots.drink.value;
-    let type; 
-
-    if (drink === 'coffee') {
-        type = handlerInput.requestEnvelope.request.intent.slots.coffeeRoast.value;
-    } else if (drink === 'tea') {
-        type = handlerInput.requestEnvelope.request.intent.slots.teaType.value;
-    } else {
-        type = 'water';
-    }
-
-    const speechText = `It looks like you want ${type} ${drink}`;
-    return handlerInput.responseBuilder
-        .speak(speechText)
-        .getResponse();
-  }
-};
-
-*/
-
-
-
-
-
-
 /**
  * Handler esecuted when instance_of_querable_object slot has a valid value and it isn't 'no'
  * and queryable_objects slot is not filled
@@ -140,6 +71,7 @@ const InProgressHowManyIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value
             && handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value !== 'no'
             && !handlerInput.requestEnvelope.request.intent.slots.queryable_objects.value
+            && !handlerInput.requestEnvelope.request.intent.slots.item.value
             && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
     },
     async handle(handlerInput) {
@@ -168,20 +100,123 @@ const InProgressHowManyIntentHandler = {
         }
         
          var message='';
+        sessionAttributes.queryable_objects = speak;
+        handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
         
         if (speak.result==='ok'){
-            sessionAttributes.queryable_objects = speak;
-            handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+            updatedIntent.slots.instance_of_querable_object.value = speak.item
+            return handlerInput.responseBuilder
+            .speak(handlerInput.t('INTENT_CONFIRMATION_2_MSG', {sub: handlerInput.t(subject), inst: speak.item}))
+            .addConfirmIntentDirective(updatedIntent)
+            .getResponse();
+        } else if (parseInt(speak.num)>1 && parseInt(speak.num)<4){
+            var msg=""
+            var n=speak.keys.length-1
+            for(var i in speak.keys){
+               msg=msg+speak.keys[i]
+               if (i==(n-1)){
+                   msg=msg+' and '
+               } else if(i==(n)) {
+                   msg=msg+'. '
+               } else {
+                   msg=msg+', '
+               }
+            }
+            message=('Searching for '+instance+', I got: ' +msg+'Which one is correct?')
+            return handlerInput.responseBuilder
+            .speak(message)
+            .addElicitSlotDirective('item')
+            .getResponse();
+        } else if (parseInt(speak.num)===0){
+            message=(handlerInput.t('NO_RESULT_MSG', {item: instance}))
         } else {
-            message=handlerInput.t('NO_QUERY_MSG');
+            message=(handlerInput.t('TOO_GENERIC_MSG', {item: instance}))
         }
         
-        var speakOutput = message;
         
         return handlerInput.responseBuilder
+        .speak(message)
+        .addElicitSlotDirective('item')
+        .getResponse();
+    }
+};
+
+
+/**
+ * Handler esecuted when instance_of_querable_object slot and item slot have a value and the firs isn't 'no'
+ * and queryable_objects slot is not filled
+ * It finds value for query object with a request to the database server
+ */
+const ItemHowManyIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HowManyIntent'
+            && handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value
+            && handlerInput.requestEnvelope.request.intent.slots.instance_of_querable_object.value !== 'no'
+            && !handlerInput.requestEnvelope.request.intent.slots.queryable_objects.value
+            && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
+    },
+    async handle(handlerInput) {
+        let subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
+        const subject_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'subject');
+         if (typeof subject !== 'undefined') {
+            subject = subject_slot.resolutions.resolutionsPerAuthority[0].values[0].value.name;
+        }
+        let updatedIntent = handlerInput.requestEnvelope.request.intent;
+         
+        const instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'item');
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+       
+        var url='cmd=fnd&ins='+instance;
+        var speak='';
+        
+        try{
+            speak=await api.AccessApi(url);
+        } catch(error){
+            console.log(error);
+        }
+        
+        var message='';
+        sessionAttributes.queryable_objects = speak;
+        handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+        
+        if (speak.result==='ok'){
+            updatedIntent.slots.instance_of_querable_object.value = updatedIntent.slots.item.value
+            
+            return handlerInput.responseBuilder
             .speak(handlerInput.t('INTENT_CONFIRMATION_2_MSG', {sub: handlerInput.t(subject), inst: instance}))
-            .addConfirmIntentDirective()
+            .addConfirmIntentDirective(updatedIntent)
             .getResponse();
+        } else if (parseInt(speak.num)>1 && parseInt(speak.num)<4){
+            var msg=""
+            var n=speak.keys.length-1
+            for(var i in speak.keys){
+               msg=msg+speak.keys[i]
+               if (i==(n-1)){
+                   msg=msg+' and '
+               } else if(i==(n)) {
+                   msg=msg+'. '
+               } else {
+                   msg=msg+', '
+               }
+            }
+            message=('Searching for '+instance+', I got: ' +msg+'Which one is correct?')
+            return handlerInput.responseBuilder
+            .speak(message)
+            .addElicitSlotDirective('item')
+            .getResponse();
+            
+        } else if (parseInt(speak.num)===0){
+            message=(handlerInput.t('NO_RESULT_MSG', {item: instance}))
+        } else {
+            message=(handlerInput.t('TOO_GENERIC_MSG', {item: instance}))
+        } 
+        
+        return handlerInput.responseBuilder
+        .speak(message)
+        .addElicitSlotDirective('item')
+        .getResponse();
+        
     }
 };
 
@@ -206,6 +241,7 @@ const InProgressWithNoInstanceHowManyIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
     },
     async handle(handlerInput) {
+        const subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject')
         const object = Alexa.getSlotValue(handlerInput.requestEnvelope, 'queryable_objects');
         
         if (!handlerInput.requestEnvelope.request.intent.slots.queryable_objects.value){
@@ -217,7 +253,7 @@ const InProgressWithNoInstanceHowManyIntentHandler = {
         } 
         
         return handlerInput.responseBuilder
-            .speak(handlerInput.t('INTENT_CONFIRMATION_1_MSG', {obj: handlerInput.t(object)}))
+            .speak(handlerInput.t('INTENT_CONFIRMATION_1_MSG', {sub: handlerInput.t(subject), obj: handlerInput.t(object)}))
             .addConfirmIntentDirective()
             .getResponse();
     }
@@ -296,7 +332,7 @@ const HowManyIntentHandler = {
         }
         
         if (speak.result==='ok'){
-            message=handlerInput.t(msg, {num: speak.hits , sub:handlerInput.t(subject), obj:handlerInput.t(speak.object), inst:instance_value})
+            message=handlerInput.t(msg, {num: speak.hits , sub:handlerInput.t(subject), obj:handlerInput.t(speak.object), inst:instance_value, prep:speak.prep})
         } else {
             message=handlerInput.t('NO_QUERY_MSG');
         }
@@ -500,12 +536,13 @@ const LocalisationRequestInterceptor = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
+        DeniedHowManyIntentHandler,
         InProgressWithNoInstanceHowManyIntentHandler,
         InProgressHowManyIntentHandler,
+        ItemHowManyIntentHandler,
         StartedInProgressHowManyIntentHandler,
         HowManyIntentHandler,
         CompletedHowManyIntentHandler,
-        DeniedHowManyIntentHandler,
         WhoAreIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
