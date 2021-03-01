@@ -28,50 +28,47 @@
           "slots": [
             {
               "name": "subject",
-              "type": "AIDA_Query_Subject",
-              "samples": [
-                "how many {subject}",
-                "{subject}"
-              ]
+              "type": "AIDA_Query_Subject"
             },
             {
               "name": "instance_of_querable_object",
               "type": "Aida_instance",
-              "samples": [
-                "she\u0027s {instance_of_querable_object}",
-                "he\u0027s {instance_of_querable_object}",
-                "it is {instance_of_querable_object}",
-                "{instance_of_querable_object}"
-              ],
               "multipleValues": {
                 "enabled": false
               }
             },
             {
-              "name": "queryable_objects",
-              "type": "Aida_Queryable_object"
-            },
-            {
-              "name": "verb",
-              "type": "Aida_verbs"
-            },
-            {
-              "name": "prep",
-              "type": "Aida_prepositions"
-            },
-            {
               "name": "item",
               "type": "AMAZON.SearchQuery"
+            },
+            {
+              "name": "yes_or_no",
+              "type": "Aida_yes_or_no"
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object"
             }
           ],
           "samples": [
-            "I want {item}",
+            "count {subject}",
+            "count the {subject} with  {instance_of_querable_object}",
+            "How many {subject} on  {instance_of_querable_object}  ",
+            "how many",
+            "count",
+            "How many {subject}  {instance_of_querable_object}  ",
+            "count the {subject} of {instance_of_querable_object}",
+            "count the {subject} from {instance_of_querable_object}",
+            "Count the {subject} in  {instance_of_querable_object}",
+            "count the {subject} by  {instance_of_querable_object}",
+            "count the {subject} ",
+            "Count the number of {subject}",
+            "Count the number of {subject} in  {instance_of_querable_object}",
+            "Count the number of {subject} by  {instance_of_querable_object}",
+            "Count the number of {subject}  {instance_of_querable_object} in {queryable_objects}",
             "How many {subject} are there in {queryable_objects}",
-            "How many {subject} in {queryable_objects} are {instance_of_querable_object}",
-            "How many {subject}  {prep} {queryable_objects}",
-            "How many {subject}",
-            "How many",
-            "How many {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects} "
+            "How many {subject}  are {instance_of_querable_object} in {queryable_objects}",
+            "How many {subject}"
           ]
         },
         {
@@ -90,10 +87,6 @@
               "type": "AIDA_Query_Subject"
             },
             {
-              "name": "prep",
-              "type": "Aida_prepositions"
-            },
-            {
               "name": "queryable_objects",
               "type": "Aida_Queryable_object"
             },
@@ -109,8 +102,8 @@
           "samples": [
             "{who_which} are the top {number}",
             "{who_which} are the top",
-            "{who_which} are the top {number} {subject} {prep} {queryable_objects} with  {instance} by {order}",
-            "{who_which} are the top {number} {subject} {prep} {queryable_objects} {instance} by {order}"
+            "{who_which} are the top {number} {subject}  {queryable_objects} with  {instance} by {order}",
+            "{who_which} are the top {number} {subject}  {queryable_objects} {instance} by {order}"
           ]
         },
         {
@@ -168,26 +161,13 @@
             {
               "id": "2",
               "name": {
-                "value": "papers",
-                "synonyms": [
-                  "scientific articles",
-                  "research papers",
-                  "conference papers",
-                  "academic papers",
-                  "academic publications",
-                  "texts",
-                  "writings"
-                ]
+                "value": "papers"
               }
             },
             {
               "id": "1",
               "name": {
-                "value": "authors",
-                "synonyms": [
-                  "scholars",
-                  "writers"
-                ]
+                "value": "authors"
               }
             }
           ],
@@ -196,107 +176,37 @@
         {
           "values": [
             {
-              "id": "6",
-              "name": {
-                "value": "industrial sectors",
-                "synonyms": [
-                  "industrial sector"
-                ]
-              }
-            },
-            {
               "id": "5",
               "name": {
-                "value": "papers",
-                "synonyms": [
-                  "paper"
-                ]
+                "value": "papers"
               }
             },
             {
               "id": "4",
               "name": {
-                "value": "authors",
-                "synonyms": [
-                  "author"
-                ]
+                "value": "authors"
               }
             },
             {
               "id": "3",
               "name": {
-                "value": "organizations",
-                "synonyms": [
-                  "organization"
-                ]
+                "value": "organizations"
               }
             },
             {
               "id": "2",
               "name": {
-                "value": "conferences",
-                "synonyms": [
-                  "conference"
-                ]
+                "value": "conferences"
               }
             },
             {
               "id": "1",
               "name": {
-                "value": "topics",
-                "synonyms": [
-                  "a topic",
-                  "topic",
-                  "subject"
-                ]
+                "value": "topics"
               }
             }
           ],
           "name": "Aida_Queryable_object"
-        },
-        {
-          "values": [
-            {
-              "id": "1",
-              "name": {
-                "value": "are",
-                "synonyms": [
-                  "are there",
-                  "is there",
-                  "there is",
-                  "is",
-                  "there are"
-                ]
-              }
-            },
-            {
-              "id": "2",
-              "name": {
-                "value": "have",
-                "synonyms": [
-                  "has"
-                ]
-              }
-            }
-          ],
-          "name": "Aida_verbs"
-        },
-        {
-          "values": [
-            {
-              "id": "2",
-              "name": {
-                "value": "as"
-              }
-            },
-            {
-              "id": "1",
-              "name": {
-                "value": "in"
-              }
-            }
-          ],
-          "name": "Aida_prepositions"
         },
         {
           "values": [
@@ -372,6 +282,29 @@
             }
           ],
           "name": "Aida_who_which"
+        },
+        {
+          "values": [
+            {
+              "id": "2",
+              "name": {
+                "value": "no",
+                "synonyms": [
+                  "nothing"
+                ]
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "yes",
+                "synonyms": [
+                  "yeah"
+                ]
+              }
+            }
+          ],
+          "name": "Aida_yes_or_no"
         }
       ]
     },
@@ -385,56 +318,31 @@
             {
               "name": "subject",
               "type": "AIDA_Query_Subject",
-              "elicitationRequired": true,
+              "elicitationRequired": false,
               "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.873103626831.1555890016131"
-              },
+              "prompts": {},
               "validations": [
                 {
-                  "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.873103626831.1555890016131.1469452802536"
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.434664083757.1508746224850.352378445909",
+                  "values": [
+                    "citations",
+                    "conference",
+                    "paper",
+                    "citation",
+                    "author",
+                    "organization",
+                    "organizations",
+                    "papers",
+                    "conferences",
+                    "authors"
+                  ]
                 }
               ]
             },
             {
               "name": "instance_of_querable_object",
               "type": "Aida_instance",
-              "elicitationRequired": true,
-              "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.431606579565.363230508419"
-              }
-            },
-            {
-              "name": "queryable_objects",
-              "type": "Aida_Queryable_object",
-              "elicitationRequired": false,
-              "confirmationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.361003181124.670097050010.1144934147735"
-                }
-              ]
-            },
-            {
-              "name": "verb",
-              "type": "Aida_verbs",
-              "elicitationRequired": false,
-              "confirmationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.9773793625.726583605904.866137367178"
-                }
-              ]
-            },
-            {
-              "name": "prep",
-              "type": "Aida_prepositions",
               "elicitationRequired": false,
               "confirmationRequired": false,
               "prompts": {}
@@ -445,6 +353,33 @@
               "elicitationRequired": false,
               "confirmationRequired": false,
               "prompts": {}
+            },
+            {
+              "name": "yes_or_no",
+              "type": "Aida_yes_or_no",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {},
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.206325480443.1056240108443.566569956143",
+                  "values": [
+                    "topics",
+                    "organizations",
+                    "papers",
+                    "conferences",
+                    "authors"
+                  ]
+                }
+              ]
             }
           ],
           "delegationStrategy": "SKILL_RESPONSE"
@@ -471,13 +406,6 @@
             {
               "name": "subject",
               "type": "AIDA_Query_Subject",
-              "elicitationRequired": false,
-              "confirmationRequired": false,
-              "prompts": {}
-            },
-            {
-              "name": "prep",
-              "type": "Aida_prepositions",
               "elicitationRequired": false,
               "confirmationRequired": false,
               "prompts": {}
@@ -547,40 +475,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "What do you want to query?"
-          },
-          {
-            "type": "PlainText",
-            "value": "What is the subject of the query?"
-          },
-          {
-            "type": "PlainText",
-            "value": "What do you want to look for?"
-          },
-          {
-            "type": "PlainText",
-            "value": "What are you looking for?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.873103626831.1555890016131.1469452802536",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Sorry, value not allowed... you can choose among authors, papers, conferences, organizations and citations"
-          },
-          {
-            "type": "PlainText",
-            "value": "Sorry, but I can\u0027t search what you asked for ... Please try again"
-          },
-          {
-            "type": "PlainText",
-            "value": "Sorry, value not allowed ... try again"
-          },
-          {
-            "type": "PlainText",
-            "value": "Sorry, but the value entered for the query subject is not allowed ... try again"
+            "value": "What do you want me to count?"
           }
         ]
       },
@@ -602,23 +497,6 @@
           {
             "type": "PlainText",
             "value": "Among what do you want to search?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.361003181124.670097050010.1144934147735",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Input not allowed... you can say  industrial sectors, papers, authors, organizations, conferences, topics"
-          },
-          {
-            "type": "PlainText",
-            "value": "Incorrect object ... try again"
-          },
-          {
-            "type": "PlainText",
-            "value": "Incorrect object ... repeat"
           }
         ]
       },
@@ -692,8 +570,39 @@
             "value": "verb error ... try again"
           }
         ]
+      },
+      {
+        "id": "Slot.Validation.434664083757.1508746224850.352378445909",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Sorry, I can\u0027t count {subject} . You can choose among authors, papers, conferences, organizations and citations. Please try again."
+          },
+          {
+            "type": "PlainText",
+            "value": "Sorry, I can\u0027t count {subject} . I can count authors, papers, conferences, organizations and citations.  What do you prefer?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1101352018046.1141217193864.592688695042",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Sorry, {queryable_objects} is an illegal value. You can choose from topics, conferences, organizations, authors and papers. What do you prefer?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.206325480443.1056240108443.566569956143",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Sorry,  {queryable_objects} is an illegal value. You can choose from topics, conferences, organizations, authors and papers. What do you prefer?"
+          }
+        ]
       }
     ]
   },
-  "version": "56"
+  "version": "79"
 }
