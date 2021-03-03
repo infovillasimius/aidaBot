@@ -4,163 +4,14 @@ const sprintf = require('i18next-sprintf-postprocessor');
 const axios = require('axios');
 const api = require('./api');
 const languageStrings = require('./localisation');
+const logic = require('./logic');
 
 const subject_categories = ['authors', 'papers', 'conferences', 'organizations', 'citations'];
 const object_categories = ['topics','conferences','organizations','authors','papers'];
-const cancel_words = ['cancel','stop', 'enough','no','stop it'];
-
-const legal_queries = {
-    'authors':{
-        'topics': [true, false],
-        'conferences': [true,true],
-        'organizations': [true,false],
-        'authors': [false,false],
-        'papers': [false,true],
-    },
-    'papers':{
-        'topics': [true, false],
-        'conferences': [true,true],
-        'organizations': [true,false],
-        'authors': [true,false],
-        'papers': [false,true],
-    },
-    'conferences':{
-        'topics': [true, false],
-        'conferences': [false,true],
-        'organizations': [true,false],
-        'authors': [true,false],
-        'papers': [false,false],
-    },
-    'organizations':{
-        'topics': [true, false],
-        'conferences': [true,false],
-        'organizations': [false,true],
-        'authors': [true,false],
-        'papers': [false,false],
-    },
-    'citations':{
-        'topics': [true, false],
-        'conferences': [true,false],
-        'organizations': [true,false],
-        'authors': [true,false],
-        'papers': [false,false],
-    }
-}
-
-const dict = {
-    'sub':{
-        'authors':{
-            'topics':'authors',
-            'conferences':'authors',
-            'organizations':'authors',
-            'authors':'authors',
-            'papers':'authors'
-        },
-        'papers':{
-            'topics':'papers',
-            'conferences':'papers',
-            'organizations':'papers',
-            'authors':'papers',
-            'papers':''
-        },
-        'conferences':{
-            'topics':'conferences',
-            'conferences':'conferences',
-            'organizations':'conferences',
-            'authors':'conferences',
-            'papers':''
-        },
-        'organizations':{
-            'topics':'organizations',
-            'conferences':'organizations',
-            'organizations':'organizations',
-            'authors':'organizations',
-            'papers':''
-        },
-        'citations':{
-            'topics':'citations',
-            'conferences':'citations',
-            'organizations':'citations',
-            'authors':'citations',
-            'papers':''
-        }
-    },
-    'prep':{
-        'authors':{
-            'topics':'who have written papers on',
-            'conferences':'who have written papers for',
-            'organizations':'affiliated to the',
-            'authors':'are called',
-            'papers':'of'
-        },
-        'papers':{
-            'topics':'on',
-            'conferences':'from',
-            'organizations':'from authors affiliated to the',
-            'authors':'written by the author',
-            'papers':''
-        },
-        'conferences':{
-            'topics':'with papers on',
-            'conferences':'',
-            'organizations':'with papers by authors affiliated to the',
-            'authors':'with papers written by the author',
-            'papers':''
-        },
-        'organizations':{
-            'topics':'with papers on', //'with affiliated authors who have written papers on'
-            'conferences':'with papers at',
-            'organizations':'',
-            'authors':'with', //'that have the author'
-            'papers':''
-        },
-        'citations':{
-            'topics':'of papers on',
-            'conferences':'of papers from',
-            'organizations':'of papers written by authors affiliated to the',
-            'authors':'of papers written by the author',
-            'papers':''
-        }
-    },
-    'obj':{
-        'authors':{
-            'topics':'topics',
-            'conferences':'conferences',
-            'organizations':'',
-            'authors':'',
-            'papers':'papers'
-        },
-        'papers':{
-            'topics':'topics',
-            'conferences':'conferences',
-            'organizations':'',
-            'authors':'',
-            'papers':'papers'
-        },
-        'conferences':{
-            'topics':'topics',
-            'conferences':'conferences',
-            'organizations':'',
-            'authors':'',
-            'papers':''
-        },
-        'organizations':{
-            'topics':'',
-            'conferences':'conferences',
-            'organizations':'',
-            'authors':'among their affiliated authors',
-            'papers':''
-        },
-        'citations':{
-            'topics':'topics',
-            'conferences':'conferences',
-            'organizations':'',
-            'authors':'',
-            'papers':''
-       }
-    }
-};
-
+const cancel_words = ['cancel','stop', 'enough','stop it'];
+const legal_queries = logic.legal_queries;
+const dict = logic.dict;
+const combinations=logic.combinations;
 
 const StartHowManyIntentHandler = {
   canHandle(handlerInput) {
@@ -194,62 +45,12 @@ const StartHowManyIntentHandler = {
             .getResponse();
     } 
     
-    if(!handlerInput.requestEnvelope.request.intent.slots.yes_or_no.value) {
-        
-        updatedIntent.slots.yes_or_no.value = 'yes';
-        return handlerInput.responseBuilder
-            .speak(handlerInput.t('ASK_FOR_INSTANCE_MSG', {sub:subject}))
-            .addConfirmSlotDirective('yes_or_no',updatedIntent)
-            .getResponse();
-    } 
-    
-    if(handlerInput.requestEnvelope.request.intent.slots.yes_or_no.value && handlerInput.requestEnvelope.request.intent.slots.yes_or_no.confirmationStatus==="DENIED") {
-        
-        const subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject')
-        const object = Alexa.getSlotValue(handlerInput.requestEnvelope, 'queryable_objects');
-        let updatedIntent = handlerInput.requestEnvelope.request.intent;
-        updatedIntent.slots.yes_or_no.value = 'no';
-        updatedIntent.slots.instance_of_querable_object.value='no'
-        
-        if (!handlerInput.requestEnvelope.request.intent.slots.queryable_objects.value){
-            
-            return handlerInput.responseBuilder
-            .speak(handlerInput.t('OBJ_MSG'))
-            .reprompt(handlerInput.t('OBJ_REPROMPT_MSG'))
-            .addElicitSlotDirective('queryable_objects')
-            .getResponse();
-            
-        } else if(handlerInput.requestEnvelope.request.intent.slots.queryable_objects.value && handlerInput.requestEnvelope.request.intent.slots.queryable_objects.resolutions.resolutionsPerAuthority[0].status.code==='ER_SUCCESS_NO_MATCH'){
-            
-            return handlerInput.responseBuilder
-            .speak(handlerInput.t('OBJECT_WRONG_MSG', {obj: handlerInput.t(object)}))
-            .addElicitSlotDirective('queryable_objects')
-            .getResponse();
-        }
-        
-         if(!legal_queries[subject][object][1]){
-            let updatedIntent = handlerInput.requestEnvelope.request.intent;
-            updatedIntent.slots.instance_of_querable_object.value='';
-            updatedIntent.slots.queryable_objects.value=''
-            updatedIntent.slots.subject.value=''
-            return handlerInput.responseBuilder
-                .speak(handlerInput.t('NO_SENSE_MSG'))
-                .reprompt()
-                .getResponse();
-        }
-        
-        return handlerInput.responseBuilder
-            .speak(handlerInput.t('INTENT_CONFIRMATION_1_MSG', {sub: handlerInput.t(dict['sub'][subject][object]), prep: dict['prep'][subject][object], obj:dict['obj'][subject][object]}))
-            .addConfirmIntentDirective(updatedIntent)
-            .getResponse();
-    } 
-    
-    if(handlerInput.requestEnvelope.request.intent.slots.yes_or_no.confirmationStatus==="CONFIRMED" && !handlerInput.requestEnvelope.request.intent.slots.item.value) {
+    if(!handlerInput.requestEnvelope.request.intent.slots.item.value) {
         
         delete updatedIntent.slots.queryable_objects.value;
         
         return handlerInput.responseBuilder
-            .speak(handlerInput.t('INSTANCE_MSG'))
+            .speak(handlerInput.t('INSTANCE_MSG', {list:logic.item_question(subject), sub:subject}))
             .addElicitSlotDirective('item',updatedIntent)
             .getResponse();
     } 
@@ -257,12 +58,39 @@ const StartHowManyIntentHandler = {
     handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
    
    
-    if(handlerInput.requestEnvelope.request.intent.slots.item.value && handlerInput.requestEnvelope.request.intent.slots.yes_or_no.confirmationStatus==="CONFIRMED") {
+    if(handlerInput.requestEnvelope.request.intent.slots.item.value) {
+        let instance=Alexa.getSlotValue(handlerInput.requestEnvelope, 'item');
+        
+        if (instance==='all' || instance==='no name' || instance==='no'){
+            
+           if(!legal_queries[subject][combinations[subject]][1]){
+                let updatedIntent = handlerInput.requestEnvelope.request.intent;
+                updatedIntent.slots.instance_of_querable_object.value='';
+                updatedIntent.slots.queryable_objects.value=''
+                updatedIntent.slots.subject.value=''
+                return handlerInput.responseBuilder
+                    .speak(handlerInput.t('NO_SENSE_MSG'))
+                    .reprompt(handlerInput.t('REPROMPT_END_MSG'))
+                    .getResponse();
+            }
+            
+            let updatedIntent = handlerInput.requestEnvelope.request.intent;
+            updatedIntent.slots.instance_of_querable_object.value='no';
+            updatedIntent.slots.queryable_objects.value=combinations[subject]
+            let object=combinations[subject]
+            return handlerInput.responseBuilder
+                .speak(handlerInput.t('INTENT_CONFIRMATION_1_MSG', {sub: handlerInput.t(dict['sub'][subject][object]), prep: dict['prep'][subject][object], obj:dict['obj'][subject][object]}))
+                .addConfirmIntentDirective(updatedIntent)
+                .getResponse();
+        } else {
+        
          let updatedIntent = handlerInput.requestEnvelope.request.intent;
-         updatedIntent.slots.instance_of_querable_object.value=handlerInput.requestEnvelope.request.intent.slots.item.value;
+         
+         updatedIntent.slots.instance_of_querable_object.value=instance;
          return handlerInput.responseBuilder
             .addDelegateDirective(updatedIntent)
             .getResponse();
+        }
     }
   }
 };
@@ -283,8 +111,10 @@ const CompletedHowManyIntentHandler = {
     const instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance_of_querable_object');
     
     var n=0;
+    var msg='INTENT_CONFIRMATION_2_MSG'
     if (instance==='no'){
-        n=1    
+        n=1
+        msg='INTENT_CONFIRMATION_1_MSG'
     }
 
     if(!legal_queries[subject][object][n]){
@@ -294,11 +124,11 @@ const CompletedHowManyIntentHandler = {
         updatedIntent.slots.subject.value=''
         return handlerInput.responseBuilder
             .speak(handlerInput.t('NO_SENSE_MSG'))
-            .reprompt()
+            .reprompt(handlerInput.t('REPROMPT_END_MSG'))
             .getResponse();
     }
     return handlerInput.responseBuilder
-        .speak(handlerInput.t('INTENT_CONFIRMATION_2_MSG', {sub: handlerInput.t(dict['sub'][subject][object]), inst: instance, prep: dict['prep'][subject][object], obj:dict['obj'][subject][object]}))
+        .speak(handlerInput.t(msg, {sub: handlerInput.t(dict['sub'][subject][object]), inst: instance, prep: dict['prep'][subject][object], obj:dict['obj'][subject][object]}))
         .addConfirmIntentDirective()
         .getResponse();
   }
@@ -341,7 +171,7 @@ const ItemHowManyIntentHandler = {
         }
         
         var message='';
-
+        
         if (speak.result==='ok'){
             updatedIntent.slots.instance_of_querable_object.value = speak.item 
             updatedIntent.slots.queryable_objects.value=speak.object;
@@ -353,7 +183,7 @@ const ItemHowManyIntentHandler = {
                 updatedIntent.slots.subject.value=''
                 return handlerInput.responseBuilder
                     .speak(handlerInput.t('NO_SENSE_MSG'))
-                    .reprompt()
+                    .reprompt(handlerInput.t('REPROMPT_END_MSG'))
                     .getResponse();
             }
             
@@ -384,6 +214,7 @@ const ItemHowManyIntentHandler = {
             
         } else if (speak.result==='ko' && parseInt(speak.num)===0){
             message=(handlerInput.t('NO_RESULT_MSG', {item: instance}))
+            
         } else if (speak.result==='kk'){
             message='';
             for (let j in speak.num){
@@ -416,18 +247,17 @@ const ItemHowManyIntentHandler = {
             updatedIntent.slots.instance_of_querable_object.value='';
             updatedIntent.slots.queryable_objects.value=''
             updatedIntent.slots.subject.value=''
+            updatedIntent.slots.item=''
             return handlerInput.responseBuilder
                 .speak(handlerInput.t('REPROMPT_MSG'))
                 .reprompt()
                 .getResponse();
         }
         
-        
-        
         return handlerInput.responseBuilder
-        .speak(message)
-        .addElicitSlotDirective('item')
-        .getResponse();
+                .speak(message)
+                .addElicitSlotDirective('item')
+                .getResponse();
         
     }
 };
@@ -501,7 +331,7 @@ const DeniedHowManyIntentHandler = {
         
         return handlerInput.responseBuilder
             .speak(handlerInput.t('REPROMPT_MSG'))
-            .reprompt()
+            .reprompt(handlerInput.t('REPROMPT_END_MSG'))
             .getResponse();
     }
 };
