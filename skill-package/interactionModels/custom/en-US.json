@@ -42,15 +42,12 @@
               "type": "AMAZON.SearchQuery"
             },
             {
-              "name": "yes_or_no",
-              "type": "Aida_yes_or_no"
-            },
-            {
               "name": "queryable_objects",
               "type": "Aida_Queryable_object"
             }
           ],
           "samples": [
+            "give me {item}",
             "count {subject}",
             "count the {subject} with  {instance_of_querable_object}",
             "How many {subject} on  {instance_of_querable_object}  ",
@@ -72,22 +69,18 @@
           ]
         },
         {
-          "name": "WhoAreTheTopIntent",
+          "name": "ListTheTopIntent",
           "slots": [
-            {
-              "name": "who_which",
-              "type": "Aida_who_which"
-            },
             {
               "name": "number",
               "type": "AMAZON.NUMBER"
             },
             {
-              "name": "subject",
-              "type": "AIDA_Query_Subject"
+              "name": "list_subject",
+              "type": "Aida_List_subject"
             },
             {
-              "name": "queryable_objects",
+              "name": "object",
               "type": "Aida_Queryable_object"
             },
             {
@@ -97,13 +90,19 @@
             {
               "name": "order",
               "type": "Aida_order"
+            },
+            {
+              "name": "item",
+              "type": "AMAZON.SearchQuery"
             }
           ],
           "samples": [
-            "{who_which} are the top {number}",
-            "{who_which} are the top",
-            "{who_which} are the top {number} {subject}  {queryable_objects} with  {instance} by {order}",
-            "{who_which} are the top {number} {subject}  {queryable_objects} {instance} by {order}"
+            "find {item}",
+            "List the top",
+            "List the top {number} {list_subject}",
+            "List the top {number}",
+            "List the top {number} {list_subject} from {instance} order by {order}",
+            "List the top {number} {list_subject} from {instance} in {object} order by {order}"
           ]
         },
         {
@@ -305,6 +304,36 @@
             }
           ],
           "name": "Aida_yes_or_no"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "topics"
+              }
+            },
+            {
+              "name": {
+                "value": "organizations"
+              }
+            },
+            {
+              "name": {
+                "value": "conferences"
+              }
+            },
+            {
+              "name": {
+                "value": "papers"
+              }
+            },
+            {
+              "name": {
+                "value": "authors"
+              }
+            }
+          ],
+          "name": "Aida_List_subject"
         }
       ]
     },
@@ -327,11 +356,6 @@
                   "prompt": "Slot.Validation.434664083757.1508746224850.352378445909",
                   "values": [
                     "citations",
-                    "conference",
-                    "paper",
-                    "citation",
-                    "author",
-                    "organization",
                     "organizations",
                     "papers",
                     "conferences",
@@ -350,13 +374,6 @@
             {
               "name": "item",
               "type": "AMAZON.SearchQuery",
-              "elicitationRequired": false,
-              "confirmationRequired": false,
-              "prompts": {}
-            },
-            {
-              "name": "yes_or_no",
-              "type": "Aida_yes_or_no",
               "elicitationRequired": false,
               "confirmationRequired": false,
               "prompts": {}
@@ -385,37 +402,63 @@
           "delegationStrategy": "SKILL_RESPONSE"
         },
         {
-          "name": "WhoAreTheTopIntent",
+          "name": "ListTheTopIntent",
           "confirmationRequired": false,
           "prompts": {},
           "slots": [
-            {
-              "name": "who_which",
-              "type": "Aida_who_which",
-              "elicitationRequired": false,
-              "confirmationRequired": false,
-              "prompts": {}
-            },
             {
               "name": "number",
               "type": "AMAZON.NUMBER",
               "elicitationRequired": false,
               "confirmationRequired": false,
-              "prompts": {}
+              "prompts": {},
+              "validations": [
+                {
+                  "type": "isLessThan",
+                  "prompt": "Slot.Validation.1212014390642.311783795553.767440157160",
+                  "value": "6"
+                }
+              ]
             },
             {
-              "name": "subject",
-              "type": "AIDA_Query_Subject",
+              "name": "list_subject",
+              "type": "Aida_List_subject",
               "elicitationRequired": false,
               "confirmationRequired": false,
-              "prompts": {}
+              "prompts": {},
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.1212014390642.799195097394.1200362804468",
+                  "values": [
+                    "topics",
+                    "organizations",
+                    "papers",
+                    "conferences",
+                    "authors"
+                  ]
+                }
+              ]
             },
             {
-              "name": "queryable_objects",
+              "name": "object",
               "type": "Aida_Queryable_object",
               "elicitationRequired": false,
               "confirmationRequired": false,
-              "prompts": {}
+              "prompts": {},
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.1212014390642.186403322558.142721811587",
+                  "values": [
+                    "all",
+                    "topics",
+                    "organizations",
+                    "conferences",
+                    "authors"
+                  ]
+                }
+              ]
             },
             {
               "name": "instance",
@@ -429,9 +472,27 @@
               "type": "Aida_order",
               "elicitationRequired": false,
               "confirmationRequired": false,
+              "prompts": {},
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.1212014390642.1334304955133.970221323524",
+                  "values": [
+                    "citations",
+                    "publications"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "item",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
               "prompts": {}
             }
-          ]
+          ],
+          "delegationStrategy": "SKILL_RESPONSE"
         },
         {
           "name": "FreeQueryIntent",
@@ -601,8 +662,61 @@
             "value": "Sorry,  {queryable_objects} is an illegal value. You can choose from topics, conferences, organizations, authors and papers. What do you prefer?"
           }
         ]
+      },
+      {
+        "id": "Slot.Validation.1212014390642.311783795553.767440157160",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "The number {number} is too big, you should tell me a number smaller than six"
+          },
+          {
+            "type": "PlainText",
+            "value": "Sorry, I can\u0027t list more the five objects. "
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1212014390642.799195097394.747435561818",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Sorry, I can\u0027t list {subject} . I can list authors, papers, conferences, organizations and topics  What do you prefer?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Sorry, I can\u0027t list {subject} . You can choose among authors, papers, conferences, organizations and topics Please try again."
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1212014390642.186403322558.142721811587",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Sorry,  {object} is an illegal value. You can choose from topics, conferences, organizations and authors. What do you prefer?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1212014390642.1334304955133.970221323524",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "{order} is an illegal value for sorting. I can only order items by publications and by citations. What would you prefer?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1212014390642.799195097394.1200362804468",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Sorry, I can\u0027t list {list_subject} . I can list papers, authors, conferences, organizations, and topics. What do you prefer?"
+          }
+        ]
       }
     ]
   },
-  "version": "79"
+  "version": "96"
 }

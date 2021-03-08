@@ -8,6 +8,7 @@ const axios = require('axios');
 const api = require('./api');
 const languageStrings = require('./localisation');
 const howMany = require('./howMany');
+const listTheTop = require('./listTheTop');
 const subject_categories = ['authors', 'papers', 'conferences', 'organizations', 'citations'];
 
 const LaunchRequestHandler = {
@@ -16,33 +17,9 @@ const LaunchRequestHandler = {
     },
     handle(handlerInput) {
         const speakOutput = handlerInput.t('WELCOME_MSG');
-
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
-            .getResponse();
-    }
-};
-
-
-const WhoAreIntentHandler = {
-    canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'WhoAreTheTopIntent';
-    },
-    handle(handlerInput) {
-        /*
-        const subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
-        const verb = Alexa.getSlotValue(handlerInput.requestEnvelope, 'verb');
-        const verb_slot = Alexa.getSlot(handlerInput.requestEnvelope, 'verb');
-        const id=verb_slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
-        
-        const nome = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance_of_querable_object');
-        const speakOutput = "you said: how many "+subject+" " + verb+ id;
-        */
-        return handlerInput.responseBuilder
-            .speak('if you say so!')
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
             .getResponse();
     }
 };
@@ -200,7 +177,10 @@ exports.handler = Alexa.SkillBuilders.custom()
         howMany.HowManyIntentHandler,
         howMany.ItemHowManyIntentHandler,
         howMany.StartHowManyIntentHandler,
-        WhoAreIntentHandler,
+        listTheTop.DeniedListTheTopIntentHandler,
+        listTheTop.ListTheTopIntentHandler,
+        listTheTop.ItemListTheTopIntentHandler,
+        listTheTop.ConfirmedListTheTopIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,

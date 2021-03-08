@@ -23,29 +23,25 @@
               "type": "AIDA_Query_Subject"
             },
             {
-              "name": "queryable_objects",
-              "type": "Aida_Queryable_object"
-            },
-            {
-              "name": "verb",
-              "type": "Aida_verbs"
-            },
-            {
               "name": "instance_of_querable_object",
               "type": "Aida_instance"
             },
             {
-              "name": "prep",
-              "type": "Aida_prepositions"
+              "name": "item",
+              "type": "AMAZON.SearchQuery"
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object"
             }
           ],
           "samples": [
-            "Quanti {subject} {prep} {queryable_objects} {verb} {instance_of_querable_object}",
-            "Quanti {subject} {verb} {instance_of_querable_object} {prep} {queryable_objects}",
-            "Quanti {subject} {instance_of_querable_object} {queryable_objects}",
-            "Quanti {subject} {queryable_objects} {instance_of_querable_object}",
-            "Quanti {subject} {queryable_objects}",
-            "Quanti {subject}",
+            "Quante",
+            "conta",
+            "vorrei {item}",
+            "conta {subject} di {instance_of_querable_object} in {queryable_objects}",
+            "conta {subject} di {instance_of_querable_object}",
+            "conta {subject}",
             "Quanti"
           ]
         },
@@ -58,50 +54,28 @@
           "samples": []
         },
         {
-          "name": "WhoAreIntent",
+          "name": "ListTheTopIntent",
           "slots": [
             {
-              "name": "who_which",
-              "type": "Aida_who_which"
-            },
-            {
-              "name": "number",
-              "type": "AMAZON.NUMBER"
-            },
-            {
-              "name": "subject",
-              "type": "AIDA_Query_Subject"
-            },
-            {
-              "name": "prep",
-              "type": "Aida_prepositions"
-            },
-            {
-              "name": "queryable_objects",
-              "type": "Aida_Queryable_object"
-            },
-            {
-              "name": "instance",
-              "type": "Aida_instance"
-            },
-            {
-              "name": "order",
-              "type": "Aida_order"
-            },
-            {
-              "name": "verb",
-              "type": "Aida_verbs"
+              "name": "query",
+              "type": "AMAZON.SearchQuery"
             }
           ],
           "samples": [
-            "{who_which} {verb} i primi {number} {subject} {prep} {queryable_objects} {instance} per {order}",
-            "{who_which} {verb} i primi {number} {subject} {prep} {queryable_objects} con {queryable_objects} {instance} per {order}"
+            "elenca {query}",
+            "elenca"
           ]
         }
       ],
       "types": [
         {
           "values": [
+            {
+              "id": "3",
+              "name": {
+                "value": "xxx xxx xxx"
+              }
+            },
             {
               "id": "2",
               "name": {
@@ -152,89 +126,31 @@
             {
               "id": "1",
               "name": {
-                "value": "in",
-                "synonyms": [
-                  "frai",
-                  "trai",
-                  "tra le",
-                  "tra",
-                  "tra i",
-                  "fra i",
-                  "fra",
-                  "nelle",
-                  "nel",
-                  "negli",
-                  "nei"
-                ]
+                "value": "autori"
               }
             },
             {
               "id": "2",
               "name": {
-                "value": "come",
-                "synonyms": [
-                  "per"
-                ]
-              }
-            }
-          ],
-          "name": "Aida_prepositions"
-        },
-        {
-          "values": [
-            {
-              "id": "1",
-              "name": {
-                "value": "autori",
-                "synonyms": [
-                  "docente",
-                  "professore",
-                  "accademico",
-                  "ricercatore",
-                  "ricercatori",
-                  "autore"
-                ]
-              }
-            },
-            {
-              "id": "2",
-              "name": {
-                "value": "articoli",
-                "synonyms": [
-                  "lavoro",
-                  "scritto",
-                  "scritti",
-                  "paper",
-                  "articolo",
-                  "papers"
-                ]
+                "value": "articoli"
               }
             },
             {
               "id": "3",
               "name": {
-                "value": "conferenze",
-                "synonyms": [
-                  "conferenza"
-                ]
+                "value": "conferenze"
               }
             },
             {
               "id": "4",
               "name": {
-                "value": "organizzazioni",
-                "synonyms": [
-                  "organizzazione"
-                ]
+                "value": "organizzazioni"
               }
             },
             {
               "id": "5",
               "name": {
-                "value": "citazioni",
-                "synonyms": [
-                  "citazione"
-                ]
+                "value": "citazioni"
               }
             }
           ],
@@ -245,103 +161,35 @@
             {
               "id": "1",
               "name": {
-                "value": "titoli",
-                "synonyms": [
-                  "argomenti",
-                  "topics",
-                  "topic",
-                  "titolo",
-                  "argomento"
-                ]
+                "value": "argomenti"
               }
             },
             {
               "id": "2",
               "name": {
-                "value": "conferenze",
-                "synonyms": [
-                  "conferenza"
-                ]
+                "value": "conferenze"
               }
             },
             {
               "id": "3",
               "name": {
-                "value": "organizzazioni",
-                "synonyms": [
-                  "organizzazione"
-                ]
+                "value": "organizzazioni"
               }
             },
             {
               "id": "4",
               "name": {
-                "value": "autori",
-                "synonyms": [
-                  "ricercatore",
-                  "ricercatori",
-                  "autore"
-                ]
+                "value": "autori"
               }
             },
             {
               "id": "5",
               "name": {
-                "value": "articoli",
-                "synonyms": [
-                  "papers",
-                  "paper",
-                  "lavoro",
-                  "lavori",
-                  "articolo"
-                ]
-              }
-            },
-            {
-              "id": "6",
-              "name": {
-                "value": "settori industriali",
-                "synonyms": [
-                  "settore industriale"
-                ]
+                "value": "articoli"
               }
             }
           ],
           "name": "Aida_Queryable_object"
-        },
-        {
-          "values": [
-            {
-              "id": "3",
-              "name": {
-                "value": "ha scritto",
-                "synonyms": [
-                  "hanno scritto"
-                ]
-              }
-            },
-            {
-              "id": "2",
-              "name": {
-                "value": "ha",
-                "synonyms": [
-                  "hanno"
-                ]
-              }
-            },
-            {
-              "id": "1",
-              "name": {
-                "value": "sono",
-                "synonyms": [
-                  "c\u0027è",
-                  "è",
-                  "ci sono"
-                ]
-              }
-            }
-          ],
-          "name": "Aida_verbs"
         },
         {
           "values": [
@@ -362,9 +210,122 @@
             }
           ],
           "name": "Aida_who_which"
+        },
+        {
+          "values": [
+            {
+              "id": "2",
+              "name": {
+                "value": "no"
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "si"
+              }
+            }
+          ],
+          "name": "Aida_yes_or_no"
         }
       ]
-    }
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "HowManyIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "subject",
+              "type": "AIDA_Query_Subject",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {},
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.566074200398.760013997484.1516865119460",
+                  "values": [
+                    "organizzazioni",
+                    "conferenze",
+                    "autori",
+                    "citazioni",
+                    "articoli"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "instance_of_querable_object",
+              "type": "Aida_instance",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "item",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "queryable_objects",
+              "type": "Aida_Queryable_object",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {},
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.566074200398.1562245618717.1583380884828",
+                  "values": [
+                    "Argomenti",
+                    "organizzazioni",
+                    "conferenze",
+                    "autori",
+                    "articoli"
+                  ]
+                }
+              ]
+            }
+          ],
+          "delegationStrategy": "SKILL_RESPONSE"
+        }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Slot.Validation.566074200398.760013997484.1516865119460",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Mi dispiace, non posso contare {subject} . Puoi scegliere tra autori, articoli, conferenze, organizzazioni, e citazioni. Quale preferisci?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.566074200398.1562245618717.1583380884828",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Mi dispiace, {queryable_objects} è un valore non permesso. Puoi scegliere tra argomenti, conferenze, organizzazioni, autori e articoli. Cosa preferisci?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.1081461793019",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "a"
+          }
+        ]
+      }
+    ]
   },
-  "version": "34"
+  "version": "43"
 }
