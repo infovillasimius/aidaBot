@@ -23,7 +23,6 @@ const in_prep = logic.in_prep;
 
 /**
  * Handler executed when there are empty required slots
- * 
  */
 const StartHowManyIntentHandler = {
   canHandle(handlerInput) {
@@ -253,7 +252,7 @@ const ItemHowManyIntentHandler = {
                     for(let j in speak.keys[i]){
                         message = message + speak.keys[i][j] + ', ';
                     }
-                    message = message+in_prep[lng]+ article(lng,object_categories[i]) + ', '
+                    message = message+in_prep[lng]+ article(lng,object_categories[lng][i]) + ', '
                 }
             }
             return handlerInput.responseBuilder

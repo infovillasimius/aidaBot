@@ -11,12 +11,12 @@ module.exports = {
             ERROR_MSG: 'Sorry, there was an error. Please try again.',
             
             SUBJECT_REQUEST_MSG:'I can count papers, authors, conferences, organizations and citations. What do you want me to count?',
-            SUBJECT_WRONG_MSG:'Sorry, I can\'t count {{sub}}. I can count papers, authors, conferences, organizations, and citations. What do you prefer?',
+            SUBJECT_WRONG_MSG:'Sorry, I can\'t count {{sub}}. I can count papers, authors, conferences, organizations and citations. What do you prefer?',
             SUBJECT_REQUEST_REPROMPT_MSG:'I can count papers, authors, conferences, organizations and citations. What do you prefer?',
             INSTANCE_MSG:'what is the name of the {{list}} whose {{sub}} I should count? You can say all for the full list', 
             ITEM_MSG:'Searching for {{inst}}, I got {{msg}} Which one is correct?',
-            INTENT_CONFIRMATION_1_MSG: 'Do you want to know how many {{sub}} {{prep}} {{obj}} are in the Aida database?',
-            INTENT_CONFIRMATION_2_MSG: 'Do you want to know how many {{sub}} {{prep}} {{inst}} {{obj}} are in the Aida database?',
+            INTENT_CONFIRMATION_1_MSG: 'Do you want to know how many {{sub}} {{prep}} {{obj}} are in the AIDA database?',
+            INTENT_CONFIRMATION_2_MSG: 'Do you want to know how many {{sub}} {{prep}} {{inst}} {{obj}} are in the AIDA database?',
             TOO_GENERIC_MSG:'Your search for {{item}} got {{results}} you need to try again and to be more specific. What are you looking for?',
             NO_RESULT_MSG:'Your search for {{item}} got no result. You need to try again. what could I search for you?',
             QUERY_1_MSG: ['I found {{num}} {{sub}} {{prep}} {{inst}} {{obj}}', 'I counted {{num}} {{sub}} {{prep}} {{inst}} {{obj}}'],
@@ -26,15 +26,18 @@ module.exports = {
             REPROMPT_END_MSG: ['You could ask me for another query or tell me stop to quit', "You can ask me to run another query or say stop to quit", "Ask me for another query or tell me stop to quit"],
             NO_SENSE_MSG:'I\'m sorry but the query resulting from the chosen options doesn\'t make sense. Try again',
             
-            LIST_WRONG_NUMBER_MSG:'The number {{number}} is too big, you should tell me a number smaller than six',
+            LIST_WRONG_NUMBER_MSG:'The number {{number}} is too big or too small, you should tell me a number bigger than one and smaller than six',
             LIST_SUBJECT_REQUEST_MSG:'I can list papers, authors, conferences, organizations and topics. What do you want me to list?',
-            LIST_SUBJECT_WRONG_MSG:'Sorry, I can\'t list {{sub}}. I can list papers, authors, conferences, organizations, and topics. What do you prefer?',
+            LIST_SUBJECT_WRONG_MSG:'Sorry, I can\'t list {{sub}}. I can list papers, authors, conferences, organizations and topics. What do you prefer?',
             LIST_SUBJECT_REQUEST_REPROMPT_MSG:'I can list papers, authors, conferences, organizations and topics. What do you prefer?',
-            LIST_ORDER_MSG:'Do you want your list of the top {{number}} {{subject}} to be sorted by publications or by citations?',
-            LIST_ORDER_WRONG_MSG:'Sorry, I can\'t order by {{order}}. I can order by publications or citations. What do you prefer?',
+            LIST_ORDER_MSG:'Do you want your list of the top {{number}} {{subject}} to be sorted by publications, by publications in the last 5 years, by citations or by citations in the last 5 years?',
+            LIST_PAPERS_ORDER_MSG:'Do you want your list of the top {{number}} {{subject}} to be sorted by citations or by citations in the last 5 years?',
+            LIST_PAPERS_ORDER_WRONG_MSG:'Sorry, I can\'t order by {{order}}. I can order by citations and by citations in the last 5 years. What do you prefer?',
+            LIST_ORDER_WRONG_MSG:'Sorry, I can\'t order by {{order}}. I can order by publications, by publications in the last 5 years, by citations and by citations in the last 5 years. What do you prefer?',
             LIST_INSTANCE_MSG:'what is the name of the {{list}} for which {{sub}} should be the top {{number}}? You can say all for the full list',
-            LIST_INTENT_CONFIRMATION_1_MSG: 'Do you want to know which are the top {{number}} {{sub}} {{prep}} {{obj}}, by number of {{order}}, in the Aida database?',
-            LIST_INTENT_CONFIRMATION_2_MSG: 'Do you want to know which are the top {{number}} {{sub}}, by number of {{order}}, {{prep}} {{inst}} {{obj}} in the Aida database?'
+            LIST_INTENT_CONFIRMATION_1_MSG: 'Do you want to know which are the top {{number}} {{sub}} {{prep}} {{obj}}, by number of {{order}}, in the AIDA database?',
+            LIST_INTENT_CONFIRMATION_2_MSG: 'Do you want to know which are the top {{number}} {{sub}}, by number of {{order}}, {{prep}} {{inst}} {{obj}} in the Aida database?',
+            LIST_QUERY_MSG:'In the AIDA database, the top {{num}} {{sub}} {{prep}} {{inst}} {{obj}}, by number of {{order}},  {{verb}}: {{lst}}'
         }
     }, 
     'it' : {

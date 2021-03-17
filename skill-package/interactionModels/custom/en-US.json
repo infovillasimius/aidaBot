@@ -127,12 +127,14 @@
           "name": "FindItemIntent",
           "slots": [
             {
-              "name": "author",
+              "name": "item",
               "type": "AMAZON.SearchQuery"
             }
           ],
           "samples": [
-            "What about {author}"
+            "I want {item}",
+            "I want to {item}",
+            "What about {item}"
           ]
         }
       ],
@@ -247,8 +249,7 @@
               "name": {
                 "value": "publications",
                 "synonyms": [
-                  "number of publications",
-                  "publication"
+                  "publications in the last 5 years"
                 ]
               }
             },
@@ -257,8 +258,7 @@
               "name": {
                 "value": "citations",
                 "synonyms": [
-                  "number of citations",
-                  "citation"
+                  "citations in the last 5 years"
                 ]
               }
             }
@@ -479,6 +479,8 @@
                   "prompt": "Slot.Validation.1212014390642.1334304955133.970221323524",
                   "values": [
                     "citations",
+                    "publications in the last 5 years",
+                    "citations in the last 5 years",
                     "publications"
                   ]
                 }
@@ -517,7 +519,7 @@
           "prompts": {},
           "slots": [
             {
-              "name": "author",
+              "name": "item",
               "type": "AMAZON.SearchQuery",
               "elicitationRequired": true,
               "confirmationRequired": false,
@@ -525,7 +527,8 @@
                 "elicitation": "Elicit.Slot.992205532477.1452459867108"
               }
             }
-          ]
+          ],
+          "delegationStrategy": "SKILL_RESPONSE"
         }
       ],
       "delegationStrategy": "ALWAYS"
@@ -703,7 +706,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "{order} is an illegal value for sorting. I can only order items by publications and by citations. What would you prefer?"
+            "value": "{order} is an illegal value for sorting. I can only order items by publications, publications in the last five years, by citations and by citations in the last five years. What would you prefer?"
           }
         ]
       },
@@ -715,8 +718,17 @@
             "value": "Sorry, I can\u0027t list {list_subject} . I can list papers, authors, conferences, organizations, and topics. What do you prefer?"
           }
         ]
+      },
+      {
+        "id": "Elicit.Slot.1351806028155.214065527802",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "I can list papers, authors, conferences, organizations and topics. What do you want me to list?"
+          }
+        ]
       }
     ]
   },
-  "version": "96"
+  "version": "103"
 }

@@ -1,6 +1,28 @@
+const list_verbs = {
+    "en-US" : ['is','are'],
+    "it-IT" : ['è','sono']
+}
+
+const prepositions = {
+    "en-US" : ['on','in','among','between','by','from','order','about','with','of'],
+    "it-IT" : ['di','a','da','in','con','su','per','tra','fra']
+};
+
+const cmds = {
+    'list':{
+        "en-US" : ['list'],
+        "it-IT" : ['lista']
+    },
+    'count':{
+        "en-US" : ['count'],
+        "it-IT" : ['quanti', 'conta']
+    }
+    
+}
+
 const orders = {
-    "en-US" : ['publications','citations'],
-    "it-IT" : ['pubblicazioni','citazioni']
+    "en-US" : ['publications','citations','publications in the last 5 years', 'citations in the last 5 years'],
+    "it-IT" : ['pubblicazioni','citazioni','pubblicazioni negli ultimi 5 anni','citazioni negli ultimi 5 anni']
 }
 
 const conjunction = {
@@ -21,6 +43,16 @@ const hit = {
 const in_prep = {
     "en-US" : ' among the ',
     "it-IT" : ' tra '
+}
+
+const list_prep = {
+    "en-US" : ' with ',
+    "it-IT" : ' con '
+}
+
+const list_author_prep = {
+    "en-US" : ' by ',
+    "it-IT" : ' di '
 }
 
 const item_question_object = {
@@ -190,6 +222,13 @@ const dict = {
                 'organizations':'citazioni',
                 'authors':'citazioni',
                 'papers':''
+            },
+            'topics':{
+                'topics':'argomenti',
+                'conferences':'argomenti',
+                'organizations':'argomenti',
+                'authors':'argomanti',
+                'papers':''
             }
         },
         'prep':{
@@ -227,6 +266,13 @@ const dict = {
                 'organizations':'di articoli scritti da autori affiliati a',
                 'authors':'di articoli scritti dall\'autore',
                 'papers':''
+            },
+            'topics':{
+                'topics':'di articoli su',
+                'conferences':'di articoli da',
+                'organizations':'di articoli scritti da autori affiliati a',
+                'authors':'di articoli scritti dall\'autore',
+                'papers':''
             }
         },
         'obj':{
@@ -259,6 +305,13 @@ const dict = {
                 'papers':''
             },
             'citations':{
+                'topics':'',
+                'conferences':'conferenze',
+                'organizations':'',
+                'authors':'',
+                'papers':''
+           },
+            'topics':{
                 'topics':'',
                 'conferences':'conferenze',
                 'organizations':'',
@@ -303,6 +356,13 @@ const dict = {
                 'organizations':'citations',
                 'authors':'citations',
                 'papers':''
+            },
+            'topics':{
+                'topics':'topics',
+                'conferences':'topics',
+                'organizations':'topics',
+                'authors':'topics',
+                'papers':''
             }
         },
         'prep':{
@@ -310,7 +370,7 @@ const dict = {
                 'topics':'who have written papers on',
                 'conferences':'who have written papers for',
                 'organizations':'affiliated to the',
-                'authors':'are called',
+                'authors':'', //'are called',
                 'papers':''
             },
             'papers':{
@@ -336,6 +396,13 @@ const dict = {
             },
             'citations':{
                 'topics':'of papers on',
+                'conferences':'of papers from',
+                'organizations':'of papers written by authors affiliated to the',
+                'authors':'of papers written by the author',
+                'papers':''
+            },
+            'topics':{
+                'topics':'',
                 'conferences':'of papers from',
                 'organizations':'of papers written by authors affiliated to the',
                 'authors':'of papers written by the author',
@@ -377,7 +444,14 @@ const dict = {
                 'organizations':'',
                 'authors':'',
                 'papers':''
-           }
+           },
+           'topics':{
+                'topics':'',
+                'conferences':'conferences',
+                'organizations':'',
+                'authors':'',
+                'papers':''
+            }
         }
     }
 };
@@ -490,6 +564,31 @@ function list_item_question(subject,lng){
     return msg
 }
 
+function lst(result,order,lng){
+    let o=orders[lng].indexOf(order);
+    let msg=' ';
+    if(o===1 || o===3){
+        let list=result.lst;
+        for(let i in list){
+            let author=''
+            if(list[i].author && list[i].author.length>0){
+                author=list_author_prep[lng]+list[i].author
+            }
+            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].citations+' '+order+'.'
+        }
+    } else {
+        let list=result.lst;
+        for(let i in list){
+            let author=''
+            if(list[i].author && list[i].author.length>0){
+                author=list_author_prep[lng]+list[i].author
+            }
+            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].papers+' '+order.split(' ')[0]+'.'
+        }
+    }
+    return msg;
+}
+
 module.exports = {
     count_legal_queries,
     dict,
@@ -512,5 +611,9 @@ module.exports = {
     list_item_question,
     list_legal_queries,
     list_swap,
-    orders
+    orders,
+    cmds,
+    prepositions,
+    lst,
+    list_verbs
 }

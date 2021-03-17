@@ -9,6 +9,7 @@ const api = require('./api');
 const languageStrings = require('./localisation');
 const howMany = require('./howMany');
 const listTheTop = require('./listTheTop');
+const findItem = require('./findItem');
 const subject_categories = ['authors', 'papers', 'conferences', 'organizations', 'citations'];
 
 const LaunchRequestHandler = {
@@ -164,6 +165,38 @@ const LocalisationRequestInterceptor = {
     }
 };
 
+const DialogManagementStateInterceptor = {
+    process(handlerInput) {
+    
+        const currentIntent = handlerInput.requestEnvelope.request.intent;
+        
+        if (handlerInput.requestEnvelope.request.type === "IntentRequest"
+            && handlerInput.requestEnvelope.request.dialogState !== "COMPLETED") {
+            
+            const attributesManager = handlerInput.attributesManager;
+            const sessionAttributes = attributesManager.getSessionAttributes();
+            
+            // If there are no session attributes we've never entered dialog management
+            // for this intent before.
+            
+            if (sessionAttributes[currentIntent.name]) {
+                let savedSlots = sessionAttributes[currentIntent.name].slots;
+            
+                for (let key in savedSlots) {
+                    // we let the current intent's values override the session attributes
+                    // that way the user can override previously given values.
+                    // this includes anything we have previously stored in their profile.
+                    if (!currentIntent.slots[key].value && savedSlots[key].value) {
+                        currentIntent.slots[key] = savedSlots[key];
+                    }
+                }    
+            }
+            sessionAttributes[currentIntent.name] = currentIntent;
+            attributesManager.setSessionAttributes(sessionAttributes);
+        }
+    }
+};
+
 /**
  * This handler acts as the entry point for your skill, routing all request and response
  * payloads to the handlers above. Make sure any new handlers or interceptors you've
@@ -181,13 +214,17 @@ exports.handler = Alexa.SkillBuilders.custom()
         listTheTop.ListTheTopIntentHandler,
         listTheTop.ItemListTheTopIntentHandler,
         listTheTop.ConfirmedListTheTopIntentHandler,
+        findItem.FindItemIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler)
     .addRequestInterceptors(
+        //DialogManagementStateInterceptor,
         LocalisationRequestInterceptor)
+    /*.addResponseInterceptors(
+        DialogManagementStateInterceptor)*/
     .addErrorHandlers(
         ErrorHandler)
     .withCustomUserAgent('Aida_Query')
