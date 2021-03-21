@@ -15,13 +15,15 @@ const legal_queries=logic.list_legal_queries;
 const hits = logic.hits;
 const hit = logic.hit;
 const conjunction=logic.conjunction;
-const dict = logic.dict;
+const dict = logic.list_dict;
 const in_prep = logic.in_prep;
 const cancel_words =logic.cancel_words;
 const orders=logic.orders;
 const singular=logic.singular;
+const singular_words=logic.singular_words;
 const lst = logic.lst;
 const list_verbs=logic.list_verbs;
+const intent_confirmation_articles=logic.intent_confirmation_articles;
 
 /**
  * Handler executed when there are empty required slots
@@ -63,7 +65,7 @@ const ListTheTopIntentHandler = {
                 .getResponse();
         }
         
-        else if (number && sessionAttributes.listTheTop!==number){
+        else if (number && sessionAttributes.listTheTop.number!==number){
             sessionAttributes.listTheTop.number=number
             handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
         }
@@ -111,17 +113,18 @@ const ListTheTopIntentHandler = {
         
         if(orders[lng].indexOf(order)===-1 && subject_categories[lng].indexOf(subject)!==1){
             return handlerInput.responseBuilder
-                .speak(handlerInput.t('LIST_ORDER_WRONG_MSG', {order: article(lng,order)}))
+                .speak(handlerInput.t('LIST_ORDER_WRONG_MSG', {order: order}))
                 .addElicitSlotDirective('order',updatedIntent)
                 .getResponse();
         } 
         
         if(orders[lng].indexOf(order)===-1 && subject_categories[lng].indexOf(subject)===1){
             return handlerInput.responseBuilder
-                .speak(handlerInput.t('LIST_PAPERS_ORDER_WRONG_MSG', {order: article(lng,order)}))
+                .speak(handlerInput.t('LIST_PAPERS_ORDER_WRONG_MSG', {order: order}))
                 .addElicitSlotDirective('order',updatedIntent)
                 .getResponse();
         } 
+        
         
         let en_subject=swap(lng,subject);
         let en_object=swap2(lng,object);
@@ -139,8 +142,14 @@ const ListTheTopIntentHandler = {
                 .getResponse();
         }
         
+        if (lng==='it-IT'){
+            updatedIntent.confirmationStatus="CONFIRMED"
+        }
+        
+        let art=intent_confirmation_articles[lng][subject_categories[lng].indexOf(subject)]
+        
         return handlerInput.responseBuilder
-            .speak(handlerInput.t('LIST_INTENT_CONFIRMATION_2_MSG', {order:order, number:number, sub: handlerInput.t(dict[lng]['sub'][subject][object]), inst: instance, prep: dict[lng]['prep'][subject][object], obj:dict[lng]['obj'][subject][object] }))
+            .speak(handlerInput.t('LIST_INTENT_CONFIRMATION_2_MSG', {art:art, order:order, number:number, sub: handlerInput.t(dict[lng][order.split(' ')[0]]['sub'][en_subject][en_object]), inst: instance, prep: dict[lng][order.split(' ')[0]]['prep'][en_subject][en_object], obj:dict[lng][order.split(' ')[0]]['obj'][en_subject][en_object] }))
             .addConfirmIntentDirective(updatedIntent)
             .getResponse();
     }
@@ -171,7 +180,6 @@ const ItemListTheTopIntentHandler = {
     async handle(handlerInput) {
         const lng = Alexa.getLocale(handlerInput.requestEnvelope);
         let subject = Alexa.getSlotValue(handlerInput.requestEnvelope,'list_subject');
-        subject=swap(lng,subject);
         let updatedIntent = handlerInput.requestEnvelope.request.intent;
         var number = Alexa.getSlotValue(handlerInput.requestEnvelope, 'number');
         var order = Alexa.getSlotValue(handlerInput.requestEnvelope, 'order');
@@ -203,14 +211,14 @@ const ItemListTheTopIntentHandler = {
             
             if(orders[lng].indexOf(order)===-1 && subject_categories[lng].indexOf(subject)!==1){
                 return handlerInput.responseBuilder
-                    .speak(handlerInput.t('LIST_ORDER_WRONG_MSG', {order: article(lng,order)}))
+                    .speak(handlerInput.t('LIST_ORDER_WRONG_MSG', {order: order}))
                     .addElicitSlotDirective('order')
                     .getResponse();
             } 
             
             if(orders[lng].indexOf(order)===-1 && subject_categories[lng].indexOf(subject)===1){
                 return handlerInput.responseBuilder
-                    .speak(handlerInput.t('LIST_PAPERS_ORDER_WRONG_MSG', {order: article(lng,order)}))
+                    .speak(handlerInput.t('LIST_PAPERS_ORDER_WRONG_MSG', {order: order}))
                     .addElicitSlotDirective('order')
                     .getResponse();
             }
@@ -233,8 +241,14 @@ const ItemListTheTopIntentHandler = {
             updatedIntent.slots.object.value='all';
             let object=en_subject;
             
+        if (lng==='it-IT'){
+            updatedIntent.confirmationStatus="CONFIRMED"
+        }
+        
+        let art=intent_confirmation_articles[lng][subject_categories[lng].indexOf(subject)]
+            
             return handlerInput.responseBuilder
-                .speak(handlerInput.t('LIST_INTENT_CONFIRMATION_1_MSG', {order:order, number:number, sub: handlerInput.t(dict[lng]['sub'][en_subject][object]), prep: dict[lng]['prep'][en_subject][object], obj:dict[lng]['obj'][en_subject][object]}))
+                .speak(handlerInput.t('LIST_INTENT_CONFIRMATION_1_MSG', {art:art, order:order, number:number, sub: handlerInput.t(dict[lng][order.split(' ')[0]]['sub'][en_subject][object]), prep: dict[lng][order.split(' ')[0]]['prep'][en_subject][object], obj:dict[lng][order.split(' ')[0]]['obj'][en_subject][object]}))
                 .addConfirmIntentDirective(updatedIntent)
                 .getResponse();
         }
@@ -413,19 +427,26 @@ const ConfirmedListTheTopIntentHandler = {
                 instance='';
             }
             
-            let sub=dict[lng]['sub'][en_subject][en_object];
+            let sub=dict[lng][order.split(' ')[0]]['sub'][en_subject][en_object];
+            let obj=dict[lng][order.split(' ')[0]]['obj'][en_subject][en_object];
+            let prep=dict[lng][order.split(' ')[0]]['prep'][en_subject][en_object];
             
             if(number>speak.lst.length){
                 number=speak.lst.length;
             }
             
+            let art=intent_confirmation_articles[lng][subject_categories[lng].indexOf(subject)+5]
+            
             if (speak.lst.length===1){
                 sub = singular(lng,sub);
                 number='';
                 verb=list_verbs[lng][0];
+                art=intent_confirmation_articles[lng][subject_categories[lng].indexOf(subject)+10]
             }
             
-            message=handlerInput.t('LIST_QUERY_MSG', {num: number, sub:sub, obj:dict[lng]['obj'][en_subject][en_object], inst:instance, prep: dict[lng]['prep'][en_subject][en_object], order: order, lst: lst(speak,order,lng), verb:verb})
+            
+            
+            message=handlerInput.t('LIST_QUERY_MSG', {art:art, num: number, sub:sub, obj:obj, inst:instance, prep: prep, order: order, lst: lst(speak,order,lng), verb:verb})
         } 
         
         else {

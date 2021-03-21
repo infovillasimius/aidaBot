@@ -57,13 +57,40 @@
           "name": "ListTheTopIntent",
           "slots": [
             {
-              "name": "query",
+              "name": "number",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "list_subject",
+              "type": "Aida_List_subject"
+            },
+            {
+              "name": "object",
+              "type": "Aida_Queryable_object"
+            },
+            {
+              "name": "instance",
+              "type": "Aida_instance"
+            },
+            {
+              "name": "order",
+              "type": "Aida_order"
+            },
+            {
+              "name": "item",
               "type": "AMAZON.SearchQuery"
             }
           ],
           "samples": [
-            "elenca {query}",
-            "elenca"
+            "elenca {number}",
+            "elenca",
+            "elenca i migliori {number} {list_subject} di {instance} in {object} ordinati per {order}",
+            "elenca i migliori {number} {list_subject} di {instance} ordinati per {order}",
+            "elenca i migliori {number} {list_subject} ordinati per {order}",
+            "elenca i migliori {number} {list_subject}",
+            "elenca i migliori {number}",
+            "trova {item}",
+            "elenca i migliori"
           ]
         }
       ],
@@ -94,28 +121,26 @@
         {
           "values": [
             {
+              "name": {
+                "value": "pubblicazioni negli ultimi 5 anni"
+              }
+            },
+            {
               "id": "1",
               "name": {
-                "value": "citazioni",
-                "synonyms": [
-                  "numero di citazioni",
-                  "citazione"
-                ]
+                "value": "citazioni"
               }
             },
             {
               "id": "2",
               "name": {
-                "value": "pubblicazioni",
-                "synonyms": [
-                  "numero di pubblicazioni"
-                ]
+                "value": "pubblicazioni"
               }
             },
             {
               "id": "3",
               "name": {
-                "value": "anno"
+                "value": "citazioni negli ultimi 5 anni"
               }
             }
           ],
@@ -227,6 +252,36 @@
             }
           ],
           "name": "Aida_yes_or_no"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "autori"
+              }
+            },
+            {
+              "name": {
+                "value": "articoli"
+              }
+            },
+            {
+              "name": {
+                "value": "conferenze"
+              }
+            },
+            {
+              "name": {
+                "value": "organizzazioni"
+              }
+            },
+            {
+              "name": {
+                "value": "argomenti"
+              }
+            }
+          ],
+          "name": "Aida_List_subject"
         }
       ]
     },
@@ -293,6 +348,69 @@
             }
           ],
           "delegationStrategy": "SKILL_RESPONSE"
+        },
+        {
+          "name": "ListTheTopIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "number",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "list_subject",
+              "type": "Aida_List_subject",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {},
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.621613218708.310659506516.564325159822",
+                  "values": [
+                    "organizzazioni",
+                    "conferenze",
+                    "autori",
+                    "argomenti",
+                    "articoli"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "object",
+              "type": "Aida_Queryable_object",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "instance",
+              "type": "Aida_instance",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "order",
+              "type": "Aida_order",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "item",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ],
+          "delegationStrategy": "SKILL_RESPONSE"
         }
       ],
       "delegationStrategy": "ALWAYS"
@@ -324,8 +442,17 @@
             "value": "a"
           }
         ]
+      },
+      {
+        "id": "Slot.Validation.621613218708.310659506516.564325159822",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Varole errato"
+          }
+        ]
       }
     ]
   },
-  "version": "43"
+  "version": "48"
 }

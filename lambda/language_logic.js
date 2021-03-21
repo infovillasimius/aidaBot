@@ -222,13 +222,6 @@ const dict = {
                 'organizations':'citazioni',
                 'authors':'citazioni',
                 'papers':''
-            },
-            'topics':{
-                'topics':'argomenti',
-                'conferences':'argomenti',
-                'organizations':'argomenti',
-                'authors':'argomanti',
-                'papers':''
             }
         },
         'prep':{
@@ -236,7 +229,7 @@ const dict = {
                 'topics':'che hanno scritto articoli su',
                 'conferences':'che hanno scritto articoli per conferenze ',
                 'organizations':'affiliati a',
-                'authors':'sono chiamati',
+                'authors':'', 
                 'papers':''
             },
             'papers':{
@@ -261,13 +254,6 @@ const dict = {
                 'papers':''
             },
             'citations':{
-                'topics':'di articoli su',
-                'conferences':'di articoli da',
-                'organizations':'di articoli scritti da autori affiliati a',
-                'authors':'di articoli scritti dall\'autore',
-                'papers':''
-            },
-            'topics':{
                 'topics':'di articoli su',
                 'conferences':'di articoli da',
                 'organizations':'di articoli scritti da autori affiliati a',
@@ -305,13 +291,6 @@ const dict = {
                 'papers':''
             },
             'citations':{
-                'topics':'',
-                'conferences':'conferenze',
-                'organizations':'',
-                'authors':'',
-                'papers':''
-           },
-            'topics':{
                 'topics':'',
                 'conferences':'conferenze',
                 'organizations':'',
@@ -356,13 +335,6 @@ const dict = {
                 'organizations':'citations',
                 'authors':'citations',
                 'papers':''
-            },
-            'topics':{
-                'topics':'topics',
-                'conferences':'topics',
-                'organizations':'topics',
-                'authors':'topics',
-                'papers':''
             }
         },
         'prep':{
@@ -370,7 +342,7 @@ const dict = {
                 'topics':'who have written papers on',
                 'conferences':'who have written papers for',
                 'organizations':'affiliated to the',
-                'authors':'', //'are called',
+                'authors':'', 
                 'papers':''
             },
             'papers':{
@@ -388,21 +360,14 @@ const dict = {
                 'papers':''
             },
             'organizations':{
-                'topics':'with papers on', //'with affiliated authors who have written papers on'
+                'topics':'with papers on', 
                 'conferences':'with papers at',
                 'organizations':'',
-                'authors':'with', //'that have the author'
+                'authors':'with',
                 'papers':''
             },
             'citations':{
                 'topics':'of papers on',
-                'conferences':'of papers from',
-                'organizations':'of papers written by authors affiliated to the',
-                'authors':'of papers written by the author',
-                'papers':''
-            },
-            'topics':{
-                'topics':'',
                 'conferences':'of papers from',
                 'organizations':'of papers written by authors affiliated to the',
                 'authors':'of papers written by the author',
@@ -444,13 +409,465 @@ const dict = {
                 'organizations':'',
                 'authors':'',
                 'papers':''
-           },
-           'topics':{
-                'topics':'',
-                'conferences':'conferences',
-                'organizations':'',
-                'authors':'',
-                'papers':''
+           }
+        }
+    }
+}
+
+const list_dict = {
+    "it-IT":{
+        'pubblicazioni':{
+            'sub':{
+                'authors':{
+                    'topics':'autori',
+                    'conferences':'autori',
+                    'organizations':'autori',
+                    'authors':'autori',
+                    'papers':'autori'
+                },
+                'papers':{
+                    'topics':'articoli',
+                    'conferences':'articoli',
+                    'organizations':'articoli',
+                    'authors':'articoli',
+                    'papers':''
+                },
+                'conferences':{
+                    'topics':'conferenze',
+                    'conferences':'conferenze',
+                    'organizations':'conferenze',
+                    'authors':'conferenze',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'organizzazioni',
+                    'conferences':'organizzazioni',
+                    'organizations':'organizzazioni',
+                    'authors':'organizzazioni',
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'argomenti',
+                    'conferences':'argomenti',
+                    'organizations':'argomenti',
+                    'authors':'argomenti',
+                    'papers':''
+                }
+            },
+            'prep':{
+                'authors':{
+                    'topics':'di articoli su',
+                    'conferences':'di articoli presentati in conferenze',
+                    'organizations':'affiliati a',
+                    'authors':'',
+                    'papers':''
+                },
+                'papers':{
+                    'topics':'su',
+                    'conferences':'presentati in conferenze',
+                    'organizations':'da autori affiliati a',
+                    'authors':'dell\'autore',
+                    'papers':''
+                },
+                'conferences':{
+                    'topics':'di articoli su',
+                    'conferences':'',
+                    'organizations':'di articoli di autori affiliati a',
+                    'authors':'di articoli dell\'autore',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'di articoli su', 
+                    'conferences':'di articoli presentati in conferenze',
+                    'organizations':'',
+                    'authors':'con',
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'di articoli su',
+                    'conferences':'di articoli presentati in conferenze',
+                    'organizations':'di articoli scritti da autori affiliati a',
+                    'authors':'di articoli scritti dall\'autore',
+                    'papers':''
+                }
+            },
+            'obj':{
+                'authors':{
+                    'topics':'',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                },
+                'papers':{
+                    'topics':'',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':'articoli'
+                },
+                'conferences':{
+                    'topics':'',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'tra gli autori affiliati',
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+               }
+            }
+        },
+        'citazioni':{
+            'sub':{
+                'authors':{
+                    'topics':'autori',
+                    'conferences':'autori',
+                    'organizations':'autori',
+                    'authors':'autori',
+                    'papers':'autori'
+                },
+                'papers':{
+                    'topics':'articoli',
+                    'conferences':'articoli',
+                    'organizations':'articoli',
+                    'authors':'articoli',
+                    'papers':''
+                },
+                'conferences':{
+                    'topics':'conferenze',
+                    'conferences':'conferenze',
+                    'organizations':'conferenze',
+                    'authors':'conferenze',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'organizzazioni',
+                    'conferences':'organizzazioni',
+                    'organizations':'organizzazioni',
+                    'authors':'organizzazioni',
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'argomenti',
+                    'conferences':'argomenti',
+                    'organizations':'argomenti',
+                    'authors':'argomenti',
+                    'papers':''
+                }
+            },
+            'prep':{
+                'authors':{
+                    'topics':'che hanno scritto articoli su',
+                    'conferences':'di articoli presentati in conferenze',
+                    'organizations':'affiliati a',
+                    'authors':'',
+                    'papers':''
+                },
+                'papers':{
+                    'topics':'su',
+                    'conferences':'presentati in conferenze',
+                    'organizations':', scritti da autori affiliati a',
+                    'authors':', scritti dall\'autore',
+                    'papers':''
+                },
+                'conferences':{
+                    'topics':'di articoli su',
+                    'conferences':'',
+                    'organizations':'di articoli di autori affiliati a',
+                    'authors':'di articoli dell\'autore',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'di articoli su', 
+                    'conferences':'di articoli presentati a',
+                    'organizations':'',
+                    'authors':'con',
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'di articoli su',
+                    'conferences':'di articoli da',
+                    'organizations':'di articoli scritti da autori affiliati a',
+                    'authors':'di articoli scritti dall\'autore',
+                    'papers':''
+                }
+            },
+            'obj':{
+                'authors':{
+                    'topics':'',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                },
+                'papers':{
+                    'topics':'',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':'articoli'
+                },
+                'conferences':{
+                    'topics':'',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'tra gli autori affiliati',
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'',
+                    'conferences':'conferenze',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+               }
+            }
+        }
+    },
+    "en-US":{
+        'publications':{
+            'sub':{
+                'authors':{
+                    'topics':'authors',
+                    'conferences':'authors',
+                    'organizations':'authors',
+                    'authors':'authors',
+                    'papers':'authors'
+                },
+                'papers':{
+                    'topics':'papers',
+                    'conferences':'papers',
+                    'organizations':'papers',
+                    'authors':'papers',
+                    'papers':''
+                },
+                'conferences':{
+                    'topics':'conferences',
+                    'conferences':'conferences',
+                    'organizations':'conferences',
+                    'authors':'conferences',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'organizations',
+                    'conferences':'organizations',
+                    'organizations':'organizations',
+                    'authors':'organizations',
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'topics',
+                    'conferences':'topics',
+                    'organizations':'topics',
+                    'authors':'topics',
+                    'papers':''
+                }
+            },
+            'prep':{
+                'authors':{
+                    'topics':'who have written papers on',
+                    'conferences':'who have written papers for',
+                    'organizations':'affiliated to the',
+                    'authors':'',
+                    'papers':''
+                },
+                'papers':{
+                    'topics':'on',
+                    'conferences':'from',
+                    'organizations':'from authors affiliated to the',
+                    'authors':'written by the author',
+                    'papers':''
+                },
+                'conferences':{
+                    'topics':'with papers on',
+                    'conferences':'',
+                    'organizations':'with papers by authors affiliated to the',
+                    'authors':'with papers written by the author',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'with papers on',
+                    'conferences':'with papers at',
+                    'organizations':'',
+                    'authors':'with', 
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'',
+                    'conferences':'of papers from',
+                    'organizations':'of papers written by authors affiliated to the',
+                    'authors':'of papers written by the author',
+                    'papers':''
+                }
+            },
+            'obj':{
+                'authors':{
+                    'topics':'topics',
+                    'conferences':'conferences',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                },
+                'papers':{
+                    'topics':'topics',
+                    'conferences':'conferences',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':'papers'
+                },
+                'conferences':{
+                    'topics':'topics',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'',
+                    'conferences':'conferences',
+                    'organizations':'',
+                    'authors':'among their affiliated authors',
+                    'papers':''
+                },
+               'topics':{
+                    'topics':'',
+                    'conferences':'conferences',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                }
+            }
+        },
+        'citations':{
+            'sub':{
+                'authors':{
+                    'topics':'authors',
+                    'conferences':'authors',
+                    'organizations':'authors',
+                    'authors':'authors',
+                    'papers':'authors'
+                },
+                'papers':{
+                    'topics':'papers',
+                    'conferences':'papers',
+                    'organizations':'papers',
+                    'authors':'papers',
+                    'papers':''
+                },
+                'conferences':{
+                    'topics':'conferences',
+                    'conferences':'conferences',
+                    'organizations':'conferences',
+                    'authors':'conferences',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'organizations',
+                    'conferences':'organizations',
+                    'organizations':'organizations',
+                    'authors':'organizations',
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'topics',
+                    'conferences':'topics',
+                    'organizations':'topics',
+                    'authors':'topics',
+                    'papers':''
+                }
+            },
+            'prep':{
+                'authors':{
+                    'topics':'who have written papers on',
+                    'conferences':'who have written papers for',
+                    'organizations':'affiliated to the',
+                    'authors':'', 
+                    'papers':''
+                },
+                'papers':{
+                    'topics':'on',
+                    'conferences':'from',
+                    'organizations':'from authors affiliated to the',
+                    'authors':'written by the author',
+                    'papers':''
+                },
+                'conferences':{
+                    'topics':'with papers on',
+                    'conferences':'',
+                    'organizations':'with papers by authors affiliated to the',
+                    'authors':'with papers written by the author',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'with papers on', 
+                    'conferences':'with papers at',
+                    'organizations':'',
+                    'authors':'with',
+                    'papers':''
+                },
+                'topics':{
+                    'topics':'',
+                    'conferences':'of papers from',
+                    'organizations':'of papers written by authors affiliated to the',
+                    'authors':'of papers written by the author',
+                    'papers':''
+                }
+            },
+            'obj':{
+                'authors':{
+                    'topics':'topics',
+                    'conferences':'conferences',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                },
+                'papers':{
+                    'topics':'topics',
+                    'conferences':'conferences',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':'papers'
+                },
+                'conferences':{
+                    'topics':'topics',
+                    'conferences':'',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                },
+                'organizations':{
+                    'topics':'',
+                    'conferences':'conferences',
+                    'organizations':'',
+                    'authors':'among their affiliated authors',
+                    'papers':''
+                },
+               'topics':{
+                    'topics':'',
+                    'conferences':'conferences',
+                    'organizations':'',
+                    'authors':'',
+                    'papers':''
+                }
             }
         }
     }
@@ -470,6 +887,21 @@ const articles={
     'citazione':    'la citazione',
     'citazioni':    'le citazioni',
     'pubblicazioni':'le pubblicazioni'
+}
+
+const intent_confirmation_articles={
+    "en-US":['', '', '', '', '','', '', '', '', '','', '', '', '', ''],
+    "it-IT":['dei','dei','delle','delle','dei','i','i','le','le','i','il','il','la','la','il']
+}
+
+const list_order={
+    "en-US" : ['publication','citation','publication in the last 5 years', 'citation in the last 5 years'],
+    "it-IT" : ['pubblicazione','citazione','pubblicazione negli ultimi 5 anni','citazione negli ultimi 5 anni']
+}
+
+const one={
+    "en-US" : ['1'],
+    "it-IT" : ['una']
 }
 
 
@@ -560,13 +992,13 @@ function list_item_question(subject,lng){
         } 
     }
     
-    
     return msg
 }
 
 function lst(result,order,lng){
     let o=orders[lng].indexOf(order);
     let msg=' ';
+    let ord;
     if(o===1 || o===3){
         let list=result.lst;
         for(let i in list){
@@ -574,7 +1006,15 @@ function lst(result,order,lng){
             if(list[i].author && list[i].author.length>0){
                 author=list_author_prep[lng]+list[i].author
             }
-            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].citations+' '+order+'.'
+            
+            if(list[i].citations===1){
+                list[i].citations=one[lng]
+                ord=list_order[lng][o];
+            } else { 
+                ord=order;
+            }
+            
+            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].citations+' '+ord+'.'
         }
     } else {
         let list=result.lst;
@@ -583,7 +1023,15 @@ function lst(result,order,lng){
             if(list[i].author && list[i].author.length>0){
                 author=list_author_prep[lng]+list[i].author
             }
-            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].papers+' '+order.split(' ')[0]+'.'
+            
+            if(list[i].papers===1){
+                list[i].papers=one[lng]
+                ord=list_order[lng][o];
+            } else { 
+                ord=order;
+            }
+            
+            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].papers+' '+ord.split(' ')[0]+'.'
         }
     }
     return msg;
@@ -592,6 +1040,7 @@ function lst(result,order,lng){
 module.exports = {
     count_legal_queries,
     dict,
+    list_dict,
     item_question,
     combinations,
     cancel_words,
@@ -615,5 +1064,6 @@ module.exports = {
     cmds,
     prepositions,
     lst,
-    list_verbs
+    list_verbs,
+    intent_confirmation_articles
 }

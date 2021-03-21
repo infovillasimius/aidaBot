@@ -63,10 +63,24 @@ module.exports = {
             QUERY_1_MSG: ['Ho trovato {{num}} {{sub}} {{prep}} {{inst}} {{obj}}', 'Ho contato {{num}} {{sub}} {{prep}} {{inst}} {{obj}}','la query ha restituito {{num}} {{sub}} {{prep}} {{inst}} {{obj}}'],
             QUERY_2_MSG: ['Ho trovato {{num}} differenti {{sub}} {{prep}} {{obj}}', 'Ho contato {{num}} differenti {{sub}} {{prep}} {{obj}}'],
             REPROMPT_MSG: 'Quindi, cosa vorresti chiedere?',
-            NO_QUERY_MSG: ['Mi dispiace, hai chiesto una query non ancora implementata','Scusa, la query richiesta non è stata ancora implementata','Mi dispiace, non so ancora eseguire la query, che mi hai chiesto'],
+            NO_QUERY_MSG: ['Mi dispiace, hai chiesto una query non ancora implementata','Scusa, la query richiesta non è stata ancora implementata','Mi dispiace, non so ancora eseguire la query che mi hai chiesto'],
             REPROMPT_END_MSG: ['Puoi chiedere di eseguire un\'altra query o dire stop per uscire','Chiedimi un\'altra query o dimmi stop per uscire'],
-            NO_SENSE_MSG:'Mi dispiace ma la query risultante dalle opziani scelte non ha senso e non può essere eseguita. Prova ancora.'
+            NO_SENSE_MSG:'Mi dispiace ma la query risultante dalle opziani scelte non ha senso e non può essere eseguita. Prova ancora.',
+            
+            LIST_WRONG_NUMBER_MSG:'Il numero {{number}} non è nell\'intervallo ammesso, dovresti dirmi un numero tra 2 e 5. Allora, quanti elementi vuoi che elenchi?',
+            LIST_SUBJECT_REQUEST_MSG:'Posso elencare articoli, autori, conferenze, organizzazioni e argomenti. Quali scegli?',
+            LIST_SUBJECT_WRONG_MSG:'Mi dispiace, non posso elencare {{sub}}. Posso elencare articoli, autori, conferenze, organizzazioni e argomenti. Quali scegli?',
+            LIST_SUBJECT_REQUEST_REPROMPT_MSG:'Posso elencare articoli, autori, conferenze, organizzazioni e argomenti. Cosa preferisci?',
+            LIST_ORDER_MSG:'Vuoi che la lista sia ordinata per pubblicazioni, per pubblicazioni negli ultimi cinque anni, per citazioni o per citazioni negli ultimi 5 anni?',
+            LIST_PAPERS_ORDER_MSG:'Vuoi che la lista sia ordinata per citazioni o per citazioni negli ultimi 5 anni?',
+            LIST_PAPERS_ORDER_WRONG_MSG:'Mi dispiace, non posso ordinare per {{order}}. Posso ordinare per citazioni o per citazioni negli ultimi 5 anni. Cosa preferisci?',
+            LIST_ORDER_WRONG_MSG:'Mi dispiace, non posso ordinare per {{order}}. Posso ordinare per pubblicazioni, per pubblicazioni negli ultimi cinque anni, per citazioni o per citazioni negli ultimi 5 anni. Cosa preferisci?',
+            LIST_INSTANCE_MSG:'Quale è il nome {{list}} da mettere in relazione con {{sub}} da elencare? Puoi dire no per utilizzare tutto il database',
+            LIST_INTENT_CONFIRMATION_1_MSG: 'Vuoi l\'elenco {{art}} {{number}} {{sub}} {{prep}} {{obj}} con il numero maggiore di {{order}}?',
+            LIST_INTENT_CONFIRMATION_2_MSG: 'Vuoi l\'elenco {{art}} {{number}} {{sub}} con il numero maggiore di {{order}} {{prep}} {{inst}} {{obj}}?',
+            LIST_QUERY_MSG:'Nel database AIDA, {{art}} {{num}} {{sub}} con il numero maggiore di {{order}} {{prep}} {{inst}} {{obj}},  {{verb}}: {{lst}}'
         }
     }
     
 }
+

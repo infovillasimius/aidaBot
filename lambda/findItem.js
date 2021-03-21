@@ -37,67 +37,28 @@ const FindItemIntentHandler = {
         
         for (let k in s){
             
-            if (!question.cmd){
-                for (let i in cmds['list'][lng]){
-                    if(s[k]===cmds['list'][lng][i]){
-                        word={'value':'list','pos':k};
-                        break;
-                    }
-                }
+            if (!question.cmd && cmds['list'][lng].includes(s[k])){
+                question.cmd={'value':'list','pos':k};
+            }
                 
-                for (let i in cmds['count'][lng]){
-                    if(s[k]===cmds['count'][lng][i]){
-                        word={'value':'count','pos':k};
-                        break;
-                    }
-                }
-                
-                if (word.value){
-                    question['cmd']=word;
-                    word={}
-                }
+            if (!question.cmd && cmds['count'][lng].includes(s[k])){
+                question.cmd={'value':'count','pos':k};
             }
             
             if(question.cmd && !question.subject && !isNaN(s[k])){
-                question['num']={'value':s[k],'pos':k};
+                question.num={'value':s[k],'pos':k};
             }
             
-            if (question.cmd && !question.subject){
-                for (let i in subjects[question.cmd.value][lng]){
-                    if(s[k]===subjects[question.cmd.value][lng][i]){
-                        word={'value':subjects[question.cmd.value][lng][i],'pos':k};
-                        break;
-                    }
-                }
-                if (word.value){
-                    question['subject']=word;
-                    word={}
-                }
+            if (question.cmd && !question.subject && subjects[question.cmd.value][lng].includes(s[k])){
+                question.subject={'value':s[k],'pos':k}
             }
             
-            if (question.subject && !question.object && k>parseInt(question.subject.pos)){
-                for (let i in objects[lng]){
-                    if(s[k]===objects[lng][i]){
-                        word={'value':objects[lng][i],'pos':k};
-                        break;
-                    }
-                }
-                if (word.value){
-                    question['object']=word;
-                    word={}
-                }
+            if (question.subject && !question.object && k>parseInt(question.subject.pos) && objects[lng].includes(s[k])){
+                question.object={'value':s[k],'pos':k}
             }
             
-            if (question.subject && !question.order && k>parseInt(question.subject.pos)){
-                let i=orders[lng].indexOf(s[k]);
-                if(i!==-1){
-                    word={'value':orders[lng][i],'pos':k};
-                }
-                
-                if (word.value){
-                    question['order']=word;
-                    word={}
-                }
+            if (question.subject && !question.order && k>parseInt(question.subject.pos) && orders[lng].includes(s[k])){
+                question.order={'value':s[k],'pos':k}
             }
             
             if (question.order && k>parseInt(question.order.pos) && !isNaN(s[k]) && parseInt(s[k])===5){
