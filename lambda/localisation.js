@@ -4,16 +4,19 @@ module.exports = {
             WELCOME_MSG: 'Welcome, you can ask to perform a query on the data contained in the AIDA database or ask for Help. What would you like to try?',
             HELLO_MSG: 'Hello',
             OK_MSG: 'Ok',
-            HELP_MSG: ['you can ask, for example, how many papers on machine learning','You can ask a query starting with how many or count'],
+            HELP_MSG: ['you can ask to count or list authors, papers, conferences, organizations, topics and citations. Start a query with list or count','You can ask a query starting with count, list, who or what'],
             GOODBYE_MSG: ['Goodbye!','Bye!','See you later'],
             REFLECTOR_MSG: 'You just triggered {{intent}}',
             FALLBACK_MSG: 'Sorry, I don\'t know about that. Please try again.',
             ERROR_MSG: 'Sorry, there was an error. Please try again.',
             
+            HOMONYMS_MSG:'I found the following homonyms: {{msg}} To choose, you have to say the number of the {{obj}} you prefer',
+            
             SUBJECT_REQUEST_MSG:'I can count papers, authors, conferences, organizations and citations. What do you want me to count?',
             SUBJECT_WRONG_MSG:'Sorry, I can\'t count {{sub}}. I can count papers, authors, conferences, organizations and citations. What do you prefer?',
             SUBJECT_REQUEST_REPROMPT_MSG:'I can count papers, authors, conferences, organizations and citations. What do you prefer?',
-            INSTANCE_MSG:'what is the name of the {{list}} whose {{sub}} I should count? You can say all for the full list', 
+            INSTANCE_MSG:'what is the name of the {{list}} whose {{sub}} I should count? You can say all for the full list',
+            INSTANCE2_MSG:'what is the name of the {{list}} whose {{sub}} I should count?',
             ITEM_MSG:'Searching for {{inst}}, I got {{msg}} Which one is correct?',
             INTENT_CONFIRMATION_1_MSG: 'Do you want to know how many {{sub}} {{prep}} {{obj}} are in the AIDA database?',
             INTENT_CONFIRMATION_2_MSG: 'Do you want to know how many {{sub}} {{prep}} {{inst}} {{obj}} are in the AIDA database?',
@@ -37,7 +40,11 @@ module.exports = {
             LIST_INSTANCE_MSG:'what is the name of the {{list}} for which {{sub}} should be the top {{number}}? You can say all for the full list',
             LIST_INTENT_CONFIRMATION_1_MSG: 'Do you want to know which are the top {{number}} {{sub}} {{prep}} {{obj}}, by number of {{order}}, in the AIDA database?',
             LIST_INTENT_CONFIRMATION_2_MSG: 'Do you want to know which are the top {{number}} {{sub}}, by number of {{order}}, {{prep}} {{inst}} {{obj}} in the Aida database?',
-            LIST_QUERY_MSG:'In the AIDA database, the top {{num}} {{sub}} {{prep}} {{inst}} {{obj}}, by number of {{order}},  {{verb}}: {{lst}}'
+            LIST_QUERY_MSG:'In the AIDA database, the top {{num}} {{sub}} {{prep}} {{inst}} {{obj}}, by number of {{order}},  {{verb}}: {{lst}}',
+            LIST_NO_RESULT_MSG:'In the AIDA database, there are no {{sub}} {{prep}} {{inst}} {{obj}}',
+            
+            DESCRIBE_CONFIRM_MSG : 'do you want to know something about {{ins}}?',
+            DESCRIBE_TOPIC_MSG :'sorry but I can\'t tell you anything about the topics yet. You can ask me about conferences, organizations and authors.'
         }
     }, 
     'it' : {
@@ -50,6 +57,8 @@ module.exports = {
             REFLECTOR_MSG: 'Hai invocato l\'intento {{intent}}',
             FALLBACK_MSG: 'Perdonami, penso di non aver capito bene. Riprova.',
             ERROR_MSG: 'Scusa, c\'è stato un errore. Riprova.',
+            
+            HOMONYMS_MSG:'Ho trovato gli omonimi seguenti: {{msg}} Per scegliere, dimmi il numero di quello che preferisci',
             
             SUBJECT_REQUEST_MSG:'Posso contare articoli, autori, conferenze, organizzazioni e citazioni. Cosa vuoi contare?',
             SUBJECT_WRONG_MSG:'Mi dispiace ma non posso contare {{sub}}. Posso contare solamente articoli, autori, conferenze, organizzazioni e citazioni. Cosa preferisci?',

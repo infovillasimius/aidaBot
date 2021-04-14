@@ -9,8 +9,10 @@ const api = require('./api');
 const languageStrings = require('./localisation');
 const howMany = require('./howMany');
 const listTheTop = require('./listTheTop');
+const describe = require('./describe');
 const findItem = require('./findItem');
 const subject_categories = ['authors', 'papers', 'conferences', 'organizations', 'citations'];
+const parser = require('./parser');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -21,23 +23,6 @@ const LaunchRequestHandler = {
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
-            .getResponse();
-    }
-};
-
-const FreeQueryIntentHandler = {
-    canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'FreeQueryIntent';
-    },
-    handle(handlerInput) {
-        
-        const query = Alexa.getSlotValue(handlerInput.requestEnvelope, 'query');
-
-        
-        return handlerInput.responseBuilder
-            .speak('if you say so!')
-            .reprompt()
             .getResponse();
     }
 };
@@ -214,7 +199,10 @@ exports.handler = Alexa.SkillBuilders.custom()
         listTheTop.ListTheTopIntentHandler,
         listTheTop.ItemListTheTopIntentHandler,
         listTheTop.ConfirmedListTheTopIntentHandler,
-        findItem.FindItemIntentHandler,
+        //findItem.FindItemIntentHandler,
+        describe.DescribeIntentHandler,
+        describe.DeniedDescribeIntentHandler,
+        describe.ConfirmedDescribeIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,

@@ -34,7 +34,9 @@ const FindItemIntentHandler = {
         let word={};
         let s=item.split(' ');
         
-        
+        /**
+         * Search for fixed values
+         */
         for (let k in s){
             
             if (!question.cmd && cmds['list'][lng].includes(s[k])){

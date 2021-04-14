@@ -31,7 +31,7 @@
               "type": "AIDA_Query_Subject"
             },
             {
-              "name": "instance_of_querable_object",
+              "name": "instance",
               "type": "Aida_instance",
               "multipleValues": {
                 "enabled": false
@@ -42,30 +42,29 @@
               "type": "AMAZON.SearchQuery"
             },
             {
-              "name": "queryable_objects",
+              "name": "object",
               "type": "Aida_Queryable_object"
+            },
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery"
             }
           ],
           "samples": [
             "give me {item}",
             "count {subject}",
-            "count the {subject} with  {instance_of_querable_object}",
-            "How many {subject} on  {instance_of_querable_object}  ",
-            "how many",
+            "count the {subject} with  {instance}",
+            "how many {query}",
             "count",
-            "How many {subject}  {instance_of_querable_object}  ",
-            "count the {subject} of {instance_of_querable_object}",
-            "count the {subject} from {instance_of_querable_object}",
-            "Count the {subject} in  {instance_of_querable_object}",
-            "count the {subject} by  {instance_of_querable_object}",
+            "count the {subject} of {instance}",
+            "count the {subject} from {instance}",
+            "Count the {subject} in  {instance}",
+            "count the {subject} by  {instance}",
             "count the {subject} ",
             "Count the number of {subject}",
-            "Count the number of {subject} in  {instance_of_querable_object}",
-            "Count the number of {subject} by  {instance_of_querable_object}",
-            "Count the number of {subject}  {instance_of_querable_object} in {queryable_objects}",
-            "How many {subject} are there in {queryable_objects}",
-            "How many {subject}  are {instance_of_querable_object} in {queryable_objects}",
-            "How many {subject}"
+            "Count the number of {subject} in  {instance}",
+            "Count the number of {subject} by  {instance}",
+            "Count the number of {subject}  {instance} in {object}"
           ]
         },
         {
@@ -97,6 +96,8 @@
             }
           ],
           "samples": [
+            "List the top {list_subject}",
+            "list",
             "find {item}",
             "List the top",
             "List the top {number} {list_subject}",
@@ -106,7 +107,7 @@
           ]
         },
         {
-          "name": "FreeQueryIntent",
+          "name": "DescribeIntent",
           "slots": [
             {
               "name": "query",
@@ -117,8 +118,12 @@
             }
           ],
           "samples": [
-            "who have {query}",
-            "who has {query}",
+            "What about {query}",
+            "Describe {query}",
+            "what\u0027s {query}",
+            "who\u0027s {query}",
+            "what are {query}",
+            "what is {query}",
             "who are {query}",
             "Who is {query}"
           ]
@@ -133,8 +138,7 @@
           ],
           "samples": [
             "I want {item}",
-            "I want to {item}",
-            "What about {item}"
+            "I want to {item}"
           ]
         }
       ],
@@ -335,7 +339,12 @@
           ],
           "name": "Aida_List_subject"
         }
-      ]
+      ],
+      "modelConfiguration": {
+        "fallbackIntentSensitivity": {
+          "level": "HIGH"
+        }
+      }
     },
     "dialog": {
       "intents": [
@@ -365,7 +374,7 @@
               ]
             },
             {
-              "name": "instance_of_querable_object",
+              "name": "instance",
               "type": "Aida_instance",
               "elicitationRequired": false,
               "confirmationRequired": false,
@@ -379,7 +388,7 @@
               "prompts": {}
             },
             {
-              "name": "queryable_objects",
+              "name": "object",
               "type": "Aida_Queryable_object",
               "elicitationRequired": false,
               "confirmationRequired": false,
@@ -397,6 +406,13 @@
                   ]
                 }
               ]
+            },
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
             }
           ],
           "delegationStrategy": "SKILL_RESPONSE"
@@ -497,7 +513,7 @@
           "delegationStrategy": "SKILL_RESPONSE"
         },
         {
-          "name": "FreeQueryIntent",
+          "name": "DescribeIntent",
           "confirmationRequired": false,
           "prompts": {},
           "slots": [
@@ -505,13 +521,13 @@
               "name": "query",
               "type": "AMAZON.SearchQuery",
               "elicitationRequired": true,
-              "confirmationRequired": true,
+              "confirmationRequired": false,
               "prompts": {
-                "confirmation": "Confirm.Slot.425908480158.345991497763",
                 "elicitation": "Elicit.Slot.425908480158.345991497763"
               }
             }
-          ]
+          ],
+          "delegationStrategy": "SKILL_RESPONSE"
         },
         {
           "name": "FindItemIntent",
@@ -662,7 +678,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Sorry,  {queryable_objects} is an illegal value. You can choose from topics, conferences, organizations, authors and papers. What do you prefer?"
+            "value": "Sorry,  {object} is an illegal value. You can choose from topics, conferences, organizations, authors and papers. What do you prefer?"
           }
         ]
       },
@@ -730,5 +746,5 @@
       }
     ]
   },
-  "version": "103"
+  "version": "111"
 }

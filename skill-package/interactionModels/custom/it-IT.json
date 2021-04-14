@@ -23,7 +23,7 @@
               "type": "AIDA_Query_Subject"
             },
             {
-              "name": "instance_of_querable_object",
+              "name": "instance",
               "type": "Aida_instance"
             },
             {
@@ -31,7 +31,7 @@
               "type": "AMAZON.SearchQuery"
             },
             {
-              "name": "queryable_objects",
+              "name": "object",
               "type": "Aida_Queryable_object"
             }
           ],
@@ -39,8 +39,8 @@
             "Quante",
             "conta",
             "vorrei {item}",
-            "conta {subject} di {instance_of_querable_object} in {queryable_objects}",
-            "conta {subject} di {instance_of_querable_object}",
+            "conta {subject} di {instance} in {object}",
+            "conta {subject} di {instance}",
             "conta {subject}",
             "Quanti"
           ]
@@ -313,7 +313,7 @@
               ]
             },
             {
-              "name": "instance_of_querable_object",
+              "name": "instance",
               "type": "Aida_instance",
               "elicitationRequired": false,
               "confirmationRequired": false,
@@ -327,7 +327,7 @@
               "prompts": {}
             },
             {
-              "name": "queryable_objects",
+              "name": "object",
               "type": "Aida_Queryable_object",
               "elicitationRequired": false,
               "confirmationRequired": false,
@@ -430,7 +430,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Mi dispiace, {queryable_objects} è un valore non permesso. Puoi scegliere tra argomenti, conferenze, organizzazioni, autori e articoli. Cosa preferisci?"
+            "value": "Mi dispiace, {object} è un valore non permesso. Puoi scegliere tra argomenti, conferenze, organizzazioni, autori e articoli. Cosa preferisci?"
           }
         ]
       },
@@ -454,5 +454,5 @@
       }
     ]
   },
-  "version": "48"
+  "version": "54"
 }

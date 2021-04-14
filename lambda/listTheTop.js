@@ -2,7 +2,7 @@ const Alexa = require('ask-sdk-core');
 const api = require('./api');
 
 /**
- * Language translation constants
+ * Language constants
  */
 const logic = require('./language_logic');
 const subject_categories = logic.list_subject_categories;
@@ -24,6 +24,9 @@ const singular_words=logic.singular_words;
 const lst = logic.lst;
 const list_verbs=logic.list_verbs;
 const intent_confirmation_articles=logic.intent_confirmation_articles;
+const get_number = logic.get_number;
+const homonyms = logic.homonyms;
+const homonyms_objects = logic.objects
 
 /**
  * Handler executed when there are empty required slots
@@ -33,7 +36,8 @@ const ListTheTopIntentHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'ListTheTopIntent'
             && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED'
-            && !handlerInput.requestEnvelope.request.intent.slots.item.value;
+            && (!handlerInput.requestEnvelope.request.intent.slots.item.value
+            || handlerInput.requestEnvelope.request.intent.slots.object.value);
     },
     handle(handlerInput) {
         const lng = Alexa.getLocale(handlerInput.requestEnvelope); 
@@ -51,8 +55,8 @@ const ListTheTopIntentHandler = {
         }
    
         else if (!number && !sessionAttributes.listTheTop.number){
-            number = "5";
-            sessionAttributes.listTheTop.number="5"
+            number = "3";
+            sessionAttributes.listTheTop.number="3"
             handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
             updatedIntent.slots.number.value=number;
         } 
@@ -170,12 +174,7 @@ const ItemListTheTopIntentHandler = {
             && (handlerInput.requestEnvelope.request.intent.slots.instance.value
             || handlerInput.requestEnvelope.request.intent.slots.item.value)
             && !handlerInput.requestEnvelope.request.intent.slots.object.value
-            && (handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED' 
-            || (sessionAttributes.FindItem && sessionAttributes.FindItem.go
-            && sessionAttributes.FindItem.go===1 
-            && handlerInput.requestEnvelope.request.intent.slots.instance.value!=='all' 
-            && handlerInput.requestEnvelope.request.intent.slots.instance.value!=='no name' 
-            && handlerInput.requestEnvelope.request.intent.slots.instance.value!=='no'));
+            && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
     },
     async handle(handlerInput) {
         const lng = Alexa.getLocale(handlerInput.requestEnvelope);
@@ -229,6 +228,7 @@ const ItemListTheTopIntentHandler = {
                 updatedIntent.slots.object.value=''
                 updatedIntent.slots.list_subject.value=''
                 delete sessionAttributes.listTheTop;
+                delete sessionAttributes.ListTheTopIntentAuthors
                 handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
                 return handlerInput.responseBuilder
                     .speak(handlerInput.t('NO_SENSE_MSG'))
@@ -236,39 +236,80 @@ const ItemListTheTopIntentHandler = {
                     .getResponse();
             }
             
-            let updatedIntent = handlerInput.requestEnvelope.request.intent;
             updatedIntent.slots.instance.value='all';
             updatedIntent.slots.object.value='all';
             let object=en_subject;
             
-        if (lng==='it-IT'){
-            updatedIntent.confirmationStatus="CONFIRMED"
+            if (lng==='it-IT'){
+                updatedIntent.confirmationStatus="CONFIRMED"
+            }
+        
+            let art=intent_confirmation_articles[lng][subject_categories[lng].indexOf(subject)]
+                
+                return handlerInput.responseBuilder
+                    .speak(handlerInput.t('LIST_INTENT_CONFIRMATION_1_MSG', {art:art, order:order, number:number, sub: handlerInput.t(dict[lng][order.split(' ')[0]]['sub'][en_subject][object]), prep: dict[lng][order.split(' ')[0]]['prep'][en_subject][object], obj:dict[lng][order.split(' ')[0]]['obj'][en_subject][object]}))
+                    .addConfirmIntentDirective(updatedIntent)
+                    .getResponse();
         }
         
-        let art=intent_confirmation_articles[lng][subject_categories[lng].indexOf(subject)]
-            
+        if (cancel_words[lng].indexOf(instance)!==-1){
+            let updatedIntent = handlerInput.requestEnvelope.request.intent;
+            updatedIntent.slots.instance.value='';
+            updatedIntent.slots.object.value=''
+            updatedIntent.slots.list_subject.value=''
+            updatedIntent.slots.item=''
+            delete sessionAttributes.listTheTop;
+            handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
             return handlerInput.responseBuilder
-                .speak(handlerInput.t('LIST_INTENT_CONFIRMATION_1_MSG', {art:art, order:order, number:number, sub: handlerInput.t(dict[lng][order.split(' ')[0]]['sub'][en_subject][object]), prep: dict[lng][order.split(' ')[0]]['prep'][en_subject][object], obj:dict[lng][order.split(' ')[0]]['obj'][en_subject][object]}))
-                .addConfirmIntentDirective(updatedIntent)
-                .getResponse();
+                .speak(handlerInput.t('REPROMPT_MSG'))
+                .reprompt()
+                .getResponse(updatedIntent);
         }
-       
+        
         var url='cmd=fnd&ins='+instance;
         var speak='';
         
-        try{
-            speak=await api.AccessApi(url);
-        } catch(error){
-            console.log(error);
-        }
         
+        /**
+         * disambiguazione autore
+         */
+         if(sessionAttributes.listTheTop.Homonyms){
+            let num=get_number(instance,lng)
+            if(!isNaN(num) && num <= (sessionAttributes.listTheTop.Homonyms.item.length-1)){
+                if (sessionAttributes.listTheTop.Homonyms.obj_id===2){
+                    instance=sessionAttributes.listTheTop.Homonyms.item[num].acronym
+                } else {
+                    instance=sessionAttributes.listTheTop.Homonyms.item[num].name
+                }
+                speak=JSON.parse(JSON.stringify(sessionAttributes.listTheTop.Homonyms));
+                speak["result"]="ok";
+                speak["id"]=sessionAttributes.listTheTop.Homonyms.item[num].id;
+                speak["item"]=instance;
+                delete sessionAttributes.listTheTop.Homonyms;
+                handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+            } else {
+                speak=sessionAttributes.listTheTop.Homonyms
+            }
+        } else {
+            try{
+                speak=await api.AccessApi(url);
+            } catch(error){
+                console.log(error);
+            }
+        }
+       
         var message='';
         
         if (speak.result==='ok'){
             updatedIntent.slots.instance.value = speak.item 
             updatedIntent.slots.object.value=speak.object;
+            if(speak.obj_id===4 || speak.obj_id===2){
+                updatedIntent.slots.item.value=speak.id
+            }
             
-            delete updatedIntent.slots.item.value
+            delete sessionAttributes.ListTheTopIntentAuthors;
+            handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+            
             return handlerInput.responseBuilder
             .addDelegateDirective(updatedIntent)
             .getResponse();
@@ -326,20 +367,16 @@ const ItemListTheTopIntentHandler = {
                 .speak(handlerInput.t('ITEM_MSG',{inst: instance, msg:message}))
                 .addElicitSlotDirective('item')
                 .getResponse();
-        }
-        
-        if (cancel_words[lng].indexOf(instance)!==-1){
-            let updatedIntent = handlerInput.requestEnvelope.request.intent;
-            updatedIntent.slots.instance.value='';
-            updatedIntent.slots.object.value=''
-            updatedIntent.slots.list_subject.value=''
-            updatedIntent.slots.item=''
-            delete sessionAttributes.listTheTop;
-            handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
+                
+        } else if (speak.result==='ka'){
+            sessionAttributes.listTheTop.Homonyms=speak;
+            handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+            let msg=homonyms(speak,lng);
+            
             return handlerInput.responseBuilder
-                .speak(handlerInput.t('REPROMPT_MSG'))
-                .reprompt()
-                .getResponse(updatedIntent);
+                .speak(handlerInput.t('HOMONYMS_MSG',{msg:msg, obj:homonyms_objects[lng][speak.obj_id-1]}))
+                .addElicitSlotDirective('item')
+                .getResponse();
         }
         
         return handlerInput.responseBuilder
@@ -393,6 +430,7 @@ const ConfirmedListTheTopIntentHandler = {
         var object = Alexa.getSlotValue(handlerInput.requestEnvelope, 'object');
         var instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance');
         var order = Alexa.getSlotValue(handlerInput.requestEnvelope, 'order');
+        var item = Alexa.getSlotValue(handlerInput.requestEnvelope,'item');
         
         if(typeof(instance)==='undefined'){
             instance='all';
@@ -406,7 +444,13 @@ const ConfirmedListTheTopIntentHandler = {
         var object_id=object_categories['en-US'].indexOf(en_object)+1;
         let order_id=orders[lng].indexOf(order)+1
         
-        var url='cmd=lst&sub='+subject_id+'&obj='+object_id+'&ins='+instance+'&ord='+order_id+'&num='+number;
+        let ins=instance;
+        
+         if(object_id===4 || object_id===2){
+            ins=item
+        }
+        
+        var url='cmd=lst&sub='+subject_id+'&obj='+object_id+'&ins='+ins+'&ord='+order_id+'&num='+number;
         
         var speak='';
         
@@ -444,9 +488,11 @@ const ConfirmedListTheTopIntentHandler = {
                 art=intent_confirmation_articles[lng][subject_categories[lng].indexOf(subject)+10]
             }
             
-            
-            
-            message=handlerInput.t('LIST_QUERY_MSG', {art:art, num: number, sub:sub, obj:obj, inst:instance, prep: prep, order: order, lst: lst(speak,order,lng), verb:verb})
+            if (speak.lst.length===0){
+                message=handlerInput.t('LIST_NO_RESULT_MSG', {sub:sub, obj:obj, inst:instance, prep: prep})
+            } else {
+                message=handlerInput.t('LIST_QUERY_MSG', {art:art, num: number, sub:sub, obj:obj, inst:instance, prep: prep, order: order, lst: lst(speak,order,lng), verb:verb})
+            }
         } 
         
         else {
