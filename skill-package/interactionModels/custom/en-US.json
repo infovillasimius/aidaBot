@@ -118,6 +118,8 @@
             }
           ],
           "samples": [
+            "What about",
+            "Describe",
             "What about {query}",
             "Describe {query}",
             "what\u0027s {query}",
@@ -746,5 +748,5 @@
       }
     ]
   },
-  "version": "111"
+  "version": "112"
 }

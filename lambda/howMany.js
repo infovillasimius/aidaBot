@@ -21,7 +21,10 @@ const singular=logic.singular;
 const in_prep = logic.in_prep;
 const homonyms = logic.homonyms;
 const get_number = logic.get_number;
-const homonyms_objects = logic.objects
+const homonyms_objects = logic.objects;
+const choice_list = logic.choice_list;
+const get_choice = logic.get_choice;
+const kk_message = logic.kk_message;
 
 
 /**
@@ -196,6 +199,9 @@ const ItemHowManyIntentHandler = {
         var url='cmd=fnd&ins='+instance;
         var speak='';
         
+        /**
+         * homonyms disambiguation
+         */
         if(sessionAttributes.HowManyIntentHomonyms){
             let num=get_number(instance,lng)
             if(!isNaN(num) && num <= (sessionAttributes.HowManyIntentHomonyms.item.length-1)){
@@ -209,11 +215,36 @@ const ItemHowManyIntentHandler = {
                 speak["id"]=sessionAttributes.HowManyIntentHomonyms.item[num].id;
                 speak["item"]=instance
                 delete sessionAttributes.HowManyIntentHomonyms;
+                delete sessionAttributes.HowManyIntentItemList;
                 handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+                
             } else {
                 speak=sessionAttributes.HowManyIntentHomonyms
             }
-        } else {
+            
+        } 
+        
+        else if(sessionAttributes.HowManyIntentItemList){
+            let num=get_number(instance,lng)
+            if(!isNaN(num) && num <= sessionAttributes.HowManyIntentItemList.num.reduce((a, b) => a + b, 0)){
+                
+                let ins = get_choice(sessionAttributes.HowManyIntentItemList,num);
+                
+                url='cmd=fnd&ins='+ins;
+                
+                delete sessionAttributes.HowManyIntentItemList;
+                handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+
+                try{
+                    speak=await api.AccessApi(url);
+                } catch(error){
+                    console.log(error);
+                }
+            }
+        } 
+        
+        else {
+            
             try{
                 speak=await api.AccessApi(url);
             } catch(error){
@@ -246,56 +277,22 @@ const ItemHowManyIntentHandler = {
             .addConfirmIntentDirective(updatedIntent)
             .getResponse();
             
-        } else if (speak.result==='ko' && parseInt(speak.num)>1 && parseInt(speak.num)<4){
-            let msg=""
-            var n=speak.keys.length-1
-            for(let i in speak.keys){
-               msg=msg+speak.keys[i]
-               if (i==(n-1)){
-                   msg=msg+conjunction[lng];
-               } else if(i==(n)) {
-                   msg=msg+'. '
-               } else {
-                   msg=msg+', '
-               }
-            }
-            
-            message=handlerInput.t('ITEM_MSG', {inst: instance, msg: msg})
-            return handlerInput.responseBuilder
-                .speak(message)
-                .addElicitSlotDirective('item')
-                .getResponse();
-            
-        } else if (speak.result==='ko' && parseInt(speak.num)===0){
+        } else if (speak.result==='ko'){
             message=(handlerInput.t('NO_RESULT_MSG', {item: instance}))
             
         } else if (speak.result==='kk'){
-            message='';
-            for (let j in speak.num){
-                if (speak.num[j]>0){
-                    if(speak.num[j]>1){
-                        message = message + speak.num[j] + hits[lng] + article(lng,object_categories[lng][j]) + ', ';
-                    } else {
-                        message = message + speak.num[j] + hit[lng] + article(lng,object_categories[lng][j]) + ', ';
-                    }
-                    
-                }
-            }
+            message=kk_message(speak,lng,1);
+            
             return handlerInput.responseBuilder
                 .speak(handlerInput.t('TOO_GENERIC_MSG',{item: instance, results:message}))
                 .addElicitSlotDirective('item')
                 .getResponse();
                 
         } else if (speak.result==='k2'){
-            message='';
-            for(let i in speak.num){
-                if (speak.num[i]>0){
-                    for(let j in speak.keys[i]){
-                        message = message + speak.keys[i][j] + ', ';
-                    }
-                    message = message+in_prep[lng]+ article(lng,object_categories[lng][i]) + ', '
-                }
-            }
+            sessionAttributes.HowManyIntentItemList=speak;
+            handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+            message=choice_list(speak,lng);
+            
             return handlerInput.responseBuilder
                 .speak(handlerInput.t('ITEM_MSG',{inst: instance, msg:message}))
                 .addElicitSlotDirective('item')

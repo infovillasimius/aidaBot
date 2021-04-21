@@ -1,3 +1,16 @@
+const obj_cat = [
+    {
+        "en-US" : ['authors','conference acronyms','conference names'],
+        "it-IT" : ['autori','acronimi di conferenze','nomi di conferenze']
+    },
+    
+    {
+    "en-US":['topic','conference','organization','author','paper'],
+    "it-IT":['argomento','conferenza','organizzazione','autore','articolo']
+    }
+    
+]
+
 const dsc_obj_cat = {
     "en-US" : ['authors','conference acronyms','conference names'],
     "it-IT" : ['autori','acronimi di conferenze','nomi di conferenze']
@@ -387,21 +400,21 @@ const dict = {
         },
         'obj':{
             'authors':{
-                'topics':'topics',
+                'topics':'topic',
                 'conferences':'conferences',
                 'organizations':'',
                 'authors':'',
                 'papers':''
             },
             'papers':{
-                'topics':'topics',
+                'topics':'topic',
                 'conferences':'conferences',
                 'organizations':'',
                 'authors':'',
                 'papers':'papers'
             },
             'conferences':{
-                'topics':'topics',
+                'topics':'topic',
                 'conferences':'',
                 'organizations':'',
                 'authors':'',
@@ -415,7 +428,7 @@ const dict = {
                 'papers':''
             },
             'citations':{
-                'topics':'topics',
+                'topics':'topic',
                 'conferences':'conferences',
                 'organizations':'',
                 'authors':'',
@@ -732,21 +745,21 @@ const list_dict = {
             },
             'obj':{
                 'authors':{
-                    'topics':'topics',
+                    'topics':'topic',
                     'conferences':'conferences',
                     'organizations':'',
                     'authors':'',
                     'papers':''
                 },
                 'papers':{
-                    'topics':'topics',
+                    'topics':'topic',
                     'conferences':'conferences',
                     'organizations':'',
                     'authors':'',
                     'papers':'papers'
                 },
                 'conferences':{
-                    'topics':'topics',
+                    'topics':'topic',
                     'conferences':'',
                     'organizations':'',
                     'authors':'',
@@ -1102,6 +1115,31 @@ function homonyms(speak,lng){
     return msg;
 }
 
+function choice_list(speak,lng){
+    let message='';
+    let n=0;
+    for(let i in speak.num){
+        if (speak.num[i]>0){
+            for(let j in speak.keys[i]){
+                if(speak.cmd){
+                    message = message+numbers[lng][n]+', ' + speak.keys[i][j]['name'] + ', ';
+                } else {
+                    message = message+numbers[lng][n]+', ' + speak.keys[i][j] + ', ';
+                }
+                
+                n+=1
+            }
+            if(speak.cmd){
+                message = message+in_prep[lng]+ article(lng,dsc_obj_cat[lng][i]) + ', '
+            } else {
+                message = message+in_prep[lng]+ article(lng,object_categories[lng][i]) + ', '
+            }
+        }
+    }
+    message=message.substring(0,message.length-2);
+    return message;
+}
+
 function get_number(item,lng){
     let words=item.split(' ');
     for(let i in words){
@@ -1112,21 +1150,41 @@ function get_number(item,lng){
     return NaN
 }
 
+function get_choice(speak,num){
+    let n=0;
+    for(let i in speak.num){
+        n = num - speak.num[i];
+        if(n<0 || i==speak.num.length-1){
+            return speak.keys[i][num]
+        } else {
+            num = n
+        }
+    }
+}
+
 function list_elements(list,lng,element){
+    let blacklist=['computer science']
     let msg='';
-    for(let i in list){
-        if(element.length>0){
-            msg+=list[i][element]
-        } else {
-            msg+=list[i]
+    let i=0;
+    let j=0;
+    let k=3;
+    while(j<k && i<list.length){
+        if(blacklist.indexOf(list[i][element])===-1){
+            if(element.length>0){
+                msg+=list[i][element]
+            } else {
+                msg+=list[i]
+            }
+            if(j==k-2){
+                msg+=conjunction[lng]
+            } else if(j==k-1){
+                msg+='; '
+            } else {
+                msg+=', '
+            }
+            j+=1
         }
-        if(i==list.length-2){
-            msg+=conjunction[lng]
-        } else if(i==list.length-1){
-            msg+='; '
-        } else {
-            msg+=', '
-        }
+        i+=1;
     }
     return msg;
 }
@@ -1210,13 +1268,24 @@ function dsc(query,lng){
             msg+=list_elements(item.top_3_company,lng,'')
         }
         
-        
-        
-        
     } else {
         msg+='Sorry, Query not yet implemented!'
+        return msg;
     }
-    return msg;
+    msg=msg.substring(0,msg.length-2);
+    return msg+'. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?';
+}
+
+function kk_message(speak,lng,cmd){
+    
+    let message='';
+    for (let j in speak.num){
+        if (speak.num[j]>0){
+            message = message + speak.num[j] + (speak.num[j]>1 ? hits[lng] : hit[lng]) + article(lng,obj_cat[cmd][lng][j]) + ', ';
+        }
+    }
+    message=message.substring(0,message.length-2);
+    return message;
 }
 
 
@@ -1253,5 +1322,8 @@ module.exports = {
     get_number,
     dsc_obj_cat,
     dsc,
-    objects
+    objects,
+    choice_list,
+    get_choice,
+    kk_message
 };

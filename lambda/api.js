@@ -9,7 +9,9 @@ module.exports = {
             };
         
         async function getR(url,config) {
-            const baseUrl='http://magunica.ddns.net:8008/?pass=123abc&'
+            //const baseUrl='http://magunica.ddns.net:8008/?pass=123abc&'
+            const baseUrl='http://90.147.146.243/?pass=123abc&'
+            
             const res = await axios.get(baseUrl+url,config);
             return res.data;
         }

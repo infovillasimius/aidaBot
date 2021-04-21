@@ -2,7 +2,7 @@ const Alexa = require('ask-sdk-core');
 const api = require('./api');
 
 /**
- * Language translation constants
+ * Language constants
  */
 const logic = require('./language_logic');
 const cmds = logic.cmds;
@@ -12,7 +12,7 @@ const orders = logic.orders;
 const prepositions = logic.prepositions;
 
 
-async function parser(handlerInput,query){
+async function parser(handlerInput){
     const intent = Alexa.getIntentName(handlerInput.requestEnvelope)
     const lng = Alexa.getLocale(handlerInput.requestEnvelope); 
     let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();

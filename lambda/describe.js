@@ -16,6 +16,9 @@ const dsc_obj_cat = logic.dsc_obj_cat;
 const dsc = logic.dsc;
 const homonyms=logic.homonyms;
 const get_number=logic.get_number;
+const choice_list = logic.choice_list;
+const get_choice = logic.get_choice;
+const kk_message = logic.kk_message;
 
 const DescribeIntentHandler = {
     canHandle(handlerInput) {
@@ -32,6 +35,13 @@ const DescribeIntentHandler = {
         
         if(!sessionAttributes.DescribeIntent){
            sessionAttributes.DescribeIntent={}; 
+        }
+        
+        if(!instance){
+            return handlerInput.responseBuilder
+                .speak(handlerInput.t('DESCRIBE_INSTANCE_MSG'))
+                .addElicitSlotDirective('query')
+                .getResponse();
         }
         
         if (cancel_words[lng].indexOf(instance)!==-1){
@@ -62,8 +72,33 @@ const DescribeIntentHandler = {
                 handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
                 
             } else {
+                
                 speak={"result": "ka", "object": "authors", "obj_id": 4, "item": sessionAttributes.DescribeIntent.Authors}
             }
+        } 
+        
+        else if(sessionAttributes.DescribeIntent.ItemList){
+            let num=get_number(instance,lng)
+            if(!isNaN(num) && num <= sessionAttributes.DescribeIntent.ItemList.num.reduce((a, b) => a + b, 0)){
+                
+                let ins = get_choice(sessionAttributes.DescribeIntent.ItemList,num);
+                ins=ins.name;
+                url='cmd=dsc&ins='+ins;
+                
+                delete sessionAttributes.DescribeIntent.ItemList;
+                handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+
+                try{
+                    speak=await api.AccessApi(url);
+                } catch(error){
+                    console.log(error);
+                }
+            } 
+            
+            else {
+                speak=sessionAttributes.DescribeIntent.ItemList;
+            }
+            
         } else {
             try{
                 speak=await api.AccessApi(url);
@@ -86,35 +121,27 @@ const DescribeIntentHandler = {
             message=(handlerInput.t('NO_RESULT_MSG', {item: instance}))
             
         } else if (speak.result==='kk'){
-            message='';
-            for (let j in speak.num){
-                if (speak.num[j]>0){
-                    if(speak.num[j]>1){
-                        message = message + speak.num[j] + hits[lng] + article(lng,dsc_obj_cat[lng][j]) + ', ';
-                    } else {
-                        message = message + speak.num[j] + hit[lng] + article(lng,dsc_obj_cat[lng][j]) + ', ';
-                    }
-                }
-            }
+            message=kk_message(speak,lng,0);
+            
             return handlerInput.responseBuilder
-                .speak(handlerInput.t('TOO_GENERIC_MSG',{item: instance, results:message}))
+                .speak(handlerInput.t('DSC_TOO_GENERIC_MSG',{item: instance, results:message}))
                 .addElicitSlotDirective('query')
                 .getResponse();
                 
         } else if (speak.result==='k2'){
-            message='';
-            for(let i in speak.num){
-                if (speak.num[i]>0){
-                    for(let j in speak.keys[i]){
-                        message = message + speak.keys[i][j].name + ', ';
-                    }
-                    message = message+in_prep[lng]+ article(lng,dsc_obj_cat[lng][i]) + ', '
-                }
+            speak.cmd='dsc';
+            if(speak.num[1]>0){
+                instance=speak.keys[1][0]['acronym'];
             }
+            sessionAttributes.DescribeIntent.ItemList=speak;
+            handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+            message=choice_list(speak,lng);
+            
             return handlerInput.responseBuilder
                 .speak(handlerInput.t('ITEM_MSG',{inst: instance, msg:message}))
                 .addElicitSlotDirective('query')
                 .getResponse();
+                
         } else if (speak.result==='ka'){
             sessionAttributes.DescribeIntent.Authors=speak.item;
             handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
