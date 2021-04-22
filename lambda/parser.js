@@ -12,23 +12,33 @@ const orders = logic.orders;
 const prepositions = logic.prepositions;
 
 
-async function parser(handlerInput){
+async function slot_parser(handlerInput){
     const intent = Alexa.getIntentName(handlerInput.requestEnvelope)
     const lng = Alexa.getLocale(handlerInput.requestEnvelope); 
     let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
     let updatedIntent = handlerInput.requestEnvelope.request.intent;
     let item = Alexa.getSlotValue(handlerInput.requestEnvelope, 'query');
     
+    /*
+    sessionAttributes.parser_passed=Alexa.getIntentName(handlerInput.requestEnvelope);
+    handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+    */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
-
-
-
-
-
-
 module.exports = {
-    parser
+    slot_parser
 }
 
 

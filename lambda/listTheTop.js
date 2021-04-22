@@ -1,5 +1,6 @@
 const Alexa = require('ask-sdk-core');
 const api = require('./api');
+const parser = require('./parser')
 
 /**
  * Language constants
@@ -52,6 +53,10 @@ const ListTheTopIntentHandler = {
         var instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance');
         var order = Alexa.getSlotValue(handlerInput.requestEnvelope, 'order');
         var item = Alexa.getSlotValue(handlerInput.requestEnvelope, 'item');
+        
+        if(handlerInput.requestEnvelope.request.intent.slots.query.value){
+            parser.slot_parser(handlerInput)
+        }
         
         if (!sessionAttributes.listTheTop){
              sessionAttributes.listTheTop={};

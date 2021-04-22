@@ -93,9 +93,16 @@
             {
               "name": "item",
               "type": "AMAZON.SearchQuery"
+            },
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery"
             }
           ],
           "samples": [
+            "list {query}",
+            "Itemise {query}",
+            "Itemize {query}",
             "List the top {list_subject}",
             "list",
             "find {item}",
@@ -118,7 +125,7 @@
             }
           ],
           "samples": [
-            "What about",
+            "What about ",
             "Describe",
             "What about {query}",
             "Describe {query}",
@@ -510,6 +517,13 @@
               "elicitationRequired": false,
               "confirmationRequired": false,
               "prompts": {}
+            },
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
             }
           ],
           "delegationStrategy": "SKILL_RESPONSE"
@@ -748,5 +762,5 @@
       }
     ]
   },
-  "version": "112"
+  "version": "113"
 }

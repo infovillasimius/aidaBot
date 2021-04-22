@@ -22,7 +22,7 @@ module.exports = {
             INTENT_CONFIRMATION_1_MSG: 'Do you want to know how many {{sub}} {{prep}} {{obj}} are in the AIDA database?',
             INTENT_CONFIRMATION_2_MSG: 'Do you want to know how many {{sub}} {{prep}} {{inst}} {{obj}} are in the AIDA database?',
             TOO_GENERIC_MSG:'Your search for {{item}} got {{results}}. You need to try again and to be more specific. Could you tell me the exact name?',
-            NO_RESULT_MSG:'Your search for {{item}} got no result. You need to try again. what could I search for you?',
+            NO_RESULT_MSG:'Your search for {{item}} got no result. You need to try again. What could I search for you?',
             QUERY_1_MSG: ['I found {{num}} {{sub}} {{prep}} {{inst}} {{obj}}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?', 
                           'I counted {{num}} {{sub}} {{prep}} {{inst}} {{obj}}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?'],
             QUERY_2_MSG: ['I found {{num}} different {{sub}} {{prep}} {{obj}}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
@@ -49,6 +49,7 @@ module.exports = {
             LIST_NO_RESULT_MSG:'In the AIDA database, there are no {{sub}} {{prep}} {{inst}} {{obj}}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
             
             DSC_TOO_GENERIC_MSG:'Your search for {{item}} got {{results}}. You need to try again and to be more specific. What is the name of the author or conference you want to know about?',
+            DSC_NO_RESULT_MSG:'Your search for {{item}} got no result. You need to try again. What is the name of the author or conference you want to know about?',
             DESCRIBE_INSTANCE_MSG: 'What is the name of the author or conference you want to know about?',
             DESCRIBE_CONFIRM_MSG : 'Do you want to know something about {{ins}}?',
             DESCRIBE_TOPIC_MSG :'sorry but I can\'t tell you anything about the topics yet. You can ask me about conferences, organizations and authors.'

@@ -12,7 +12,6 @@ const article=logic.article;
 const object_categories = logic.object_categories;
 const in_prep = logic.in_prep;
 const cancel_words = logic.cancel_words;
-const dsc_obj_cat = logic.dsc_obj_cat;
 const dsc = logic.dsc;
 const homonyms=logic.homonyms;
 const get_number=logic.get_number;
@@ -59,8 +58,8 @@ const DescribeIntentHandler = {
         
         if(sessionAttributes.DescribeIntent.Authors){
             let num=get_number(instance,lng)
-            if(!isNaN(num) && num < (sessionAttributes.DescribeIntent.Authors.length)){
-                let ins=sessionAttributes.DescribeIntent.Authors[num].id
+            if(!isNaN(num) && num < (sessionAttributes.DescribeIntent.Authors.item.length)){
+                let ins=sessionAttributes.DescribeIntent.Authors.item[num].id
                 
                 url='cmd=dsc&ins='+ins;
                 try{
@@ -118,7 +117,7 @@ const DescribeIntentHandler = {
             .getResponse();
             
         } else if (speak.result==='ko'){
-            message=(handlerInput.t('NO_RESULT_MSG', {item: instance}))
+            message=(handlerInput.t('DSC_NO_RESULT_MSG', {item: instance}))
             
         } else if (speak.result==='kk'){
             message=kk_message(speak,lng,0);
@@ -143,9 +142,9 @@ const DescribeIntentHandler = {
                 .getResponse();
                 
         } else if (speak.result==='ka'){
-            sessionAttributes.DescribeIntent.Authors=speak.item;
+            sessionAttributes.DescribeIntent.Authors=speak;
             handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
-            let msg=homonyms(speak.item,lng);
+            let msg=homonyms(speak,lng);
             
             return handlerInput.responseBuilder
                 .speak(handlerInput.t('HOMONYMS_MSG',{msg:msg}))

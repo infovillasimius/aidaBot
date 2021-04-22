@@ -1,5 +1,6 @@
 const Alexa = require('ask-sdk-core');
 const api = require('./api');
+const parser = require('./parser')
 
 /**
  * Language translation constants
@@ -43,6 +44,10 @@ const StartHowManyIntentHandler = {
     const lng = Alexa.getLocale(handlerInput.requestEnvelope); 
     let updatedIntent = handlerInput.requestEnvelope.request.intent;
     let subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
+    
+    if(handlerInput.requestEnvelope.request.intent.slots.query.value){
+        parser.slot_parser(handlerInput)
+    }
     
     if(!handlerInput.requestEnvelope.request.intent.slots.subject.value){
         return handlerInput.responseBuilder

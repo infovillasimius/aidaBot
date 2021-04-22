@@ -5,16 +5,11 @@ const obj_cat = [
     },
     
     {
-    "en-US":['topic','conference','organization','author','paper'],
-    "it-IT":['argomento','conferenza','organizzazione','autore','articolo']
+        "en-US":['topic','conference','organization','author','paper'],
+        "it-IT":['argomento','conferenza','organizzazione','autore','articolo']
     }
     
 ]
-
-const dsc_obj_cat = {
-    "en-US" : ['authors','conference acronyms','conference names'],
-    "it-IT" : ['autori','acronimi di conferenze','nomi di conferenze']
-}
 
 const list_verbs = {
     "en-US" : ['is','are'],
@@ -1118,22 +1113,14 @@ function homonyms(speak,lng){
 function choice_list(speak,lng){
     let message='';
     let n=0;
+    let cmd=(speak.cmd ? 0:1);
     for(let i in speak.num){
         if (speak.num[i]>0){
             for(let j in speak.keys[i]){
-                if(speak.cmd){
-                    message = message+numbers[lng][n]+', ' + speak.keys[i][j]['name'] + ', ';
-                } else {
-                    message = message+numbers[lng][n]+', ' + speak.keys[i][j] + ', ';
-                }
-                
+                message+=numbers[lng][n]+', ' +(speak.cmd ? speak.keys[i][j]['name'] : speak.keys[i][j]) + ', ';
                 n+=1
             }
-            if(speak.cmd){
-                message = message+in_prep[lng]+ article(lng,dsc_obj_cat[lng][i]) + ', '
-            } else {
-                message = message+in_prep[lng]+ article(lng,object_categories[lng][i]) + ', '
-            }
+            message += in_prep[lng]+ article(lng,obj_cat[cmd][lng][i]) + ', ';
         }
     }
     message=message.substring(0,message.length-2);
@@ -1277,7 +1264,6 @@ function dsc(query,lng){
 }
 
 function kk_message(speak,lng,cmd){
-    
     let message='';
     for (let j in speak.num){
         if (speak.num[j]>0){
@@ -1320,7 +1306,6 @@ module.exports = {
     intent_confirmation_articles,
     homonyms,
     get_number,
-    dsc_obj_cat,
     dsc,
     objects,
     choice_list,
