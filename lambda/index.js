@@ -190,15 +190,18 @@ const DialogManagementStateInterceptor = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
+        
         howMany.DeniedHowManyIntentHandler,
         howMany.CompletedHowManyIntentHandler,
         howMany.HowManyIntentHandler,
         howMany.ItemHowManyIntentHandler,
         howMany.StartHowManyIntentHandler,
-        listTheTop.DeniedListTheTopIntentHandler,
-        listTheTop.ListTheTopIntentHandler,
-        listTheTop.ItemListTheTopIntentHandler,
+        
         listTheTop.ConfirmedListTheTopIntentHandler,
+        listTheTop.DeniedListTheTopIntentHandler,
+        listTheTop.ItemListTheTopIntentHandler,
+        listTheTop.ListTheTopIntentHandler,
+        
         //findItem.FindItemIntentHandler,
         describe.DescribeIntentHandler,
         describe.DeniedDescribeIntentHandler,

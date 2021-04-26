@@ -32,6 +32,7 @@ const choice_list = logic.choice_list;
 const get_choice = logic.get_choice;
 const kk_message = logic.kk_message;
 
+
 /**
  * Handler executed when there are empty required slots
  */
@@ -43,7 +44,7 @@ const ListTheTopIntentHandler = {
             && (!handlerInput.requestEnvelope.request.intent.slots.item.value
             || handlerInput.requestEnvelope.request.intent.slots.object.value);
     },
-    handle(handlerInput) {
+    async handle(handlerInput) {
         const lng = Alexa.getLocale(handlerInput.requestEnvelope); 
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         var updatedIntent = handlerInput.requestEnvelope.request.intent;
@@ -53,16 +54,55 @@ const ListTheTopIntentHandler = {
         var instance = Alexa.getSlotValue(handlerInput.requestEnvelope, 'instance');
         var order = Alexa.getSlotValue(handlerInput.requestEnvelope, 'order');
         var item = Alexa.getSlotValue(handlerInput.requestEnvelope, 'item');
+        let speak;
         
         if(handlerInput.requestEnvelope.request.intent.slots.query.value){
-            parser.slot_parser(handlerInput)
+            speak=await parser.slot_parser(handlerInput);
+            
+            if(speak.sub){
+                subject=speak.sub.value;
+                handlerInput.requestEnvelope.request.intent.slots.list_subject.value=speak.sub.value;
+                updatedIntent.slots.list_subject.value=speak.sub.value;
+            }
+            if(speak.ins){
+                item=speak.ins.value;
+                handlerInput.requestEnvelope.request.intent.slots.item.value=speak.ins.value;
+                updatedIntent.slots.item.value=speak.ins.value;
+                instance=speak.ins.value;
+                handlerInput.requestEnvelope.request.intent.slots.instance.value=speak.ins.value;
+                updatedIntent.slots.instance.value=speak.ins.value;
+                if(item==='all'){
+                    object='all'
+                    handlerInput.requestEnvelope.request.intent.slots.object.value='all';
+                    updatedIntent.slots.object.value='all';
+                }
+            }
+            if(speak.num){
+                number=speak.num.value;
+                handlerInput.requestEnvelope.request.intent.slots.number.value=speak.num.value;
+                updatedIntent.slots.number.value=speak.num.value;
+            }
+            if(speak.order){
+                order=speak.order.value;
+                handlerInput.requestEnvelope.request.intent.slots.order.value=speak.order.value;
+                updatedIntent.slots.order.value=speak.order.value;
+            }
+            
+            /*if(speak.obj){
+                object=speak.obj.value
+                handlerInput.requestEnvelope.request.intent.slots.object.value=speak.obj.value;
+                updatedIntent.slots.object.value=speak.obj.value;
+            }*/
+            
+            delete handlerInput.requestEnvelope.request.intent.slots.query.value
+            delete updatedIntent.slots.query.value;
         }
         
         if (!sessionAttributes.listTheTop){
              sessionAttributes.listTheTop={};
         }
    
-        else if (!number && !sessionAttributes.listTheTop.number){
+        if (!number && !sessionAttributes.listTheTop.number){
             number = "3";
             sessionAttributes.listTheTop.number="3"
             handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
@@ -80,6 +120,11 @@ const ListTheTopIntentHandler = {
         else if (number && sessionAttributes.listTheTop.number!==number){
             sessionAttributes.listTheTop.number=number
             handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+        }
+        
+        else if (!number && sessionAttributes.listTheTop.number){
+            number = sessionAttributes.listTheTop.number;
+            updatedIntent.slots.number.value=number;
         }
         
         if (!subject){
@@ -137,7 +182,19 @@ const ListTheTopIntentHandler = {
                 .getResponse();
         } 
         
-        
+        if(!object){
+        let result = await parser.item_checker(handlerInput,updatedIntent)
+            
+            if (result==='1'){
+                object=updatedIntent.slots.object.value
+                handlerInput.requestEnvelope.request.intent.slots.object.value=updatedIntent.slots.object.value;
+                item=updatedIntent.slots.item.value
+                handlerInput.requestEnvelope.request.intent.slots.item.value=updatedIntent.slots.item.value;
+            } else {
+                return result
+            }
+         
+        }
         let en_subject=swap(lng,subject);
         let en_object=swap2(lng,object);
         
@@ -160,6 +217,37 @@ const ListTheTopIntentHandler = {
         
         let art=intent_confirmation_articles[lng][subject_categories[lng].indexOf(subject)]
         
+        if(object==='all'){
+            if(!legal_queries[en_subject]['all'][orders[lng].indexOf(order.split(' ')[0])]){
+                let updatedIntent = handlerInput.requestEnvelope.request.intent;
+                updatedIntent.slots.instance.value='';
+                updatedIntent.slots.object.value=''
+                updatedIntent.slots.list_subject.value=''
+                delete sessionAttributes.listTheTop;
+                delete sessionAttributes.ListTheTopIntentAuthors
+                handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
+                return handlerInput.responseBuilder
+                    .speak(handlerInput.t('NO_SENSE_MSG'))
+                    .reprompt(handlerInput.t('REPROMPT_END_MSG'))
+                    .getResponse();
+            }
+            
+            updatedIntent.slots.instance.value='all';
+            updatedIntent.slots.object.value='all';
+            let object=en_subject;
+            
+            if (lng==='it-IT'){
+                updatedIntent.confirmationStatus="CONFIRMED"
+            }
+        
+            let art=intent_confirmation_articles[lng][subject_categories[lng].indexOf(subject)]
+                
+                return handlerInput.responseBuilder
+                    .speak(handlerInput.t('LIST_INTENT_CONFIRMATION_1_MSG', {art:art, order:order, number:number, sub: handlerInput.t(dict[lng][order.split(' ')[0]]['sub'][en_subject][object]), prep: dict[lng][order.split(' ')[0]]['prep'][en_subject][object], obj:dict[lng][order.split(' ')[0]]['obj'][en_subject][object]}))
+                    .addConfirmIntentDirective(updatedIntent)
+                    .getResponse();
+        }
+        
         return handlerInput.responseBuilder
             .speak(handlerInput.t('LIST_INTENT_CONFIRMATION_2_MSG', {art:art, order:order, number:number, sub: handlerInput.t(dict[lng][order.split(' ')[0]]['sub'][en_subject][en_object]), inst: instance, prep: dict[lng][order.split(' ')[0]]['prep'][en_subject][en_object], obj:dict[lng][order.split(' ')[0]]['obj'][en_subject][en_object] }))
             .addConfirmIntentDirective(updatedIntent)
@@ -179,25 +267,25 @@ const ItemListTheTopIntentHandler = {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'ListTheTopIntent'
+            && (handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED'
             && (handlerInput.requestEnvelope.request.intent.slots.instance.value
             || handlerInput.requestEnvelope.request.intent.slots.item.value)
-            && !handlerInput.requestEnvelope.request.intent.slots.object.value
-            && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
+            && !handlerInput.requestEnvelope.request.intent.slots.object.value);
     },
     async handle(handlerInput) {
+        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const lng = Alexa.getLocale(handlerInput.requestEnvelope);
         let subject = Alexa.getSlotValue(handlerInput.requestEnvelope,'list_subject');
         let updatedIntent = handlerInput.requestEnvelope.request.intent;
         var number = Alexa.getSlotValue(handlerInput.requestEnvelope, 'number');
         var order = Alexa.getSlotValue(handlerInput.requestEnvelope, 'order');
         var instance;
-        if(!handlerInput.requestEnvelope.request.intent.slots.item.value){
+        if(!handlerInput.requestEnvelope.request.intent.slots.item.value && sessionAttributes.go){
             instance = Alexa.getSlotValue(handlerInput.requestEnvelope,'instance');
         } else {
             instance = Alexa.getSlotValue(handlerInput.requestEnvelope,'item');
         }
         
-        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         
         let en_subject=swap(lng,subject);
         if (instance==='all' || instance==='no name' || instance==='no'){

@@ -1064,7 +1064,7 @@ function lst(result,order,lng){
                 ord=order;
             }
             
-            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].citations+' '+ord.split(' ')[0]+'.'
+            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].citations+' '+ord.split(' ')[0]+';'
         }
     } else {
         let list=result.lst;
@@ -1081,9 +1081,10 @@ function lst(result,order,lng){
                 ord=order;
             }
             
-            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].papers+' '+ord.split(' ')[0]+'.'
+            msg=msg+' '+list[i].name+author+list_prep[lng]+list[i].papers+' '+ord.split(' ')[0]+';'
         }
     }
+    msg=msg.substring(0,msg.length-1);
     return msg;
 }
 

@@ -40,13 +40,31 @@ const StartHowManyIntentHandler = {
         || !handlerInput.requestEnvelope.request.intent.slots.object.value)
       && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
   },
-  handle(handlerInput) {
+  async handle(handlerInput) {
     const lng = Alexa.getLocale(handlerInput.requestEnvelope); 
     let updatedIntent = handlerInput.requestEnvelope.request.intent;
     let subject = Alexa.getSlotValue(handlerInput.requestEnvelope, 'subject');
+    let object = Alexa.getSlotValue(handlerInput.requestEnvelope, 'object');
+    let item  = Alexa.getSlotValue(handlerInput.requestEnvelope, 'item');
+    let query = Alexa.getSlotValue(handlerInput.requestEnvelope, 'query');
+    let speak;
     
     if(handlerInput.requestEnvelope.request.intent.slots.query.value){
-        parser.slot_parser(handlerInput)
+
+        speak=await parser.slot_parser(handlerInput);
+        if(speak.sub){
+            subject=speak.sub.value;
+            handlerInput.requestEnvelope.request.intent.slots.subject.value=speak.sub.value;
+            updatedIntent.slots.subject.value=speak.sub.value;
+        }
+        if(speak.ins){
+            item=speak.ins.value;
+            handlerInput.requestEnvelope.request.intent.slots.item.value=speak.ins.value;
+            updatedIntent.slots.item.value=speak.ins.value;
+        }
+        
+        delete handlerInput.requestEnvelope.request.intent.slots.query.value
+        delete updatedIntent.slots.query.value;
     }
     
     if(!handlerInput.requestEnvelope.request.intent.slots.subject.value){
@@ -81,7 +99,6 @@ const StartHowManyIntentHandler = {
     if(handlerInput.requestEnvelope.request.intent.slots.item.value) {
         let instance=Alexa.getSlotValue(handlerInput.requestEnvelope, 'item');
         let en_subject=swap(lng,subject);
-        
         
         if (instance==='all' || instance==='no name' || instance==='no'){
             let en_object=combinations[en_subject]
@@ -169,10 +186,12 @@ const ItemHowManyIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HowManyIntent'
+            && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED'
+            && (handlerInput.requestEnvelope.request.intent.slots.subject.value
             && handlerInput.requestEnvelope.request.intent.slots.instance.value
             && handlerInput.requestEnvelope.request.intent.slots.instance.value !== 'no'
-            && !handlerInput.requestEnvelope.request.intent.slots.object.value
-            && handlerInput.requestEnvelope.request.intent.confirmationStatus !== 'CONFIRMED';
+            && !handlerInput.requestEnvelope.request.intent.slots.object.value);
+            
     },
     async handle(handlerInput) {
         const lng = Alexa.getLocale(handlerInput.requestEnvelope);
@@ -180,6 +199,7 @@ const ItemHowManyIntentHandler = {
         let subject = Alexa.getSlotValue(handlerInput.requestEnvelope,'subject');
         subject=swap(lng,subject);
         let updatedIntent = handlerInput.requestEnvelope.request.intent;
+        delete updatedIntent.slots.query.value; //necessario altrimenti rimane bloccato sulla disambiguazione
         var instance;
         if(!handlerInput.requestEnvelope.request.intent.slots.item.value){
             instance = Alexa.getSlotValue(handlerInput.requestEnvelope,'instance');
@@ -310,7 +330,7 @@ const ItemHowManyIntentHandler = {
             
             return handlerInput.responseBuilder
                 .speak(handlerInput.t('HOMONYMS_MSG',{msg:msg, obj:homonyms_objects[lng][speak.obj_id-1]}))
-                .addElicitSlotDirective('item')
+                .addElicitSlotDirective('item',updatedIntent)
                 .getResponse();
         }
         

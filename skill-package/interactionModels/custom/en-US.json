@@ -51,20 +51,11 @@
             }
           ],
           "samples": [
+            "count {query}",
             "give me {item}",
-            "count {subject}",
-            "count the {subject} with  {instance}",
             "how many {query}",
             "count",
-            "count the {subject} of {instance}",
-            "count the {subject} from {instance}",
-            "Count the {subject} in  {instance}",
-            "count the {subject} by  {instance}",
-            "count the {subject} ",
-            "Count the number of {subject}",
-            "Count the number of {subject} in  {instance}",
-            "Count the number of {subject} by  {instance}",
-            "Count the number of {subject}  {instance} in {object}"
+            "Count the number of {subject} with {instance} in {object}"
           ]
         },
         {
@@ -103,13 +94,9 @@
             "list {query}",
             "Itemise {query}",
             "Itemize {query}",
-            "List the top {list_subject}",
             "list",
             "find {item}",
             "List the top",
-            "List the top {number} {list_subject}",
-            "List the top {number}",
-            "List the top {number} {list_subject} from {instance} order by {order}",
             "List the top {number} {list_subject} from {instance} in {object} order by {order}"
           ]
         },
@@ -762,5 +749,5 @@
       }
     ]
   },
-  "version": "113"
+  "version": "117"
 }

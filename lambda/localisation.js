@@ -26,7 +26,7 @@ module.exports = {
             QUERY_1_MSG: ['I found {{num}} {{sub}} {{prep}} {{inst}} {{obj}}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?', 
                           'I counted {{num}} {{sub}} {{prep}} {{inst}} {{obj}}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?'],
             QUERY_2_MSG: ['I found {{num}} different {{sub}} {{prep}} {{obj}}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
-                          'I counted {{num}} different {{sub}} {{prep}} {{obj}}. You can ask to perform anothera query on the data contained in the AIDA database or ask for Help. What would you like to try?'],
+                          'I counted {{num}} different {{sub}} {{prep}} {{obj}}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?'],
             REPROMPT_MSG: 'So, what would you like to ask?',
             NO_QUERY_MSG: ['Sorry, you asked for a query that is not yet implemented. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
                             'Sorry, you asked for a not yet implemented query. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?', 
