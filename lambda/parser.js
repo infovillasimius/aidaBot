@@ -47,13 +47,7 @@ async function slot_parser(handlerInput){
     let cmd = intent_name==='HowManyIntent' ? 'count' : 'list';
     
     let res={};
-    
-    
-    /*sessionAttributes.parser_passed=Alexa.getIntentName(handlerInput.requestEnvelope);
-    handlerInput.attributesManager.setSessionAttributes(sessionAttributes)*/
-    //sessionAttributes.go=1;
-    //handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
-    
+
     let url='cmd=parser&lng='+lng+'&ins='+cmd+' '+query;
     try{
         speak=await api.AccessApi(url);
@@ -61,17 +55,6 @@ async function slot_parser(handlerInput){
         console.log(error);
     }
     
-    //sessionAttributes.parser=speak
-    //handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
-    /*
-    
-    if(intent_name==='HowManyIntent'){
-        if(speak.sub){
-            res.sub=speak.sub.value
-            handlerInput.requestEnvelope.request.intent.slots.subject.value=speak.sub.value;
-        }
-    }
-    */
     return speak;
 }
 
@@ -112,9 +95,7 @@ async function item_checker(handlerInput,updatedIntent) {
         delete sessionAttributes.ListTheTopIntentAuthors;
         handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
         
-        return '1' /*handlerInput.responseBuilder
-            .addDelegateDirective(updatedIntent)
-            .getResponse();*/
+        return '1'
         
     } else if (speak.result==='ko'){
         

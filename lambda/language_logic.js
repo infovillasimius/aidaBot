@@ -5,8 +5,8 @@ const obj_cat = [
     },
     
     {
-        "en-US":['topic','conference','organization','author','paper'],
-        "it-IT":['argomento','conferenza','organizzazione','autore','articolo']
+        "en-US":['topics', 'conferences', 'organizations', 'authors', 'papers'],
+        "it-IT":['argomenti', 'conferenze', 'organizzazioni', 'autori', 'articoli']
     }
     
 ]
@@ -1093,8 +1093,8 @@ function homonyms(speak,lng){
     let num=0;
     let item=speak.item;
     for(let i in item){
-        num=numbers[lng][i]
-        msg=msg+num+', '+ item[i].name
+        num='say '+numbers[lng][i]+' for '
+        msg=msg+num+item[i].name
         if(item[i].affiliation){
             msg=msg + homonyms_list[lng][0]+ item[i].affiliation+"; \n"
         } else if(item[i].paper) {
@@ -1155,7 +1155,7 @@ function list_elements(list,lng,element){
     let msg='';
     let i=0;
     let j=0;
-    let k=3;
+    let k=list.length;
     while(j<k && i<list.length){
         if(blacklist.indexOf(list[i][element])===-1){
             if(element.length>0){

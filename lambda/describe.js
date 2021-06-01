@@ -72,7 +72,7 @@ const DescribeIntentHandler = {
                 
             } else {
                 
-                speak={"result": "ka", "object": "authors", "obj_id": 4, "item": sessionAttributes.DescribeIntent.Authors}
+                speak=sessionAttributes.DescribeIntent.Authors //{"result": "ka", "object": "authors", "obj_id": 4, "item": sessionAttributes.DescribeIntent.Authors}
             }
         } 
         

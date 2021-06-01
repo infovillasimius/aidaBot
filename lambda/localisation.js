@@ -11,7 +11,7 @@ module.exports = {
             FALLBACK_MSG: 'Sorry, I don\'t know that. Please try again.',
             ERROR_MSG: 'Sorry, there was an error. Please try again.',
             
-            HOMONYMS_MSG:'I found the following homonyms: {{msg}} To choose, you have to say the number of the {{obj}} you prefer',
+            HOMONYMS_MSG:'I found different homonyms: {{msg}} ', //To choose, you have to say the number of the {{obj}} you prefer',
             
             SUBJECT_REQUEST_MSG:'I can count papers, authors, conferences, organizations and citations. What do you want me to count?',
             SUBJECT_WRONG_MSG:'Sorry, I can\'t count {{sub}}. I can count papers, authors, conferences, organizations and citations. What do you prefer?',

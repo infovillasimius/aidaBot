@@ -10,8 +10,6 @@ const languageStrings = require('./localisation');
 const howMany = require('./howMany');
 const listTheTop = require('./listTheTop');
 const describe = require('./describe');
-const findItem = require('./findItem');
-const subject_categories = ['authors', 'papers', 'conferences', 'organizations', 'citations'];
 const parser = require('./parser');
 
 const LaunchRequestHandler = {
@@ -202,7 +200,6 @@ exports.handler = Alexa.SkillBuilders.custom()
         listTheTop.ItemListTheTopIntentHandler,
         listTheTop.ListTheTopIntentHandler,
         
-        //findItem.FindItemIntentHandler,
         describe.DescribeIntentHandler,
         describe.DeniedDescribeIntentHandler,
         describe.ConfirmedDescribeIntentHandler,
