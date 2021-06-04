@@ -1,7 +1,7 @@
 var session={
 	'level':0,
 	'intent' : {'slots':{}},
-	'audio' : true
+	'audio' : false
 };
 
 var audio_resume=setInterval(audio_reset,10000);

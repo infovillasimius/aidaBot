@@ -22,22 +22,21 @@
 	</div>
 </div>
 <div class='help_text'></div>
-
 <div id="bot" class="chat"></div>
-
 <div class="input">
 	<fieldset class="text">
 		<legend>Input TEXT:</legend> 
 		<input type="text" autofocus id="user_input"></input> 
-		<div class="audio">
-			<input id="audio" type="checkbox" name="audio"/ checked="checked">
-			<label for="audio">Audio</label>
-		</div>
 	</fieldset>
-	
 </div>
-<div class="speak_button">
-	<button  id="button" onclick="toggleStartStop()"></button>
+<div class="audio_cmd">
+	<div class="speak_button">
+		<button  id="button" onclick="toggleStartStop()"></button>
+	</div>
+	<div class="audio">
+		<input id="audio" type="checkbox" name="audio">
+		<label for="audio">Enable speech synthesizer</label>
+	</div>
 </div>
 </body>
 </html>
