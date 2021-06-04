@@ -596,7 +596,7 @@ def check_author(result):
             result['result'] = 'ka'
             result['item'] = authors
         elif len(authors) == 1:
-            result['author_id'] = authors[0]['id']
+            result['id'] = authors[0]['id']
         else:
             result['result'] = 'ka'
             result['item'] = authors2
