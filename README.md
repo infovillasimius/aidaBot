@@ -1,6 +1,6 @@
-# aida
+# AidaBot Chat
 
-<h2>Alexa Skill</h2>
+<h3>Alexa Skill</h3>
 To import AIDA Alexa-hosted skill from this repository
 
 <ol>
@@ -26,9 +26,9 @@ The skill uses the data from our web server. If you want yours you have to:
 <li>run the web server by launching web_server.py script (configuration options are in config.py and conf.js)</li>
 </ol>
 
-<h2><a href="https://aidabot.ddns.net" target="_blank">AidaBot Chat</a> - Web Application</h2>
-
-The database can be queried about <b>authors</b>, papers, conferences, organizations, citations and topics.
+<h3><a href="https://aidabot.ddns.net" target="_blank">The web application</a></h3>
+The Web Browser application is based onJavascript and JQuery and offers roughly the same functionality as the Alexa skill.
+The database can be queried about authors, papers, conferences, organizations, citations and topics.
 It is possible to further filter the queries by specifying the name of a particular topic, conference, organization or author.
 The results can be sorted according to one of the following four options: publications, citations, publications in the last 5 years, citations in the last 5 years
 There are three types of queries:
