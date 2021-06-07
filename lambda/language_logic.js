@@ -1152,27 +1152,30 @@ function get_choice(speak,num){
 
 function list_elements(list,lng,element){
     let blacklist=['computer science']
+    for (let i in list){
+		if(blacklist.indexOf(list[i][element])!==-1){
+			list.splice(i, 1); 
+            i--;
+		}
+	}
     let msg='';
     let i=0;
     let j=0;
     let k=list.length;
-    while(j<k && i<list.length){
-        if(blacklist.indexOf(list[i][element])===-1){
-            if(element.length>0){
-                msg+=list[i][element]
-            } else {
-                msg+=list[i]
-            }
-            if(j==k-2){
-                msg+=conjunction[lng]
-            } else if(j==k-1){
-                msg+='; '
-            } else {
-                msg+=', '
-            }
-            j+=1
+    while(j<k){
+        if(element.length>0){
+            msg+=list[j][element]
+        } else {
+            msg+=list[j]
         }
-        i+=1;
+        if(j==k-2){
+            msg+=conjunction[lng]
+        } else if(j==k-1){
+            msg+='; '
+        } else {
+            msg+=', '
+        }
+        j+=1
     }
     return msg;
 }
