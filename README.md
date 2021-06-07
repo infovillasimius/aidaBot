@@ -16,6 +16,15 @@ To import AIDA Alexa-hosted skill from this repository
   <li>Click Continue. The message Creating your Alexa-hosted skill appears. If Alexa validates that the Git repository contains an Alexa skill that it can import, Alexa creates       your Alexa-hosted skill.</li>
 </ol>
 
+<h3>Web Server</h3>
+The skill uses the data from our web server. If you want yours you have to:
+<ol>
+<li>install elasticsearch on a Linux machine with public ip reachable from the internet</li>
+<li>download sample data from https://github.com/infovillasimius/aida/tree/main/data_sample (the authors data for index "authors" are in a splitted zip file which has to be unzipped only once before use with import_dsc_authors_zip.py script)</li>
+<li>create four indexes named authors, authors2, aida2 and conferences</li>
+<li>index data on elasticsearch using the four python scripts provided</li>
+<li>run the web server by launching web_server.py script (configuration options are in config.py and conf.js)</li>
+</ol>
 
 <h2><a href="https://aidabot.ddns.net" target="_blank">AidaBot Chat</a> - Web Application</h2>
 
