@@ -67,7 +67,7 @@ textarea:focus, input:focus{
 }
 
 #user_input{
-	width: 100%;
+	width: 80%;
 	border: 0; 
 }
 
@@ -122,5 +122,9 @@ textarea:focus, input:focus{
  .audio_cmd{
 	 padding-left: 2px;
 	 padding-top: 5px;
+ }
+ 
+ #go_button{
+	 width: 20px
  }
 

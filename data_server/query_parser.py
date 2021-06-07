@@ -49,14 +49,11 @@ def query_parser(query, lng):
     phrase = {}
     cmd = ''
     sub = ''
-    # obj = ''
     order = ''
-    # ins = ''
     num = 0
     used_words = []
 
     for pos, w in enumerate(t):
-        # print(pos,w)
         if len(cmd) == 0:
             for key in phrase_parts[lng]['com']:
                 if w in phrase_parts[lng]['com'][key]:
@@ -76,7 +73,6 @@ def query_parser(query, lng):
                 used_words.append(pos)
         if len(cmd) > 0 and len(sub) > 0 and pos > phrase['sub']['pos']:
             if w in phrase_parts[lng]['obj']:
-                # obj = w
                 i = phrase_parts[lng]['obj'].index(w) % 5
                 phrase['obj'] = {'value': phrase_parts[lng]['obj'][i], 'pos': pos}
                 used_words.append(pos)
@@ -140,18 +136,14 @@ def query_parser(query, lng):
         if pos<sub_pos or (pos not in used_words and (w in words or w in phrase_parts[lng]['prep'])):
             used_words.append(pos)
 
-    #print(t)
     used_words.sort()
-    #print(used_words, len(t), sep=' of ')
     
-
     part = ''
     prob_ins = []
     for pos, w in enumerate(t):
         if pos not in used_words:
             part += w + ' '
         elif (pos<len(t)-1 and pos-1 not in used_words and pos+1 not in used_words and w in phrase_parts[lng]['prep']):
-            #print(t[pos-1],w,t[pos+1])
             part += w + ' '
         elif len(part) > 0:
             prob_ins.append(part[:-1])
@@ -174,10 +166,3 @@ def query_parser(query, lng):
             phrase['obj'] = {'value': r['object']}
     return json.dumps(phrase)
 
-
-# s = ''
-# while s != 'stop':
-#    language = 'en-US'
-#    s = input('What do you want me to do? ')
-#    string = parser(s, language)
-#    print(string)

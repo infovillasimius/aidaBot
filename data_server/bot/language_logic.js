@@ -1,7 +1,6 @@
-const api='https://aidabot.ddns.net/api?pass=123abc&';
 
 const intents = {
-	'cancel': ['stop','bye','goodbye'],
+	'cancel': ['bye','goodbye'],
 	'help': ['help'],
 	'count': ['count', 'how many'],
 	'list': ['list'],
@@ -26,7 +25,7 @@ const combinations = {
 const subject_categories =['authors', 'papers', 'conferences', 'organizations', 'citations'];
 const object_categories =['topics','conferences','organizations','authors','papers'];
 const list_subject_categories = ['authors', 'papers', 'conferences', 'organizations', 'topics'];
-const tags_list = ['<Br/>','<b>','</b>'];
+const tags_list = ['<Br/>','<b>','</b>','<br/>','<ul>','</ul>','<li>','</li>'];
 const marks_list = ['.','?',';',','];
 
 
@@ -48,7 +47,7 @@ const templates = {
 	SUBJECT_REQUEST_REPROMPT_MSG:'I can count papers, authors, conferences, organizations and citations. What do you prefer?',
 	INSTANCE_MSG:"what is the name of the ${list} whose ${sub} I should count? You can say all for the full list",
 	INSTANCE2_MSG:"what is the name of the ${list} whose ${sub} I should count?",
-	ITEM_MSG:"Searching for ${ins}, I got ${msg}. To choose, say the number. Which one is correct?",
+	ITEM_MSG:"Searching for ${ins}, I got: ${msg}. <br/>To choose, say the number. Which one is correct?",
 	INTENT_CONFIRMATION_1_MSG: "Do you want to know how many ${sub} ${prep} ${obj} are in the AIDA database?",
 	INTENT_CONFIRMATION_2_MSG: "Do you want to know how many ${sub} ${prep} ${ins} ${obj} are in the AIDA database?",
 	TOO_GENERIC_MSG:"Your search for ${ins} got ${results}. You need to try again and to be more specific. Could you tell me the exact name?",
@@ -73,7 +72,7 @@ const templates = {
 	LIST_INSTANCE_MSG:'what is the name of the ${list} for which ${sub} should be in the top ${num}? You can say all for the full list',
 	LIST_INTENT_CONFIRMATION_1_MSG: 'Do you want to know which are the top ${num} ${sub} ${prep} ${obj}, by number of ${order}, in the AIDA database?',
 	LIST_INTENT_CONFIRMATION_2_MSG: 'Do you want to know which are the top ${num} ${sub}, by number of ${order}, ${prep} ${ins} ${obj} in the Aida database?',
-	LIST_QUERY_MSG:'In the AIDA database, the top ${num} ${sub} ${prep} ${ins} ${obj}, by number of ${order},  ${verb}: ${lst}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
+	LIST_QUERY_MSG:'In the AIDA database, the top ${num} ${sub} ${prep} ${ins} ${obj}, by number of ${order},  ${verb}: ${lst} You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
 	LIST_NO_RESULT_MSG:'In the AIDA database, there are no ${sub} ${prep} ${ins} ${obj}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
 	
 	DSC_TOO_GENERIC_MSG:'Your search for ${ins} got ${results}. You need to try again and to be more specific. What is the name of the author or conference you want to know about?',
@@ -247,7 +246,7 @@ const item_question_object = {
 };
 
 const numbers=[
-	'1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth','1','2','3','4','5','6','7','8','9','10','one','two','three','four','five','six','seven','eight','nine','ten'
+	'1','2','3','4','5','6','7','8','9','10','one','two','three','four','five','six','seven','eight','nine','ten','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth'
 ];
 
 const list_legal_queries = {
@@ -527,9 +526,9 @@ const list_verbs = ['is','are'];
 
 const list_order=['publication','citation','publication in the last 5 years', 'citation in the last 5 years']
 
-const cancel_words = ['cancel','stop', 'enough','stop it','no'];
+const cancel_words = ['cancel','stop', 'enough','no'];
 
-const dsc_list=[' is an author',' affiliated to ',' affiliated to the ','Author rating: ','Publications: ' ,'citations: ','Total number of co-authors: ','The top topic in terms of publications is: ','The top topics in terms of publications are: ','The top conference in terms of publications is: ', 'The top conferences in terms of publications are: ', 'The top journal in terms of publications is: ', 'The top journals in terms of publications are: ',', acronym of ',', is a conference whose focus areas are: ', 'Ratings: ','citations in the last 5 years: ','Years of activity: from ',' to ','Number of publications in the last year: ', 'The top country in terms of publications is: ', 'The top countries in terms of publications are: ', 'The top organization in education is: ', 'The top organizations in education are: ', 'The top organization in industry is: ', 'The top organizations in industry are: '];
+const dsc_list=[' is an author',' affiliated to ',' affiliated to the ','Author rating: ','Publications: ' ,'Citations: ','Total number of co-authors: ','The top topic in terms of publications is: ','The top topics in terms of publications are: ','The top conference in terms of publications is: ', 'The top conferences in terms of publications are: ', 'The top journal in terms of publications is: ', 'The top journals in terms of publications are: ',', acronym of ',', is a conference whose focus areas are: ', 'The rankings are: ','citations in the last 5 years: ','Years of activity: from ',' to ','Number of publications in the last year: ', 'The top country in terms of publications is: ', 'The top countries in terms of publications are: ', 'The top organization in education is: ', 'The top organizations in education are: ', 'The top organization in industry is: ', 'The top organizations in industry are: '];
 
 function getIntent(msg){
 	let message = msg.toLowerCase().split(" ");
@@ -565,7 +564,7 @@ function getUserDescribeQueryText(msg){
 }
 
 function setUserMessage(msg){
-	$('#bot').append('<div class="container"><img src="user.svg" alt="Avatar" class="right" style="width:100%;"><p>'+msg+'</p></div>')
+	$('#bot').append('<div class="container"><img src="user.svg" alt="Avatar" class="right" style="max-width: 60px;"><p>'+msg+'</p></div>')
 	$('#bot').scrollTop($('#bot')[0].scrollHeight - $('#bot')[0].clientHeight);
 	setAnimation();
 }
@@ -577,8 +576,10 @@ function setAnimation(){
 
 function setMessage(msg,options){
 	let value=templates[msg];
+	let speak=templates[msg];
 	if (Array.isArray(value)) {
         value = value[Math.floor(Math.random() * value.length)];
+		speak = value;
     }
 	let lst=[];
 	if(options){
@@ -592,20 +593,34 @@ function setMessage(msg,options){
 		}
 		lst.pop();
 		for(let i in options){
-			value = value.replace('${'+i+'}', options[i]);
+			if(Array.isArray(options[i])){
+				value = value.replace('${'+i+'}', options[i][0]);
+				speak = speak.replace('${'+i+'}', options[i][1]);
+			} else {
+				value = value.replace('${'+i+'}', options[i]);
+				speak = speak.replace('${'+i+'}', options[i]);
+			}
+			
 		}
 		for(let i in lst){
 			value = value.replace(lst[i],'');
 		}
 	}
-	appendMessage(value)
+	appendMessage([value,speak])
 }	
 
 function appendMessage(value){
+	let speak = '';
+	if(Array.isArray(value)){
+		speak = value[1];
+		value = value[0];
+	} else {
+		speak = value;
+	}
 	$('#thinker').remove();
-	$('#bot').append('<div class="container darker"><div class="logo"><img src="nao.svg" alt="Avatar" style="width:100%;"></div><div class="msg"><p>' + value + '</p></div></div>');
+	$('#bot').append('<div class="container darker"><div class="logo"><img src="nao.svg" alt="Avatar" style="max-width: 60px;"></div><div class="msg"><p>' + value + '</p></div></div>');
 	$('#bot').scrollTop($('#bot')[0].scrollHeight - $('#bot')[0].clientHeight);
-	say(value);
+	say(speak);
 }
 
 function say(msg){
@@ -613,18 +628,19 @@ function say(msg){
 		window.speechSynthesis.cancel();
 		return
 	}
+
 	for(let i in tags_list){
 		msg = msg.replaceAll(tags_list[i],'');
 	}
-	/*
-	if(window.speechSynthesis.speaking){
-		window.speechSynthesis.cancel();
-	}*/
+
 	window.speechSynthesis.cancel();
 	let voice_msg = new SpeechSynthesisUtterance(msg);
 	voice_msg.lang = 'en-US';
 	voice_msg.rate=0.90;
 	window.speechSynthesis.speak(voice_msg);
+	/* if (session.recognition){
+		voice_msg.onend = toggleStartStop()
+	} */
 }
 
 function item_question(subject){
@@ -653,7 +669,7 @@ function kk_message(speak,cmd){
     let message='';
     for (let j in speak.num){
         if (speak.num[j]>0){
-            message = message + speak.num[j] + (speak.num[j]>1 ? 'hits' : 'hit') + ' among the ' + obj_cat[cmd][j] + ', ';
+            message = message + speak.num[j] + (speak.num[j]>1 ? ' hits' : ' hit') + ' among the ' + obj_cat[cmd][j] + ', ';
         }
     }
     message = message.substring(0,message.length-2);
@@ -662,19 +678,23 @@ function kk_message(speak,cmd){
 
 function choice_list(speak){
     let message='';
+	let msg='<ol>';
     let n=0;
     let cmd=(speak.cmd ? 0:1);
     for(let i in speak.num){
         if (speak.num[i]>0){
             for(let j in speak.keys[i]){
-                message+=numbers[n]+', ' +(speak.cmd ? speak.keys[i][j]['name'] : speak.keys[i][j]) + ', ';
+                msg+='<li>'+(speak.cmd ? speak.keys[i][j]['name'] : speak.keys[i][j]) + ';</li>';
+				message+=numbers[n]+', ' +(speak.cmd ? speak.keys[i][j]['name'] : speak.keys[i][j]) + '; ';
                 n+=1
             }
-            message +=' among the '+ obj_cat[cmd][i] + ', ';
+            message +=' among the '+ obj_cat[cmd][i] + '; ';
+			msg +='</ol> among the '+ obj_cat[cmd][i] + '; ';
         }
     }
-    message=message.substring(0,message.length-2);
-    return message;
+    message = message.substring(0,message.length-2);
+	msg = msg.substring(0,msg.length-2);
+    return [msg,message];
 }
 
 function homonyms(speak){
@@ -747,7 +767,7 @@ function list_item_question(subject){
 
 function lst(result,order){
     let o=orders.indexOf(order);
-    let msg=' ';
+    let msg='<ul>';
     let ord;
 	let list = result.lst;
     if(o===1 || o===3){
@@ -764,7 +784,7 @@ function lst(result,order){
                 ord=order;
             }
             
-            msg = msg+' '+list[i].name+author+' with '+list[i].citations+' '+ord.split(' ')[0]+';'
+            msg +='<li>'+list[i].name+author+' with '+list[i].citations+' '+ord.split(' ')[0]+'; </li>'
         }
     } else {
         for(let i in list){
@@ -780,11 +800,11 @@ function lst(result,order){
                 ord=order;
             }
             
-            msg=msg+' '+list[i].name+author+' with '+list[i].papers+' '+ord.split(' ')[0]+';'
+            msg+='<li>'+list[i].name+author+' with '+list[i].papers+' '+ord.split(' ')[0]+'; </li>'
         }
     }
-    msg = msg.substring(0,msg.length-1);
-    return msg;
+    //msg = msg.substring(0,msg.length-1);
+    return msg+'</ul>';
 }
 
 function list_elements(list,element){
@@ -795,28 +815,21 @@ function list_elements(list,element){
             i--;
 		}
 	}
+	
+	let i=list.length;
+	if (i>3){
+		i=3
+	}
     let msg='';
-    let i=0;
     let j=0;
-    let k=list.length;
-    while(j<k && i<list.length){
-        if(blacklist.indexOf(list[i][element])===-1){
-            if(element.length>0){
-                msg+=list[i][element]
-            } else {
-                msg+=list[i]
-            }
-            if(j==k-2){
-                msg+=' and '
-            } else if(j==k-1){
-                msg+='; '
-            } else {
-                msg+=', '
-            }
-            j+=1
-        }
-        i+=1;
-    }
+	while(j<i){
+		if(element.length>0){
+			msg+='<li>'+upper_first(list[j][element])+';</li>'
+		} else {
+			msg+='<li>'+upper_first(list[j])+';</li>' 
+		}
+		j+=1;
+	}
     return msg;
 }
 
@@ -844,69 +857,73 @@ function dsc(query){
         } else {
             msg+='. <Br/>'
         }
-        //msg+=dsc_list[3]+'<Br/>';
+        msg+=dsc_list[3];
+		msg+='<ul>';
         if(item.publications){
-            msg+=dsc_list[4]+item.publications+'; <Br/>';
+            msg+='<li>'+dsc_list[4]+item.publications+'; </li>';
         }
         if(item.citations){
-            msg+=dsc_list[5]+item.citations+'; <Br/>';
+            msg+='<li>'+dsc_list[5]+item.citations+'; </li>';
         }
         if(item['h-index']){
-            msg+='h-index: '+item['h-index']+'; <Br/>';
+            msg+='<li>'+'h-index: '+item['h-index']+'; </li>';
         }
         if(item['h5-index']){
-            msg+='h5-index: '+item['h5-index']+'; <Br/>';
+            msg+='<li>'+'h5-index: '+item['h5-index']+'; </li>';
         }
         if (item['co_authors'] && item.co_authors>0){
-            msg+=dsc_list[6] + item.co_authors+'; <Br/>'
+            msg+='<li>'+dsc_list[6] + item.co_authors+'; </li>';
         }
+		msg+='</ul>';
         if(item.top_pub_topics && item.top_pub_topics.length>0){
-            msg+=(item.top_pub_topics.length==1 ? dsc_list[7]: dsc_list[8])
-            msg+=list_elements(item.top_pub_topics,'topic')+'<Br/>'
+            msg+=(item.top_pub_topics.length==1 ? dsc_list[7]: dsc_list[8]);
+            msg+='<ul>'+list_elements(item.top_pub_topics,'topic')+'</ul>';
         }
         if(item.top_pub_conf && item.top_pub_conf.length>0){
-            msg+=(item.top_pub_conf.length==1 ? dsc_list[9]: dsc_list[10])
-            msg+=list_elements(item.top_pub_conf,'name')+'<Br/>'
+            msg+=(item.top_pub_conf.length==1 ? dsc_list[9]: dsc_list[10]);
+            msg+='<ul>'+list_elements(item.top_pub_conf,'name')+'</ul>';
         }
         if(item.top_journals && item.top_journals.length>0){
-            msg+=(item.top_journals.length==1 ? dsc_list[11]: dsc_list[12])
-            msg+=list_elements(item.top_journals,'name')+'<Br/>'
+            msg+=(item.top_journals.length==1 ? dsc_list[11]: dsc_list[12]);
+            msg+='<ul>'+list_elements(item.top_journals,'name')+'</ul>';
         } 
     } else if (query.obj_id===2 || query.obj_id===3){
         msg+=item.acronym+dsc_list[13]+item.name+ dsc_list[14];
-        msg+=list_elements(item.topics,'')+'<Br/>'
-        //msg+='<Br/>'+dsc_list[15]+'<Br/>';
-        if(item['h5_index']){
-            msg+='h5-index: '+item['h5_index']+'; <Br/>';
+        msg+='<ul>'+list_elements(item.topics,'')+'</ul>';
+        msg+=dsc_list[15];
+        msg+='<ul>';
+		if(item['h5_index']){
+            msg+='<li>'+'h5-index: '+item['h5_index']+'; </li>';
         }
         if(item['citationcount_5']){
-            msg+=dsc_list[16]+item['citationcount_5']+'; <Br/>';
+            msg+='<li>'+dsc_list[16]+item['citationcount_5']+'; </li>';
         }
         if(item['activity_years']){
-            msg+=dsc_list[17]+item['activity_years']['from']+dsc_list[18]+item['activity_years']['to']+'; <Br/>'
+            msg+='<li>'+dsc_list[17]+item['activity_years']['from']+dsc_list[18]+item['activity_years']['to']+'; </li>';
         }
         if(item.last_year_publications){
-            msg+=dsc_list[19]+item.last_year_publications+'; <Br/>'
+            msg+='<li>'+dsc_list[19]+item.last_year_publications+'; </li>';
         }
+		msg+='</ul>';
         if(item.top_3_country.length>0){
-            msg+=(item.top_3_country.length==1 ? dsc_list[20]: dsc_list[21])
-            msg+=list_elements(item.top_3_country,'')+'<Br/>'
+            msg+=(item.top_3_country.length==1 ? dsc_list[20]: dsc_list[21]);
+            msg+='<ul>'+list_elements(item.top_3_country,'')+'</ul>';
         }
         if(item.top_3_edu.length>0){
-            msg+=(item.top_3_edu.length==1 ? dsc_list[22]: dsc_list[23])
-            msg+=list_elements(item.top_3_edu,'')+'<Br/>'
+            msg+=(item.top_3_edu.length==1 ? dsc_list[22]: dsc_list[23]);
+            msg+='<ul>'+list_elements(item.top_3_edu,'')+'</ul>';
         }
         if(item.top_3_company.length>0){
-            msg+=(item.top_3_company.length==1 ? dsc_list[24]:dsc_list[25])
-            msg+=list_elements(item.top_3_company,'')+'<Br/>'
+            msg+=(item.top_3_company.length==1 ? dsc_list[24]:dsc_list[25]);
+            msg+='<ul>'+list_elements(item.top_3_company,'')+'</ul>';
         }
         
     } else {
         msg+='Sorry, Query not yet implemented!'
         return msg;
     }
-    msg = msg.substring(0,msg.length-7);
-    return msg + '.<Br/> You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?';
+    //msg = msg.substring(0,msg.length-7);
+    return msg + 'You can ask to perform another query on the data contained in the AIDA database or ask for Help. <br/>What would you like to try?';
 }
 
 

@@ -4,8 +4,7 @@ import datetime
 from elasticsearch import Elasticsearch
 # from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
-
-host = input ('ElasticSearch Host IP ')
+from config import elasticsearch_host as host
 
 es = Elasticsearch([{'host': host, 'port': 9200}])
 index = 'aida2'

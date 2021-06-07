@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="stylesheet" href="style.css" type="text/css"/>
 <title>A Chatbot Architecture to Explore ScholarlyKnowledge Graphs</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="style.css" type="text/css"/>
 <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="conf.js"></script>
 <script type="text/javascript" src="language_logic.js"></script>
 <script type="text/javascript" src="count.js"></script>
 <script type="text/javascript" src="list.js"></script>
@@ -18,22 +19,26 @@
 		<h2>AidaBot Chat</h2>
 	</div>
 	<div class="help">
-		<img src="question_mark.svg" alt="Help" id="help_button" class="right" onclick="help()">
+		<img src="question_mark.svg" alt="Help" id="help_button" title="get help" class="right" onclick="help()">
 	</div>
 </div>
 <div class='help_text'></div>
-
 <div id="bot" class="chat"></div>
-
 <div class="input">
 	<fieldset class="text">
 		<legend>Input TEXT:</legend> 
 		<input type="text" autofocus id="user_input"></input> 
+		<img src="freccia_blu.gif" title="send question" alt="Go" id="go_button" class="right" onclick="cycle()">
 	</fieldset>
 </div>
-<div class="audio">
-			<input id="audio" type="checkbox" name="audio"/ >
-			<label id="audio_label" for="audio">Enable speech synthesizer</label>
-		</div>
+<div class="audio_cmd">
+	<div class="speak_button">
+		<button  id="button" onclick="button_click()"></button>
+	</div>
+	<div class="audio">
+		<input id="audio" type="checkbox" name="audio">
+		<label for="audio">Speech synthesizer</label>
+	</div>
+</div>
 </body>
 </html>

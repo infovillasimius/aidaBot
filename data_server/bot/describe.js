@@ -37,9 +37,14 @@ function describe(msg){
 		
 		//caso ok
 		if(msg.result=='ok'){
+			let message_ins = ''
 			session.intent.slots.results = msg;
 			session.intent.level = 2;
-			message_ins = msg.obj_id == 1 ? upper_first(msg.item.name) : '"'+msg.item.name+'" conference'
+			if(msg.item.name.toLowerCase().indexOf('conference')>0 && msg.obj_id > 1){
+				message_ins = msg.item.name
+			} else {
+				message_ins = msg.obj_id == 1 ? upper_first(msg.item.name) : '"'+msg.item.name+'" conference'
+			}
 			
 			setMessage("DESCRIBE_CONFIRM_MSG",{'ins': message_ins});
 			return
