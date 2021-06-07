@@ -1,7 +1,20 @@
 # aida
 
 <h2>Alexa Skill</h2>
+To import AIDA Alexa-hosted skill from this repository
 
+<ol>
+  <li>Open the Alexa developer console and log in.</li>
+  <li>Click Create Skill. The Create a new skill page appears.</li>
+  <li>For Skill name, type a name.</li>
+  <li>For Default language, choose a language (en.US).</li>
+  <li>For Choose a model to add to your skill, select Custom.</li>
+  <li>For Choose a method to host your skill's backend resources, select Alexa-Hosted (Node.js).</li>
+  <li>Click Create Skill. The Choose a template to add to your skill page appears.</li>
+  <li>Click Import skill. The Import skill dialog appears.</li>
+  <li>Enter the .git link to the Git repository that contains the skill that you want to import (https://github.com/infovillasimius/aida.git).</li>
+  <li>Click Continue. The message Creating your Alexa-hosted skill appears. If Alexa validates that the Git repository contains an Alexa skill that it can import, Alexa creates       your Alexa-hosted skill.</li>
+</ol>
 
 
 <h2><a href="https://aidabot.ddns.net" target="_blank">AidaBot Chat</a> - Web Application</h2>
