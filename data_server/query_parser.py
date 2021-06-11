@@ -88,7 +88,6 @@ def query_parser(query, lng):
                         j += 2
                     if t[i] == 'years':
                         pos2 = i
-                print(phrase_parts[lng]['order']['ways'][j], pos, pos2, sep='-')
                 phrase['order'] = {'value': phrase_parts[lng]['order']['ways'][j], 'pos': pos, 'fin': pos2}
                 used_words = [*used_words, *range(pos, pos2 + 1)]
         if len(order) == 0:
@@ -101,7 +100,6 @@ def query_parser(query, lng):
                         j += 2
                     if t[i] == 'years':
                         pos2 = i
-                print(phrase_parts[lng]['order']['ways'][j], pos, pos2, sep='-')
                 phrase['order'] = {'value': phrase_parts[lng]['order']['ways'][j], 'pos': pos, 'fin': pos2}
                 used_words = [*used_words, *range(pos, pos2 + 1)]
                     
@@ -151,7 +149,6 @@ def query_parser(query, lng):
     if len(part) > 0:
         prob_ins.append(part[:-1])
 
-    print(prob_ins)
     result = []
     if len(prob_ins) == 1:
         result.append(find_match(prob_ins[0]))
@@ -161,7 +158,6 @@ def query_parser(query, lng):
     for res in result:
         r = json.loads(res)
         if r['result'] == 'ok':
-            print(type(phrase))
             phrase['ins'] = {'value': r['item'], 'pos': -1}
             phrase['obj'] = {'value': r['object']}
     return json.dumps(phrase)

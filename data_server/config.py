@@ -13,13 +13,13 @@ key_file = './privkey.pem'
 # debug mode
 debug_mode = True #False
 
-# elasticsearch host ip e.g. '192.168.1.1':
-elasticsearch_host = '127.0.0.1' 
- 
+# elasticsearch host ip: 192.168.1.150 dev host  - 10.25.0.70 prod host
+elasticsearch_host = '192.168.1.150' 
+# elasticsearch_host = '10.25.0.70' 
 
 # web resources path (if web server is daemonized it needs absolute path to resources)
 if daemonized:
-    resources_path = '/home/server/AidaBot/bot/'
+    resources_path = '/home/server/httpsAidaBot/bot/'
 else:
     resources_path = './bot/'
 

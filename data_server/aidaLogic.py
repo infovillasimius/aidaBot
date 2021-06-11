@@ -20,13 +20,11 @@ def authors_name(authors):
         msg = ' et al.'
     for a in authors:
         if a['order'] == 1:
-            # print(a['name'])
             msg = a['name'] + msg
     return msg
 
 
 def lst(sub, obj, ins, num=5, order=1):
-    # print('sub:', sub, ' ins:', ins, ' order:', order, ' obj:', obj)
     result = json.dumps({'result': 'Query not implemented yet'})
     num = int(num)
     result_lst = []
@@ -167,8 +165,6 @@ def lst(sub, obj, ins, num=5, order=1):
                                                               "bucket_sort": {"sort": [{"the_sum": {"order": "desc"}}],
                                                                               "size": num * 5}}}}}})
         a = res['aggregations']['names']['buckets']
-        print('risultati ',a)
-       
         
         for i in a:
             res1 = es.search(index=author_index, body = {"size": 1,"track_total_hits": 'true', "query": {"bool": {"must": [{"match_phrase": {"id": i["key"]}},{"match_phrase": {"affiliation": ins}}]}}})
@@ -450,7 +446,6 @@ def find_match(ins):
             item = keys[obj_id][keys2[obj_id].index(ins.lower())]
         else:
             item = keys[obj_id][0]
-        # print({'object': objects[obj_id], 'result': 'ok', 'obj_id': obj_id + 1, 'item': item})
         return json.dumps({'result': 'ok', 'object': objects[obj_id], 'obj_id': obj_id + 1, 'item': item})
 
     # caso con più di tre risultati in una sola categoria
@@ -510,9 +505,6 @@ def find_match(ins):
             found[i] = flat[:3]
 
     num = [len(a) for a in found]
-
-    # print(num)
-    # print(found)
 
     if sum(num) == 1:
         obj_id = num.index(1)
@@ -715,7 +707,6 @@ def dsc_finder(query):
         return json.dumps(result)
     elif sum(num) > 1 and obj_id == 0:
         auth_list = dsc_check_author(query)
-        # print(len(auth_list))
         if len(auth_list) > 1:
             result = {'result': 'ka', 'obj_id': obj_id + 1, 'object': objects[obj_id], 'item': auth_list}
         else:
@@ -730,7 +721,6 @@ def dsc_finder(query):
         res.append(es.search(index=dsc_indexes[i],
                              body={"track_total_hits": "true", "query": {"match_phrase": {dsc_fields[i]: query}}}))
         num.append(res[i]['hits']['total']['value'])
-    # print(num)
     obj_id = num.index(max(num))
     if sum(num) == 1:
         result = ({'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id],
@@ -740,7 +730,7 @@ def dsc_finder(query):
             result['item'] = result['item'] | author_data(res[obj_id]['hits']['hits'][0]['_source']['id'])
         return json.dumps(result)
 
-    if 1 < max(num) <= 6:
+    if max(num)>1 and max(num) <= 3:
         names = ['last affiliation', 'acronym', 'acronym']
         for i in range(len(dsc_indexes)):
             for data in res[i]['hits']['hits']:
@@ -750,9 +740,95 @@ def dsc_finder(query):
                     key[names[i]] = item[names[i]]
                 keys[i].append(key)
         result = {'result': 'k2', 'num': num, 'keys': keys}
-        # print(result)
+        return json.dumps(result)
 
-    if max(num) > 3 or sum(num) > 10:
+    if max(num) > 3:
         result = {'result': 'kk', 'num': num}
+        return json.dumps(result)
 
-    return json.dumps(result)
+    
+    
+    # ricerca fuzzy
+    es_index=[dsc_authors_index,dsc_conferences_index,dsc_conferences_index]
+    dsc_fields = ['name', 'acronym', 'name']
+    objects = ['authors', 'conferences', 'conferences']
+    res = []
+    num = []
+    keys = [[], [], []]
+    found = [[], [], []]
+    result = {'result': 'ko'}
+    source = ['name', 'acronym', 'name']
+
+    # ricerca in es come per la ricerca esatta ma con il parametro fuzziness e con match al posto di match_phrase
+    for i in range(3):
+        res.append(es.search(index=es_index[i], body={"size": 10, "track_total_hits": "true", "_source": source[i],"query": {"match": {dsc_fields[i]: {"query": query, "fuzziness": "auto","max_expansions": 50, "prefix_length": 0}}}}))
+
+        # elimina i doppioni
+        voice = []
+        for data in res[i]['hits']['hits']:
+            if data['_source'][dsc_fields[i]] not in voice:
+                voice.append(data['_source'][dsc_fields[i]])
+                found[i].append(data['_source'][dsc_fields[i]])
+
+    # estrae i valori più probabili e calcola il punteggio: se ci sono valori sopra soglia
+    # li salva nella lista delle chiavi più probabili
+    for i in range(3):
+        found[i] = process.extract(query, found[i], limit=3)
+        for data in found[i]:
+            if data[1] > threshold:
+                keys[i].append(data[0])
+
+    # prende solo i primi tre valori per ogni campo e verifica se siamo in presenza
+    # di un unico valore candidato e in tal caso lo restituisce
+    keys = [keys[0][:2], keys[1][:2], keys[2][:2]]
+    num = [len(a) for a in keys]
+    if sum(num) == 1:
+        obj_id = num.index(1)
+        item = keys[obj_id][0]
+        i=obj_id
+        ok_res = es.search(index=dsc_indexes[i], body={"track_total_hits": "true", "query": {"match_phrase": {dsc_exact_fields[i]: item}}})
+        
+        result = ({'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id], 'item': ok_res['hits']['hits'][0]['_source']})
+        if i == 0:
+            result['item'] = result['item'] | author_data(ok_res['hits']['hits'][0]['_source']['id'])
+        return json.dumps(result)
+
+    for i in range(3):
+        flat = []
+        for data in found[i]:
+            if data[1] > (threshold - 15):
+                flat.append(data[0])
+            found[i] = flat[:3]
+
+    num = [len(a) for a in found]
+
+    if sum(num) == 1:
+        obj_id = num.index(1)
+        item = found[obj_id][0]
+        i=obj_id
+        ok_res = es.search(index=dsc_indexes[i], body={"track_total_hits": "true", "query": {"match_phrase": {dsc_exact_fields[i]: item}}})
+        result = ({'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id], 'item': ok_res['hits']['hits'][0]['_source']})
+        if i == 0:
+            result['item'] = result['item'] | author_data(ok_res['hits']['hits'][0]['_source']['id'])
+        return json.dumps(result)
+
+    if sum(num) > 1 and sum(num) < 10:
+        keys = [[], [], []]
+        names = ['last affiliation', 'acronym', 'acronym']
+        for i in range(len(dsc_indexes)):
+            for element in found[i]:
+                ok_res = es.search(index=dsc_indexes[i], body={"track_total_hits": "true", "query": {"match_phrase": {dsc_exact_fields[i]: element}}})
+                for data in ok_res['hits']['hits']:
+                    item = data['_source']
+                    key = {'id': item['id'], 'name': item['name']}
+                    if names[i] in item:
+                        key[names[i]] = item[names[i]]
+                    keys[i].append(key)
+        result = {'result': 'k2', 'num': num, 'keys': keys}
+        return json.dumps(result)
+
+    if sum(num) > 10:
+        return json.dumps({'result': 'kk', 'num': num})
+
+    # nessun risultato
+    return json.dumps({'result': 'ko', 'object': '', 'obj_id': 0, 'keys': [], 'num': 0})
