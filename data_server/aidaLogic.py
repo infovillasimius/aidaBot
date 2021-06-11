@@ -746,8 +746,6 @@ def dsc_finder(query):
         result = {'result': 'kk', 'num': num}
         return json.dumps(result)
 
-    
-    
     # ricerca fuzzy
     es_index=[dsc_authors_index,dsc_conferences_index,dsc_conferences_index]
     dsc_fields = ['name', 'acronym', 'name']
