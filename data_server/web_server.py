@@ -91,9 +91,10 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
             self.send_header('Content-Type', mime)
             if path=='/' or path=='/index.html':
                 self.send_header('Cache-Control', 'no-cache')
-            elif not debug_mode or path=='/style.css':
-                 self.send_header('Cache-Control', 'max-age=31536000, immutable')
-                
+            elif not debug_mode: #or path=='/style.css':
+                self.send_header('Cache-Control', 'max-age=31536000, immutable')
+            else:
+                self.send_header('Cache-Control', 'max-age=60')
             self.send_header('X-Content-Type-Options', 'nosniff')
             self.end_headers()
             self.wfile.write(file.read())

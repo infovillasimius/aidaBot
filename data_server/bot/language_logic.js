@@ -678,18 +678,19 @@ function kk_message(speak,cmd){
 
 function choice_list(speak){
     let message='';
-	let msg='<ol>';
+	let msg='';
     let n=0;
     let cmd=(speak.cmd ? 0:1);
     for(let i in speak.num){
         if (speak.num[i]>0){
-            for(let j in speak.keys[i]){
+            msg+='<ol start='+(+1+n)+'>'
+			for(let j in speak.keys[i]){
                 msg+='<li>'+(speak.cmd ? speak.keys[i][j]['name'] : speak.keys[i][j]) + ';</li>';
 				message+=numbers[n]+', ' +(speak.cmd ? speak.keys[i][j]['name'] : speak.keys[i][j]) + '; ';
                 n+=1
             }
-            message +=' among the '+ obj_cat[cmd][i] + '; ';
-			msg +='</ol> among the '+ obj_cat[cmd][i] + '; ';
+            message +=' among the '+ obj_cat[cmd][i] + '. ';
+			msg +='</ol> among the '+ obj_cat[cmd][i] + '. ';
         }
     }
     message = message.substring(0,message.length-2);

@@ -5,13 +5,10 @@ from elasticsearch import Elasticsearch
 # from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 from config import elasticsearch_host as host
+from config import index,author_index,dsc_authors_index,dsc_conferences_index,threshold
+from all_database_queries import opt, lst_results
 
-es = Elasticsearch([{'host': host, 'port': 9200}])
-index = 'aida2'
-author_index = 'authors2'
-threshold = 85
-dsc_authors_index = 'authors'
-dsc_conferences_index = 'conferences'
+es = Elasticsearch([{'host': host, 'port': 9200, 'timeout':120}])
 
 
 def authors_name(authors):
@@ -24,9 +21,16 @@ def authors_name(authors):
     return msg
 
 
-def lst(sub, obj, ins, num=5, order=1):
+def lst(sub, obj, ins, num='5', order='1'):
     result = json.dumps({'result': 'Query not implemented yet'})
     num = int(num)
+    if ins=='all' and opt:
+        #print(lst_results[sub].get(order))
+        q = lst_results[sub].get(order)
+        if q is not None:
+            q['lst']=q['lst'][0:num]
+            return json.dumps(q)
+    
     result_lst = []
     sub_fields = ['authors.id', '', 'conferenceseriesid', 'authors.affiliation.keyword', 'cso_enhanced_topics.keyword']
     obj_fields = ['cso_enhanced_topics.keyword', 'conferenceseriesid', 'authors.affiliation.keyword', 'authors.id']
@@ -196,6 +200,7 @@ def lst(sub, obj, ins, num=5, order=1):
         result = {"lst": result_lst, 'result': 'ok'}
         return json.dumps(result)
 
+    # sostituisce il nome all'id nella lista dei risultati
     if sub == '1' or sub == '3':
         item_lst = []
         for item in result['lst']:
@@ -746,6 +751,8 @@ def dsc_finder(query):
         result = {'result': 'kk', 'num': num}
         return json.dumps(result)
 
+    
+    
     # ricerca fuzzy
     es_index=[dsc_authors_index,dsc_conferences_index,dsc_conferences_index]
     dsc_fields = ['name', 'acronym', 'name']

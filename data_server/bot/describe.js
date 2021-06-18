@@ -70,9 +70,9 @@ function describe(msg){
 		//caso k2 (risultati multipli ricerca dsc)
 		if(msg.result=='k2'){
 			msg.cmd='dsc';
-			if(msg.num[1]>0){
+			/* if(msg.num[1]>0){
                 ins=msg.keys[1][0]['acronym'];
-            }
+            } */
 			session.intent.items_list = msg;
             let message = choice_list(msg);
             setMessage('ITEM_MSG',{'ins': ins, 'msg':message});

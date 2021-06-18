@@ -1,9 +1,10 @@
 
 //data server IP address
 
-const api = 'http://127.0.0.1/api?pass=123abc&';
-//const api = 'https://127.0.0.1/api?pass=123abc&';
-
+//const api = 'http://192.168.1.125/api?pass=123abc&';
+const api = 'https://192.168.1.125/api?pass=123abc&';
+//const api = 'http://aidabot.ddns.net/api?pass=123abc&';
+//const api = 'https://aidabot.ddns.net/api?pass=123abc&';
 
 var audio_recognitions_enabled = false
 

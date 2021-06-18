@@ -10,12 +10,69 @@ var session={
 };
 
 var audio_resume=setInterval(audio_reset,10000);
+var mic_animation;
+var mic_image = 'microphone-on1.svg'
 
 var help_status = false;
 
 //variabili per speech to text
 var recognizing;
 var recognition;
+
+
+
+//carica messaggio di benvenuto all'avvio
+$(document).ready(function () {
+	set_audio_recognition();
+	resize();
+	setTimeout(function(){ 
+		setMessage('WELCOME_MSG');
+	}, 300);	
+	
+	/* $('#mic_off').mousedown(function(){
+		$('#mic_off').attr("src",mic_image);
+		mic_animation=setInterval(function(){
+			if (mic_image == 'microphone-on1.svg'){
+				mic_image = 'microphone-on2.svg';
+			} else {
+				mic_image = 'microphone-on1.svg';
+			}
+			$('#mic_off').attr("src",mic_image);
+		},300);
+	});
+	$('#mic_off').mouseup(function(){
+		clearInterval(mic_animation);
+		$('#mic_off').attr("src","microphone-off.svg");
+	}) */
+	
+	//prevent context menu visualization on long click
+	//window.oncontextmenu = function() { return false; }
+	//document.getElementsByTagName("body")[0].oncontextmenu = function(e){ e.preventDefault();}
+	
+});
+
+//ciclo principale determinato dalla pressione del tasto invio (input utente)
+$(document).on('keyup',function(e) {
+	if(e.which == 13 && $('#user_input').val().length>0) {
+		cycle();
+	} 
+	
+	let go_button_hide = setInterval(function(){ 
+		if ($('#user_input').val().length>0){
+			$('#go_button').show()
+			$('#mic').hide();
+		} else {
+			$('#go_button').hide()
+			$('#mic').show();
+			clearInterval(go_button_hide)
+		}
+	},300); 
+});
+
+//aggiorna la dimensione della chat quando viene ridimensionata la finestra del browser
+$(window).on("resize", function () {
+	resize();
+}).resize();
 
 function screen_scroll(){
 	$('#bot').scrollTop($('#bot')[0].scrollHeight - $('#bot')[0].clientHeight);
@@ -24,47 +81,26 @@ function screen_scroll(){
 function session_reset(){
 	let rec = session.recognition;
 	let audio = session.audio;
-	$("#audio").prop('checked', session.audio);
 	session={'level':0,	'intent' : {'slots':{}}, 'audio': audio, 'recognition' : rec, 'recognize' : false}
 	recogn_stop();
 }
 
 function resize(){
 	setTimeout(function(){ 
-		let height=$(window).height()-$('.top').height()-$('.help_text').height()-$('.input').height()-70;
+		let height=$(window).height()-$('.top').height()-$('.help_text').height()-$('.input').height()-20;
 		$('#bot').height(height); 
 		}, 500);	
 }
 
-//carica messaggio di benvenuto all'avvio
-
-$(document).ready(function () {
-	set_audio_recognition();
-	resize();
-	setTimeout(function(){ 
-		setMessage('WELCOME_MSG');
-	}, 300);
-	
-});
-
-//aggiorna la dimensione della chat quando viene ridimensionata la finestra del browser
-$(window).on("resize", function () {
-    resize();
-}).resize();
-
-//ciclo principale determinato dalla pressione del tasto invio (input utente)
-$(document).on('keypress',function(e) {
-	if(e.which == 13 && $('#user_input').val().length>0) {
-		cycle();
-    }
-});
 
 //ciclo principale
 function cycle(){
-	if(session.recognition && session.recognize){
-		recogn_start();
-	} else {
-		recogn_stop();
+	if(!session.audio){
+	 	if(session.recognition && session.recognize){
+			recogn_start();
+		} else {
+			recogn_stop();
+		} 
 	}
 	
 	if($('#user_input').val().length==0){
@@ -83,7 +119,7 @@ function cycle(){
 		return
 	}
 		
-	// trasferice controllo agli intenti complessi in base al nome dell'intento
+	// trasferisce controllo agli intenti complessi in base al nome dell'intento
 	if(session.level == 1){
 		let intent = getIntent(msg)[0];
 		if(intent!='fallback'){
@@ -208,16 +244,15 @@ function setIntentSlots(data){
 		list('');
 	}
 }
-/*
-$(document).click(function(event) {
-    alert('ciao')
-});
-*/
-function help(){
+
+function help(cmd){
 	let body_height_ini=$('body').height();
 	help_status = !help_status;
-	if(help_status){
-		$('.help_text').append('<p class="help_text_p">The database can be queried about <b>authors</b>, <b>papers</b>, <b>conferences</b>, <b>organizations</b>, <b>citations</b> and <b>topics</b>.<br/>It is possible to further filter the queries by specifying the <b>name</b> of a particular <b>topic</b>, <b>conference</b>, <b>organization</b> or <b>author</b>.<br/>The results can be sorted according to one of the following four options: <b>publications</b>, <b>citations</b>, <b>publications in the last 5 years</b>, <b>citations in the last 5 years</b><br/>There are three types of queries:<br/>1. <b>Describe</b> (e.g .: "describe ISWC")<br/>2. <b>Count</b> (e.g .: "count the papers on machine learning")<br/>3. <b>List</b> (e.g .: "list the top 5 conferences with papers on rdf graph sorted by publications").<br/>You can enter a query all at once in natural language or through a wizard by entering one of the three activation words: <b>describe</b>, <b>count</b> or <b>list</b>.<br/>The audio functions use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API" target="_blank">Web Speech API</a> which is defined as experimental technology and may not work correctly depending on the compatibility of the browser used, therefore the options to activate them are only available on fully compatible browsers (Google Chrome, Microsoft Edge, Apple Safari: all functions - Mozilla Firefox: only the speech syntetizer).</p><a class="right" onclick="help()" href="javascript:void(0)" title="close help">close</a>');
+	if(help_status && cmd==1){
+		$('.help_text').append('<p class="help_text_p">The database can be queried about <b>authors</b>, <b>papers</b>, <b>conferences</b>, <b>organizations</b>, <b>citations</b> and <b>topics</b>.<br/>It is possible to further filter the queries by specifying the <b>name</b> of a particular <b>topic</b>, <b>conference</b>, <b>organization</b> or <b>author</b>.<br/>The results can be sorted according to one of the following four options: <b>publications</b>, <b>citations</b>, <b>publications in the last 5 years</b>, <b>citations in the last 5 years</b><br/>There are three types of queries:<br/>1. <b>Describe</b> (e.g .: "describe ISWC")<br/>2. <b>Count</b> (e.g .: "count the papers on machine learning")<br/>3. <b>List</b> (e.g .: "list the top 5 conferences with papers on rdf graph sorted by publications").<br/>You can enter a query all at once in natural language or through a wizard by entering one of the three activation words: <b>describe</b>, <b>count</b> or <b>list</b>.</p><a class="right" onclick="help()" href="javascript:void(0)" title="close help">close</a>');
+	} 
+	else if(help_status && cmd==2){
+		$('.help_text').append('<p class="help_text_p"><b>The audio functions</b> use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API" target="_blank">Web Speech API</a> which is defined as experimental technology and may not work correctly depending on the compatibility of the browser used, therefore the options to activate them are only available on fully compatible browsers (<b>Google Chrome, Microsoft Edge, Apple Safari</b>: all functions - Mozilla Firefox: only the speech syntetizer). <br/><b>Speech recognition features</b> are only available through encrypted connections.</p><a class="right" onclick="help()" href="javascript:void(0)" title="close help">close</a>');
 	}
 	else {
 		$('.help_text').empty();
@@ -226,15 +261,6 @@ function help(){
 	$('#bot').height(height)
 }
 
-
-$(document).change(function(){
-    session.audio = $("#audio").prop( "checked" )
-	if(!session.audio){
-		window.speechSynthesis.pause();
-	} else {
-		window.speechSynthesis.resume()
-	}
-});
 
 // trucco per imbrogliare chrome e fargli sistetizzare voice msg lunghi 
 function audio_reset(){
@@ -249,35 +275,32 @@ function audio_reset(){
 }
 
 function set_audio_recognition(){
-	$("#audio").prop('checked', session.audio);
-		
-	if (browser == 'Mozilla Firefox'){
-		$('.speak_button').empty();
-		return
+	
+	if(!("speechSynthesis" in window)){
+		$('#speaker_div').empty();
 	}
 	
-
-	
-	if(!("webkitSpeechRecognition" in window)){
-		$('.audio_cmd').empty();
-		$('.audio_cmd').html('Speech recognition features are only available on compatible browsers on encrypted connections. A list is in the help.');
-		return
-	}
-	
-	if (!audio_recognitions_enabled){
-		$('.speak_button').empty();
-		$('.speak_button').html('Speech recognition features are only available on encrypted connections.');
-		return 
-	}
-	
-	if (browser != 'Google Chrome or Chromium on Windows' &&
+	/* if (browser != 'Google Chrome or Chromium on Windows' &&
 		browser != 'Google Chrome or Chromium on Mobile' &&
 		browser != 'Google Chrome or Chromium on Mac' &&
 		browser != 'Microsoft Edge' && 
 		browser != 'Apple Safari'){
 		$('.audio_cmd').empty();
+		$('#speaker_div').empty();
+		
 		return
+	} */
+	
+	
+	if(!("webkitSpeechRecognition" in window) || !audio_recognitions_enabled || browser=='Opera'){
+		$('.audio_cmd').empty();
+		$('#mic_disabled').show();
+		return
+	} else {
+		$('#mic_off').show();
 	}
+	
+	
 	session.recognition = true;
 	recognition = new webkitSpeechRecognition();
 	recognition.continuous = true;
@@ -292,6 +315,9 @@ function set_audio_recognition(){
 			if (event.results[i].isFinal) {
 			  $('#user_input').val(event.results[i][0].transcript);
 			  //toggleStartStop()
+			  if(session.audio){
+				  recogn_stop();
+			  }
 			  cycle();
 			}
 		}
@@ -311,13 +337,21 @@ function recogn_start() {
 	setTimeout(function(){
 		recognition.start();
 		recognizing = true;
-		button.innerHTML = "Click to Stop";
+		mic_animation=setInterval(function(){
+			if (mic_image == 'microphone-on1.svg'){
+				mic_image = 'microphone-on2.svg';
+			} else {
+				mic_image = 'microphone-on1.svg';
+			}
+			$('#mic_off').attr("src",mic_image);
+		},300);
 	}, 500);	
 }
 
 function recogn_reset() {
 	recognizing = false;
-	button.innerHTML = "Click to Speak";
+	clearInterval(mic_animation);
+	$('#mic_off').attr("src","microphone-off.svg");
 }
 
 function toggleStartStop() {
@@ -325,12 +359,7 @@ function toggleStartStop() {
 	recognition.stop();
 	recogn_reset();
 	} else {
-	recognition.abort();
-	recogn_reset();
-	setTimeout(function(){
-		recognition.start();
-		recognizing = true;
-		button.innerHTML = "Click to Stop";}, 500);	
+		recogn_start()
 	}
 }
 
@@ -343,6 +372,18 @@ function button_click(){
 	toggleStartStop()
 }
 
+function switch_audio(){
+	if(session.audio){
+		$('#speaker_off').show();
+		$('#speaker_on').hide();
+		window.speechSynthesis.pause();
+	} else {
+		$('#speaker_on').show();
+		$('#speaker_off').hide();
+		window.speechSynthesis.resume()
+	}
+	session.audio = !session.audio;
+}
 
 function detect_browser(){
 	var sBrowser, sUsrAg = navigator.userAgent;

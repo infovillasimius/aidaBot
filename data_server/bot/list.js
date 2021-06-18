@@ -7,7 +7,7 @@ function list(msg){
 	let order = slots.order;
 	let id = slots.id;
 	
-	let sub_id=subject_categories.indexOf(sub)+1;
+	let sub_id=list_subject_categories.indexOf(sub)+1;
 	let obj_id=object_categories.indexOf(obj)+1;
 	let order_id = orders.indexOf(order)+1;
 	
