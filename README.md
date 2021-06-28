@@ -1,7 +1,7 @@
 # AidaBot Chat
 
 <h3>Alexa Skill</h3>
-To import AIDA Alexa-hosted skill from this repository (https://youtu.be/7ANn_u-zX1Q)
+To import AIDA Alexa-hosted skill (see https://youtu.be/7ANn_u-zX1Q)
 
 <ol>
   <li>Open the Alexa developer console and log in.</li>
