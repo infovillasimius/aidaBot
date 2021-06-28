@@ -8,9 +8,9 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
-   width="500"
-   height="500"
-   viewBox="0 0 75 75"
+   width="30.024815"
+   height="23.982725"
+   viewBox="0 0 4.5037222 3.5974088"
    id="svg6"
    sodipodi:docname="speaker_on.svg"
    inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)">
@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -37,24 +37,32 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1777"
-     inkscape:window-height="1030"
+     inkscape:window-width="2400"
+     inkscape:window-height="1271"
      id="namedview8"
      showgrid="false"
-     inkscape:zoom="1.0653294"
-     inkscape:cx="-61.53757"
-     inkscape:cy="204.25609"
-     inkscape:window-x="2432"
-     inkscape:window-y="32"
-     inkscape:window-maximized="0"
+     inkscape:zoom="21.878106"
+     inkscape:cx="0.13993358"
+     inkscape:cy="14.110638"
+     inkscape:window-x="2391"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg6"
-     inkscape:document-rotation="0" />
-  <path
-     d="M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z"
-     style="stroke:#b3b3b3;stroke-width:5;stroke-linejoin:round;fill:#b3b3b3"
-     id="path2" />
-  <path
-     d="M48,27.6a19.5,19.5 0 0 1 0,21.4M55.1,20.5a30,30 0 0 1 0,35.6M61.6,14a38.8,38.8 0 0 1 0,48.6"
-     style="fill:none;stroke:#b3b3b3;stroke-width:5;stroke-linecap:round"
-     id="path4" />
+     inkscape:document-rotation="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <g
+     id="g833"
+     transform="matrix(0.06513431,0,0,0.06664286,-0.22797008,-0.75101816)">
+    <path
+       d="M 39.389,13.769 22.235,28.606 H 6 v 19.093 h 15.989 l 17.4,15.051 z"
+       style="fill:#b3b3b3;stroke:#b3b3b3;stroke-width:5;stroke-linejoin:round"
+       id="path2" />
+    <path
+       d="M 48,27.6 A 19.5,19.5 0 0 1 48,49 m 7.1,-28.5 a 30,30 0 0 1 0,35.6 M 61.6,14 a 38.8,38.8 0 0 1 0,48.6"
+       style="fill:none;stroke:#b3b3b3;stroke-width:5;stroke-linecap:round"
+       id="path4" />
+  </g>
 </svg>

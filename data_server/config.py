@@ -70,5 +70,8 @@ dsc_authors_index = 'authors'
 #dsc command conferences index
 dsc_conferences_index = 'conferences'
 
+#dsc command organizations index
+dsc_organizations_index = 'organizations'
+
 # fuzzy search threshold
 threshold = 85

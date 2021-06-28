@@ -8,10 +8,10 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
-   width="500"
-   height="500"
-   viewBox="0 0 75 75"
-   stroke="#111"
+   width="29.990271"
+   height="24.000027"
+   viewBox="0 0 4.4985406 3.600004"
+   stroke="#111111"
    stroke-width="5"
    id="svg6"
    sodipodi:docname="speaker_off.svg"
@@ -39,27 +39,38 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="915"
-     inkscape:window-height="480"
+     inkscape:window-width="2400"
+     inkscape:window-height="1271"
      id="namedview8"
      showgrid="false"
-     inkscape:zoom="0.58588235"
-     inkscape:cx="250"
-     inkscape:cy="250"
-     inkscape:window-x="3728"
-     inkscape:window-y="378"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg6" />
-  <path
-     d="m39,14-17,15H6V48H22l17,15z"
-     fill="#111"
-     stroke-linejoin="round"
-     id="path2"
-     style="stroke:#b3b3b3;fill:#b3b3b3" />
-  <path
-     d="m49,26 20,24m0-24-20,24"
-     fill="none"
-     stroke-linecap="round"
-     id="path4"
-     style="fill:#cccccc;stroke:#b3b3b3" />
+     inkscape:zoom="24.063911"
+     inkscape:cx="18.033681"
+     inkscape:cy="7.9653283"
+     inkscape:window-x="2391"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6"
+     inkscape:document-rotation="0"
+     units="px"
+     width="50mm"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <g
+     id="g833"
+     transform="matrix(0.06615501,0,0,0.06666749,-0.23154253,-0.76669639)">
+    <path
+       d="M 39,14 22,29 H 6 v 19 h 16 l 17,15 z"
+       fill="#111"
+       stroke-linejoin="round"
+       id="path2"
+       style="fill:#b3b3b3;stroke:#b3b3b3" />
+    <path
+       d="M 49,26 69,50 M 69,26 49,50"
+       fill="none"
+       stroke-linecap="round"
+       id="path4"
+       style="fill:#cccccc;stroke:#b3b3b3" />
+  </g>
 </svg>

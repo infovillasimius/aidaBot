@@ -25,9 +25,10 @@ function count(msg){
 			return
 		}
 		if(!sub && msg.length>0){
-			if (subject_categories.indexOf(msg)!=-1){
-				sub = msg;
-				session.intent.slots.sub = msg;
+			let word = fuzzy_search(subject_categories,msg);
+			if (word.length>0){
+				sub = word;
+				session.intent.slots.sub = word;
 				msg='';
 				sub_id=subject_categories.indexOf(sub)+1;
 				
@@ -107,6 +108,10 @@ function count(msg){
 				return
 			}
 			
+			if(obj_id == 4){
+				ins = upper_first(ins)
+			}
+			
 			setMessage('INTENT_CONFIRMATION_2_MSG',{'sub': dict['sub'][sub][obj], 'prep': dict['prep'][sub][obj], 'obj':dict['obj'][sub][obj],'ins': ins});		
 			session.intent.level = 2
 			return
@@ -168,6 +173,10 @@ function count(msg){
 				setMessage('NO_QUERY_MSG');
 				session_reset();
 				return
+			}
+			
+			if(obj_id == 4){
+				ins = upper_first(ins)
 			}
 			
 			let message='QUERY_1_MSG';

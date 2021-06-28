@@ -21,9 +21,9 @@ function describe(msg){
 		
 		if(ins || (!ins && msg.length >0)){
 			if(!ins){
-				session.intent.slots.ins = msg;
+				session.intent.slots.ins = session.original_input; //msg;
 			}
-			const url = encodeURI(api+'cmd=dsc&ins='+(ins ? ins : msg));
+			const url = encodeURI(api+'cmd=dsc&ins='+(ins ? ins : session.original_input));
 			$.getJSON(url,function(data, status){
 				session.intent.level = 1;
 				describe(data);
@@ -37,13 +37,18 @@ function describe(msg){
 		
 		//caso ok
 		if(msg.result=='ok'){
-			let message_ins = ''
+			let message_ins = '<b>'
 			session.intent.slots.results = msg;
 			session.intent.level = 2;
-			if(msg.item.name.toLowerCase().indexOf('conference')>0 && msg.obj_id > 1){
-				message_ins = msg.item.name
+			
+			if (msg.obj_id == 1){
+				message_ins += upper_first(msg.item.name)+'</b>'
+			} else if(msg.obj_id == 4){
+				message_ins += msg.item.name+'</b>';
+			} else if(msg.obj_id >1 && msg.obj_id < 4 && msg.item.name.toLowerCase().indexOf('conference')>0){
+				message_ins += msg.item.name+'</b>';
 			} else {
-				message_ins = msg.obj_id == 1 ? upper_first(msg.item.name) : '"'+msg.item.name+'" conference'
+				message_ins += msg.item.name+'</b> conference'
 			}
 			
 			setMessage("DESCRIBE_CONFIRM_MSG",{'ins': message_ins});
@@ -160,6 +165,9 @@ function describe(msg){
 		if(!isNaN(num) && num <= (session.intent.homonyms_list.item.length-1)){
 			ins = session.intent.homonyms_list.item[num].name;
 			id = session.intent.homonyms_list.item[num].id;
+			if(session.intent.homonyms_list.obj_id==4){
+				id='00'+id
+			}
 			delete session.intent.homonyms_list;
 			const url = encodeURI(api+'cmd=dsc&ins='+ id);
 			$.getJSON(url,function(data, status){

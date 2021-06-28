@@ -44,9 +44,10 @@ function list(msg){
 			return
 		}
 		if(!sub && msg.length>0){
-			if (list_subject_categories.indexOf(msg)!=-1){
-				sub = msg;
-				session.intent.slots.sub = msg;
+			let word = fuzzy_search(list_subject_categories, msg);
+			if (word.length>0){
+				sub = word;
+				session.intent.slots.sub = word;
 				msg='';
 				sub_id=list_subject_categories.indexOf(sub)+1;
 				
@@ -171,12 +172,13 @@ function list(msg){
 		}
 		if(!order && msg.length>0){
 			setUserMessage(msg);
-			if (orders.indexOf(msg)!=-1){
-				order = msg;
-				session.intent.slots.order = msg;
-				order=msg;
+			let word = fuzzy_search(orders,msg);
+			if (word.length>0){
+				order = word;
+				session.intent.slots.order = word;
+				order=word;
 				msg='';
-				order_id=list_subject_categories.indexOf(sub)+1;
+				order_id=orders.indexOf(order)+1;
 				
 			} else {
 				let message='LIST_ORDER_WRONG_MSG';
@@ -205,7 +207,11 @@ function list(msg){
 				session_reset();
 				return
 			}
-			setMessage('LIST_INTENT_CONFIRMATION_2_MSG', {'ins': ins,'order':order, 'num':num, 'sub':(list_dict[order.split(' ')[0]]['sub'][sub][obj]), 'prep': list_dict[order.split(' ')[0]]['prep'][sub][obj], 'obj':list_dict[order.split(' ')[0]]['obj'][sub][obj]});		
+			let msg_ins = ins;
+			if (obj_id == 4){
+				msg_ins = upper_first(ins);
+			}
+			setMessage('LIST_INTENT_CONFIRMATION_2_MSG', {'ins': msg_ins,'order':order, 'num':num, 'sub':(list_dict[order.split(' ')[0]]['sub'][sub][obj]), 'prep': list_dict[order.split(' ')[0]]['prep'][sub][obj], 'obj':list_dict[order.split(' ')[0]]['obj'][sub][obj]});		
 			session.intent.level=5
 			return
 		}
@@ -296,6 +302,10 @@ function list(msg){
                 obj=sub;
                 ins='';
             }
+			let msg_ins = ins;
+			if (obj_id == 4){
+				msg_ins = upper_first(ins);
+			}
 			
 			let ord = order.split(' ')[0];
 			let sub1=list_dict[ord]['sub'][sub][obj];
@@ -303,7 +313,7 @@ function list(msg){
 			let prep = list_dict[ord]['prep'][sub][obj]
 						
 			if(data.result=='ok' && data.lst.length>0){	
-				setMessage('LIST_QUERY_MSG',{'order': order, 'num': (data.lst.length == 1 ? '' : num), 'sub':(data.lst.length == 1 ? sub1.substr(0,sub.length-1) : sub1), 'obj':obj1, 'prep': prep, 'ins':ins, 'verb': (data.lst.length == 1 ? list_verbs[0] : list_verbs[1]), lst: lst(data,order)});
+				setMessage('LIST_QUERY_MSG',{'order': order, 'num': (data.lst.length == 1 ? '' : num), 'sub':(data.lst.length == 1 ? sub1.substr(0,sub.length-1) : sub1), 'obj':obj1, 'prep': prep, 'ins':msg_ins, 'verb': (data.lst.length == 1 ? list_verbs[0] : list_verbs[1]), lst: lst(data,order,sub)});
 			} 
 			else if(data.lst.length==0){
 				setMessage('LIST_NO_RESULT_MSG', {'sub':sub1, 'obj':obj1, 'ins':ins, 'prep': prep})

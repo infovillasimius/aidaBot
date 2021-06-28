@@ -25,7 +25,7 @@ const combinations = {
 const subject_categories =['authors', 'papers', 'conferences', 'organizations', 'citations'];
 const object_categories =['topics','conferences','organizations','authors','papers'];
 const list_subject_categories = ['authors', 'papers', 'conferences', 'organizations', 'topics'];
-const tags_list = ['<Br/>','<b>','</b>','<br/>','<ul>','</ul>','<li>','</li>'];
+const tags_list = ['<br/>','<b>','</b>','<br/>','<ul>','</ul>','<li>','</li>','<i>','</i>'];
 const marks_list = ['.','?',';',','];
 
 
@@ -33,51 +33,50 @@ const templates = {
 	WELCOME_MSG: ['<b>Hello!</b> You can ask me to <b>describe</b>, <b>list</b>, or <b>count</b> any scholarly entity.','Welcome, you can ask me to <b>describe</b>, <b>list</b>, or <b>count</b> any scholarly entity. What would you like to try?'],
 	HELLO_MSG: ['Hello! What can I do for you?', 'Hi! what could i do for you?'],
 	OK_MSG: 'Ok',
-    HELP_MSG: ['You can ask to count or list authors, papers, conferences, organizations, topics and citations or to describe authors or conferences. Start a query with list, count or describe',
-               'You can ask a query starting with count, list, describe, who or what'],
+    HELP_MSG: ['You can ask to <b>count</b> or <b>list</b> <i>authors</i>, <i>papers</i>, <i>conferences</i>, <i>organizations</i>, <i>topics</i> and <i>citations</i> or to <b>describe</b> <i>authors</i>, <i>conferences</i> or <i>organizations</i>. Start a query with <b>list</b>, <b>count</b> or <b>describe</b>.', 'You can ask a query starting with <b>count</b>, <b>list</b>, or <b>describe</b>.'],
     GOODBYE_MSG: ['Goodbye!','Bye!','See you later!'],
 	REFLECTOR_MSG: 'You just triggered ${intent}',
 	FALLBACK_MSG: 'Sorry, I don\'t know that. Please try again.',
 	ERROR_MSG: 'Sorry, there was an error. Please try again.',
 	
-	HOMONYMS_MSG:'I found different homonyms: ${msg} ',
+	HOMONYMS_MSG:'I found different homonyms (list sorted by number of publications): ${msg} ',
 	
-	SUBJECT_REQUEST_MSG:'I can count papers, authors, conferences, organizations and citations. What do you want me to count?',
-	SUBJECT_WRONG_MSG:"Sorry, I can\'t count ${sub}. I can count papers, authors, conferences, organizations and citations. What do you prefer?",
-	SUBJECT_REQUEST_REPROMPT_MSG:'I can count papers, authors, conferences, organizations and citations. What do you prefer?',
-	INSTANCE_MSG:"what is the name of the ${list} whose ${sub} I should count? You can say all for the full list",
-	INSTANCE2_MSG:"what is the name of the ${list} whose ${sub} I should count?",
-	ITEM_MSG:"Searching for ${ins}, I got: ${msg}. <br/>To choose, say the number. Which one is correct?",
-	INTENT_CONFIRMATION_1_MSG: "Do you want to know how many ${sub} ${prep} ${obj} are in the AIDA database?",
-	INTENT_CONFIRMATION_2_MSG: "Do you want to know how many ${sub} ${prep} ${ins} ${obj} are in the AIDA database?",
-	TOO_GENERIC_MSG:"Your search for ${ins} got ${results}. You need to try again and to be more specific. Could you tell me the exact name?",
+	SUBJECT_REQUEST_MSG:'I can count <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>citations</b>. What do you want me to count?',
+	SUBJECT_WRONG_MSG:"Sorry, I can\'t count <b>${sub}</b>. I can count <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>citations</b>. What do you prefer?",
+	SUBJECT_REQUEST_REPROMPT_MSG:'I can count <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>citations</b>. What do you prefer?',
+	INSTANCE_MSG:"what is the <b>name</b> of the ${list} whose <b>${sub}</b> I should count? You can say <b>all</b> for the full list",
+	INSTANCE2_MSG:"what is the <b>name</b> of the ${list} whose <b>${sub}</b> I should count?",
+	ITEM_MSG:"Searching for <b>${ins}</b>, I got: ${msg}. <br/>To choose, say the number. Which one is correct?",
+	INTENT_CONFIRMATION_1_MSG: "Do you want to know how many <b>${sub}</b> ${prep} ${obj} are in the AIDA database?",
+	INTENT_CONFIRMATION_2_MSG: "Do you want to know how many <b>${sub}</b> ${prep} <b>${ins}</b> ${obj} are in the AIDA database?",
+	TOO_GENERIC_MSG:"Your search for <b>${ins}</b> got ${results}. You need to try again and to be more specific. Could you tell me the exact name?",
 	NO_RESULT_MSG:"Your search for ${ins} got no result. You need to try again. What could I search for you?",
-	QUERY_1_MSG: "I found ${num} ${sub} ${prep} ${ins} ${obj}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?", 
-	QUERY_2_MSG: "I found ${num} different ${sub} ${prep} ${obj}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?",
+	QUERY_1_MSG: "I found <b>${num}</b> ${sub} ${prep} <b>${ins}</b> ${obj}. <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?", 
+	QUERY_2_MSG: "I found <b>${num}</b> different ${sub} ${prep} ${obj}. <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?",
 
 	REPROMPT_MSG: 'So, what would you like to ask?',
-	NO_QUERY_MSG: 'Sorry, you asked for a query that is not yet implemented. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
+	NO_QUERY_MSG: 'Sorry, you asked for a query that is not yet implemented. <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
 
 	REPROMPT_END_MSG: 'You could ask me for another query or say stop to quit',
-	NO_SENSE_MSG:'I\'m sorry but the query resulting from the chosen options doesn\'t make sense. Try again. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
+	NO_SENSE_MSG:'I\'m sorry but the query resulting from the chosen options doesn\'t make sense. Try again. <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
 	
 	LIST_WRONG_NUMBER_MSG:'The number ${num} is too big or too small, you should tell me a number higher than one and smaller than six',
-	LIST_SUBJECT_REQUEST_MSG:'I can list papers, authors, conferences, organizations and topics. What do you want me to list?',
-	LIST_SUBJECT_WRONG_MSG:'Sorry, I can\'t list ${sub}. I can list papers, authors, conferences, organizations and topics. What do you prefer?',
-	LIST_SUBJECT_REQUEST_REPROMPT_MSG:'I can list papers, authors, conferences, organizations and topics. What do you prefer?',
-	LIST_ORDER_MSG:'Do you want your list of the top ${num} ${sub} to be sorted by publications, by publications in the last 5 years, by citations or by citations in the last 5 years?',
-	LIST_PAPERS_ORDER_MSG:'Do you want your list of the top ${num} ${sub} to be sorted by citations or by citations in the last 5 years?',
-	LIST_PAPERS_ORDER_WRONG_MSG:'Sorry, I can\'t list ${sub} sorted by ${order}. I can sort them by citations and by citations in the last 5 years. What do you prefer?',
-	LIST_ORDER_WRONG_MSG:'Sorry, I can\'t list ${sub} sorted by ${order}. I can sort them by publications, by publications in the last 5 years, by citations and by citations in the last 5 years. What do you prefer?',
-	LIST_INSTANCE_MSG:'what is the name of the ${list} for which ${sub} should be in the top ${num}? You can say all for the full list',
-	LIST_INTENT_CONFIRMATION_1_MSG: 'Do you want to know which are the top ${num} ${sub} ${prep} ${obj}, by number of ${order}, in the AIDA database?',
-	LIST_INTENT_CONFIRMATION_2_MSG: 'Do you want to know which are the top ${num} ${sub}, by number of ${order}, ${prep} ${ins} ${obj} in the Aida database?',
-	LIST_QUERY_MSG:'In the AIDA database, the top ${num} ${sub} ${prep} ${ins} ${obj}, by number of ${order},  ${verb}: ${lst} You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
-	LIST_NO_RESULT_MSG:'In the AIDA database, there are no ${sub} ${prep} ${ins} ${obj}. You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
+	LIST_SUBJECT_REQUEST_MSG:'I can list <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>topics</b>. What do you want me to list?',
+	LIST_SUBJECT_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b>. I can list <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>topics</b>. What do you prefer?',
+	LIST_SUBJECT_REQUEST_REPROMPT_MSG:'I can list <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>topics</b>. What do you prefer?',
+	LIST_ORDER_MSG: 'Which sorting option do you prefer between <b>publications</b>, <b>citations</b>, <b>publications in the last 5 years</b> and <b>citations in the last 5 years</b>?',//'Do you want your list of the top ${num} ${sub} to be sorted by publications, by publications in the last 5 years, by citations or by citations in the last 5 years?',
+	LIST_PAPERS_ORDER_MSG:'Which sorting option do you prefer between <b>citations</b> and <b>citations in the last 5 years?</b>',//'Do you want your list of the top ${num} ${sub} to be sorted by citations or by citations in the last 5 years?',
+	LIST_PAPERS_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by <b>citations</b> and by <b>citations in the last 5 years</b>. What do you prefer?',
+	LIST_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by <b>publications</b>, by <b>publications in the last 5 years</b>, by <b>citations</b> and by <b>citations in the last 5 years</b>. What do you prefer?',
+	LIST_INSTANCE_MSG:'what is the <b>name</b> of the ${list} for which <b>${sub}</b> should be in the top ${num}? You can say <b>all</b> for the full list',
+	LIST_INTENT_CONFIRMATION_1_MSG: 'Do you want to know which are the top ${num} <b>${sub}</b> ${prep} ${obj}, by number of <b>${order}</b>, in the AIDA database?',
+	LIST_INTENT_CONFIRMATION_2_MSG: 'Do you want to know which are the top ${num} <b>${sub}</b>, by number of <b>${order}</b>, ${prep} <b>${ins}</b> ${obj} in the Aida database?',
+	LIST_QUERY_MSG:'In the AIDA database, the top ${num} <b>${sub}</b> ${prep} <b>${ins}</b> ${obj} - by number of <b>${order}</b> - ${verb}: ${lst} <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
+	LIST_NO_RESULT_MSG:'In the AIDA database, there are no <b>${sub}</b> ${prep} <b>${ins}</b> ${obj}. <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
 	
-	DSC_TOO_GENERIC_MSG:'Your search for ${ins} got ${results}. You need to try again and to be more specific. What is the name of the author or conference you want to know about?',
-	DSC_NO_RESULT_MSG:'Your search for ${ins} got no result. You need to try again. What is the name of the author or conference you want to know about?',
-	DESCRIBE_INSTANCE_MSG: 'What is the name of the author or conference you want to know about?',
+	DSC_TOO_GENERIC_MSG:'Your search for <b>${ins}</b> got ${results}. You need to try again and to be more specific. What is the <b>name</b> of the <b>author</b> or <b>conference</b> or <b>organization</b> you want to know about?',
+	DSC_NO_RESULT_MSG:'Your search for <b>${ins}</b> got no result. You need to try again. What is the name of the author or conference you want to know about?',
+	DESCRIBE_INSTANCE_MSG: 'What is the <b>name</b> of the <b>author</b> or <b>conference</b> or <b>organization</b> you want to know about?',
 	DESCRIBE_CONFIRM_MSG : 'Do you want to know something about ${ins}?'
 }
 
@@ -234,15 +233,15 @@ const count_legal_queries = {
 };
 
 const obj_cat = [
-	['authors','conference acronyms','conference names'],
+	['authors','conference acronyms','conference names','organizations'],
     ['topics', 'conferences', 'organizations', 'authors', 'papers']    
 ]
 
 const item_question_object = {
-    'topics':'topic or ',
-    'conferences':'conference or ',
-    'organizations':'organization or ',
-    'authors':'author'    
+    'topics':'<b>topic</b> or ',
+    'conferences':'<b>conference</b> or ',
+    'organizations':'<b>organization</b> or ',
+    'authors':'<b>author</b>'    
 };
 
 const numbers=[
@@ -528,7 +527,7 @@ const list_order=['publication','citation','publication in the last 5 years', 'c
 
 const cancel_words = ['cancel','stop', 'enough','no'];
 
-const dsc_list=[' is an author',' affiliated to ',' affiliated to the ','Author rating: ','Publications: ' ,'Citations: ','Total number of co-authors: ','The top topic in terms of publications is: ','The top topics in terms of publications are: ','The top conference in terms of publications is: ', 'The top conferences in terms of publications are: ', 'The top journal in terms of publications is: ', 'The top journals in terms of publications are: ',', acronym of ',', is a conference whose focus areas are: ', 'The rankings are: ','citations in the last 5 years: ','Years of activity: from ',' to ','Number of publications in the last year: ', 'The top country in terms of publications is: ', 'The top countries in terms of publications are: ', 'The top organization in education is: ', 'The top organizations in education are: ', 'The top organization in industry is: ', 'The top organizations in industry are: '];
+const dsc_list=[' is an author',' affiliated to ',' affiliated to the ','Author rating: ','Publications: ' ,'Citations: ','Total number of co-authors: ','The top topic in terms of publications is: ','The top topics in terms of publications are: ','The top conference in terms of publications is: ', 'The top conferences in terms of publications are: ', 'The top journal in terms of publications is: ', 'The top journals in terms of publications are: ',', acronym of ',', is a conference whose focus areas are: ', 'The rankings are: ','citations in the last 5 years: ','Years of activity: from ',' to ','Number of publications in the last year: ', 'The top country in terms of publications is: ', 'The top countries in terms of publications are: ', 'The top organization in education is: ', 'The top organizations in education are: ', 'The top organization in industry is: ', 'The top organizations in industry are: ','publications in the last 5 years: ','number of affiliated authors: '];
 
 function getIntent(msg){
 	let message = msg.toLowerCase().split(" ");
@@ -564,7 +563,7 @@ function getUserDescribeQueryText(msg){
 }
 
 function setUserMessage(msg){
-	$('#bot').append('<div class="container"><img src="user.svg" alt="Avatar" class="right" style="max-width: 60px;"><p>'+msg+'</p></div>')
+	$('#bot').append('<div class="container"><img src="user.svg" alt="Avatar" class="right"><p>'+msg+'</p></div>')
 	$('#bot').scrollTop($('#bot')[0].scrollHeight - $('#bot')[0].clientHeight);
 	setAnimation();
 }
@@ -618,14 +617,13 @@ function appendMessage(value){
 		speak = value;
 	}
 	$('#thinker').remove();
-	$('#bot').append('<div class="container darker"><div class="logo"><img src="nao.svg" alt="Avatar" style="max-width: 60px;"></div><div class="msg"><p>' + value + '</p></div></div>');
+	$('#bot').append('<div class="container darker"><div class="logo"><img src="nao.svg" alt="Avatar"></div><div class="msg"><p>' + value + '</p></div></div>');
 	$('#bot').scrollTop($('#bot')[0].scrollHeight - $('#bot')[0].clientHeight);
 	say(speak);
 }
 
 function say(msg){
 	if(!session.audio){
-		window.speechSynthesis.cancel();
 		return
 	}
 
@@ -638,9 +636,6 @@ function say(msg){
 	voice_msg.lang = 'en-US';
 	voice_msg.rate=0.90;
 	window.speechSynthesis.speak(voice_msg);
-	/* if (session.recognition){
-		voice_msg.onend = toggleStartStop()
-	} */
 }
 
 function item_question(subject){
@@ -703,16 +698,19 @@ function homonyms(speak){
     let num=0;
     let item=speak.item;
     for(let i in item){
-        num = '<Br/>say '+numbers[i]+' for '
-        msg = msg+num+item[i].name
+        num = '<br/>say '+'<b>'+numbers[i]+'</b>'+' for ';
+        msg += num+'<b>'+item[i].name+'</b>';
+		/* if(item[i].publications) {
+            msg += homonyms_list[2]+'<b>'+item[i].publications+'</b>'+homonyms_list[3]+", ";
+		} */
         if(item[i].affiliation){
-            msg = msg + homonyms_list[0]+ item[i].affiliation+"; "
+            msg += homonyms_list[0] +'<b>'+item[i].affiliation+"</b>; ";
         } else if(item[i].paper) {
-            msg = msg + homonyms_list[1]+ item[i].paper+"; "
-        } else if(item[i].publications) {
-            msg = msg + homonyms_list[2]+ item[i].publications+homonyms_list[3]+"; "
+            msg += homonyms_list[1] + '<b>' + item[i].paper+"</b>; ";
+        } else if(item[i].country) {
+            msg += ' - ' + '<b>' + item[i].country+"</b>; ";
         } else {
-            msg+="; "
+            msg+="; ";
         }
         if (i>8){
             return msg;
@@ -747,16 +745,16 @@ function list_item_question(subject){
     let msg='';
     let sub=subject;
     if (list_legal_queries[sub]['topics'][1]){
-        msg=msg+item_question_object['topics']
+        msg += item_question_object['topics']
     }
     if (list_legal_queries[sub]['conferences'][1]){
-        msg=msg+item_question_object['conferences']
+        msg += item_question_object['conferences']
     }
     if (list_legal_queries[sub]['organizations'][1]){
-        msg=msg+item_question_object['organizations']
+        msg += item_question_object['organizations']
     }
     if (list_legal_queries[sub]['authors'][1]){
-        msg=msg+item_question_object['authors']
+        msg += item_question_object['authors']
     }
     
 	let s = msg.substring(msg.length - 4, msg.length);
@@ -766,7 +764,7 @@ function list_item_question(subject){
     return msg
 }
 
-function lst(result,order){
+function lst(result,order,sub){
     let o=orders.indexOf(order);
     let msg='<ul>';
     let ord;
@@ -775,7 +773,7 @@ function lst(result,order){
         for(let i in list){
             let author=''
             if(list[i].author && list[i].author.length>0){
-                author = ' by '+list[i].author
+                author = ' by '+'<b>'+upper_authors(list[i].author)+'</b>';
             }
             
             if(list[i].citations===1){
@@ -785,13 +783,13 @@ function lst(result,order){
                 ord=order;
             }
             
-            msg +='<li>'+list[i].name+author+' with '+list[i].citations+' '+ord.split(' ')[0]+'; </li>'
+            msg +='<li><b><i>'+(sub=='authors' ? upper_first(list[i].name) : list[i].name[0].toUpperCase()+list[i].name.slice(1))+'</i></b>'+author+' with '+list[i].citations+' '+ord.split(' ')[0]+'; </li>'
         }
     } else {
         for(let i in list){
             let author=''
             if(list[i].author && list[i].author.length>0){
-                author=' by '+list[i].author
+                author=' by '+'<b>'+upper_authors(list[i].author)+'</b>';
             }
             
             if(list[i].papers===1){
@@ -801,22 +799,40 @@ function lst(result,order){
                 ord=order;
             }
             
-            msg+='<li>'+list[i].name+author+' with '+list[i].papers+' '+ord.split(' ')[0]+'; </li>'
+            msg+='<li><b><i>'+(sub=='authors' ? upper_first(list[i].name) : list[i].name[0].toUpperCase()+list[i].name.slice(1))+'</i></b>'+' with '+list[i].papers+' '+ord.split(' ')[0]+'; </li>'
         }
     }
-    //msg = msg.substring(0,msg.length-1);
     return msg+'</ul>';
 }
 
+function upper_authors(string){
+	let author='';
+	if(string.indexOf(' et al.')>-1){
+		author=string.replace(' et al.','');
+		author=upper_first(author);
+		return author+' et al.';
+	}
+	return upper_first(string);
+}
+
 function list_elements(list,element){
-    let blacklist=['computer science'];
-	for (let i in list){
-		if(blacklist.indexOf(list[i][element])!==-1){
-			list.splice(i, 1); 
-            i--;
+    let blacklist=['computers science'];
+	let blacklist2 = ['lecture notes in computer science', 'arxiv software engineering']
+	if(element.length>0){
+		for (let i in list){
+			if(blacklist.indexOf(list[i][element])!==-1 || blacklist2.indexOf(list[i][element])!==-1){
+				list.splice(i, 1); 
+				i--;
+			}
+		}
+	} else {
+		for (let i in list){
+			if(blacklist.indexOf(list[i])!==-1 || blacklist2.indexOf(list[i])!==-1){
+				list.splice(i, 1); 
+				i--;
+			}
 		}
 	}
-	
 	let i=list.length;
 	if (i>3){
 		i=3
@@ -825,9 +841,9 @@ function list_elements(list,element){
     let j=0;
 	while(j<i){
 		if(element.length>0){
-			msg+='<li>'+upper_first(list[j][element])+';</li>'
+			msg+='<li>'+upper_only_first(list[j][element])+';</li>'
 		} else {
-			msg+='<li>'+upper_first(list[j])+';</li>' 
+			msg+='<li>'+upper_only_first(list[j])+';</li>' 
 		}
 		j+=1;
 	}
@@ -844,19 +860,23 @@ function upper_first(str){
 	return result.slice(1);
 }
 
+function upper_only_first(s){
+	return s[0].toUpperCase()+s.slice(1);
+}
+
 function dsc(query){
-    let msg='';
+	let msg='';
     let item=query.item;
     if (query.obj_id===1){
-        msg=upper_first(item.name)+dsc_list[0];
+        msg='<b>'+upper_first(item.name)+'</b>'+dsc_list[0];
         if(item.last_affiliation.affiliation_name){
             let s = item.last_affiliation.affiliation_name.split(' ');
-            msg=msg+((s[0]==='the' || s[0]==='The') ? dsc_list[1]:dsc_list[2])+item.last_affiliation.affiliation_name
+            msg=msg+((s[0]==='the' || s[0]==='The') ? dsc_list[1]:dsc_list[2])+'<b>'+item.last_affiliation.affiliation_name+'</b>'
 			if(item.last_affiliation.affiliation_country){
-            msg+=', '+item.last_affiliation.affiliation_country+'. <Br/>'
+            msg+=', '+item.last_affiliation.affiliation_country+'. <br/>'
 			}
         } else {
-            msg+='. <Br/>'
+            msg+='. <br/>'
         }
         msg+=dsc_list[3];
 		msg+='<ul>';
@@ -889,7 +909,7 @@ function dsc(query){
             msg+='<ul>'+list_elements(item.top_journals,'name')+'</ul>';
         } 
     } else if (query.obj_id===2 || query.obj_id===3){
-        msg+=item.acronym+dsc_list[13]+item.name+ dsc_list[14];
+        msg+='<b>'+item.acronym+'</b>'+dsc_list[13]+'<b>'+item.name+'</b>'+ dsc_list[14];
         msg+='<ul>'+list_elements(item.topics,'')+'</ul>';
         msg+=dsc_list[15];
         msg+='<ul>';
@@ -919,6 +939,44 @@ function dsc(query){
             msg+='<ul>'+list_elements(item.top_3_company,'')+'</ul>';
         }
         
+    } else if (query.obj_id===4){
+        msg+='<b>'+item.name+'</b>'+ (item.country ? ' - ' + item.country + ' -':'')+' is an organization';
+		
+		if(item.type && (item.type == 'academia' || item.type == 'industry')){
+			
+			msg += ' in ' + (item.type=='academia' ?'Edu':'Industry') + ' sector. <br/>';
+		} else {
+			msg += '. <br/>';
+		}
+		msg += '<br/>' + dsc_list[15] + '<br/>';
+		msg+='<ul>';
+		if(item['h5-index']){
+            msg+='<li>'+'h5-index: '+item['h5-index']+'; </li>';
+        }
+		if(item['publications_5']){
+            //alert(dsc_list.length)
+			msg+='<li>'+dsc_list[26]+item['publications_5']+'; </li>';
+        }
+		if(item['citations_5']){
+            msg+='<li>'+dsc_list[16]+item['citations_5']+'; </li>';
+        }
+		if(item['authors_number']){
+            msg+='<li>'+dsc_list[27]+item['authors_number']+'; </li>';
+        }
+		msg+='</ul>';
+		if(item.top_3_topics && item.top_3_topics.length>0){
+            msg+=(item.top_3_topics.length==1 ? dsc_list[7]: dsc_list[8]);
+            msg+='<ul>'+list_elements(item.top_3_topics,'')+'</ul>';
+        }
+		if(item.top_3_conferences && item.top_3_conferences.length>0){
+            msg+=(item.top_3_conferences.length==1 ? dsc_list[9]: dsc_list[10]);
+            msg+='<ul>'+list_elements(item.top_3_conferences,'')+'</ul>';
+        }
+		if(item.top_3_journals && item.top_3_journals.length>0){
+            msg+=(item.top_3_journals.length==1 ? dsc_list[11]: dsc_list[12]);
+            msg+='<ul>'+list_elements(item.top_3_journals,'')+'</ul>';
+        } 
+        
     } else {
         msg+='Sorry, Query not yet implemented!'
         return msg;
@@ -927,8 +985,14 @@ function dsc(query){
     return msg + 'You can ask to perform another query on the data contained in the AIDA database or ask for Help. <br/>What would you like to try?';
 }
 
-
-
+function fuzzy_search(list,string){
+	let fuse = new Fuse(list, {includeScore: true})
+	let result = fuse.search(string)
+	if (result.length>0 && result[0].score<0.5){
+		return result[0].item
+	}
+	return ''
+}
 
 
 

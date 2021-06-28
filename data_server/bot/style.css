@@ -86,6 +86,11 @@ textarea:focus, input:focus{
 	padding: 5px	
 }
 
+ .right{
+ 	float: right;
+    margin-right:0;
+ }
+
 .title{
 	float:left; 
 }
@@ -101,46 +106,27 @@ textarea:focus, input:focus{
 	float: right;
     margin-right:0;
 }
-
-#help_button{
-	width: 100%
-}
-
-.speak_button{
-	float:left; 
-}
-
- .right{
- 	float: right;
-    margin-right:0;
- }
- 
- .audio_cmd{
-	 padding-left: 2px;
-	 padding-top: 5px;
- }
  
  #go_button{
 	 width: 20px;
 	 display: none
  }
  
- #speaker_on{
-	 margin-top: 15px;
-	 margin-left: 10px;
-	 display: none
- }
  
-  #speaker_off{
-	 margin-top: 15px;
-	 margin-left: 10px
+#help_button{
+	width: 30px
+}
+ 
+  #speaker{
+	 margin-top: 20px;
+	 margin-left: 10px;
+	 width: 35px
  }
  
   .mic{
  	float: right;
     margin-right:0;
-	display: none;
-	width: 30px;
+	height: 30px;
  }
  
  #mic{

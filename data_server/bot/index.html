@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="style.css" type="text/css"/>
 <title>A Chatbot Architecture to Explore ScholarlyKnowledge Graphs</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="text/javascript" src="fuse.js"></script>
 <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="conf.js"></script>
 <script type="text/javascript" src="language_logic.js"></script>
@@ -19,11 +20,10 @@
 		<h2>AidaBot Chat</h2>
 	</div>
 	<div class="audio" id="speaker_div">
-		<img src="speaker_off.svg" alt="Speaker off" id="speaker_off" title="Click to unmute" class="right" onclick="switch_audio()" style="max-width: 40px;">
-		<img src="speaker_on.svg" alt="Speaker on" id="speaker_on" title="Click to mute" class="right" onclick="switch_audio()" style="max-width: 40px;">
+		<img src="speaker_off.svg" alt="Speaker off" id="speaker" title="Click to unmute" class="right" onclick="switch_audio()">
 	</div>
 	<div class="help">
-		<img src="question_mark.svg" alt="Help" id="help_button" title="Click to get help" class="right" onclick="help(1)" style="max-width: 60px;">
+		<img src="question_mark.svg" alt="Help" id="help_button" title="Click to get help" class="right" onclick="help(1)">
 	</div>
 
 </div>
@@ -33,10 +33,9 @@
 	<fieldset class="text">
 		<legend>Input TEXT:</legend> 
 		<input type="text" autofocus id="user_input"></input> 
-		<img src="freccia_blu.gif" title="Click to send" alt="Go" id="go_button" class="right" onclick="cycle()" style="max-width: 30px;">
+		<img src="freccia_blu.svg" title="Click to send" alt="Go" id="go_button" class="right" onclick="cycle()">
 		<div id="mic">
-			<img src="microphone-off.svg" title="Click to Speak" alt="Microphone" id="mic_off" class="mic" onclick="button_click()" style="max-width: 30px;">
-			<img src="microphone-deactivated.svg" title="Disabled" alt="Microphone" id="mic_disabled" onclick='help(2)' class="mic" style="max-width: 30px;">
+			<img src="microphone-off.svg" title="Click to Speak" alt="Microphone" id="mic_off" class="mic" onclick="toggleStartStop()">
 		</div>
 	</fieldset>
 </div>
