@@ -172,6 +172,20 @@ function list(msg){
 		}
 		if(!order && msg.length>0){
 			setUserMessage(msg);
+			
+			let n = get_number(msg)
+			if (!isNaN(n)){
+				if(sub && list_subject_categories.indexOf(sub)==1){
+					if (n>-1 && n < 2){
+						msg = orders[n*2+1]
+					}
+				} else {
+					if (n>-1 && n < 4){
+						msg = orders[n]
+					}
+				}
+			}
+			
 			let word = fuzzy_search(orders,msg);
 			if (word.length>0){
 				order = word;
@@ -183,7 +197,7 @@ function list(msg){
 			} else {
 				let message='LIST_ORDER_WRONG_MSG';
 				if(sub && list_subject_categories.indexOf(sub)==1){
-				message='LIST_PAPERS_ORDER_WRONG_MSG';
+					message='LIST_PAPERS_ORDER_WRONG_MSG';
 				}
 				setMessage(message,{'sub':sub,'order':msg});
 				return

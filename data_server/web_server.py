@@ -92,7 +92,8 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
             if path=='/' or path=='/index.html':
                 self.send_header('Cache-Control', 'max-age=10')
             elif not debug_mode:
-                self.send_header('Cache-Control', 'max-age=31536000, immutable')
+                # self.send_header('Cache-Control', 'max-age=31536000, immutable')
+                self.send_header('Cache-Control', 'max-age=3600') 
             else:
                 self.send_header('Cache-Control', 'max-age=10')
             self.send_header('X-Content-Type-Options', 'nosniff')

@@ -163,7 +163,7 @@ function describe(msg){
 		
 		let num = get_number(msg);
 		if(!isNaN(num) && num <= (session.intent.homonyms_list.item.length-1)){
-			ins = session.intent.homonyms_list.item[num].name;
+			// ins = session.intent.homonyms_list.item[num].name;
 			id = session.intent.homonyms_list.item[num].id;
 			if(session.intent.homonyms_list.obj_id==4){
 				id='00'+id
@@ -184,18 +184,5 @@ function describe(msg){
 			describe(msg)
 			return
 		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 }

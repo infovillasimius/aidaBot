@@ -74,14 +74,14 @@ function cycle(){
 	if($('#user_input').val().length==0){
 		return
 	}
-	
-	let msg=$('#user_input').val().toLowerCase();
-	session.original_input=$('#user_input').val();
+	let msg=$('#user_input').val();
 	$('#user_input').val("");
-	for(let i in tags_list){
+	for(let i in marks_list){
 		msg = msg.replaceAll(marks_list[i],'');
 	}
-			
+	session.original_input = msg
+	msg = msg.toLowerCase();
+	
 	//verifica intento
 	if(session.level==0){
 		intent_verify(msg)
@@ -325,7 +325,8 @@ function switch_audio(){
 	if(session.audio){
 		$('#speaker').attr("src","speaker_off.svg");
 		$('#speaker').attr("title","Click to unmute");
-		window.speechSynthesis.pause();
+		//window.speechSynthesis.pause();
+		window.speechSynthesis.cancel();
 	} else {
 		$('#speaker').attr("src","speaker_on.svg");
 		$('#speaker').attr("title","Click to mute");

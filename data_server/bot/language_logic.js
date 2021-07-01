@@ -64,10 +64,10 @@ const templates = {
 	LIST_SUBJECT_REQUEST_MSG:'I can list <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>topics</b>. What do you want me to list?',
 	LIST_SUBJECT_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b>. I can list <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>topics</b>. What do you prefer?',
 	LIST_SUBJECT_REQUEST_REPROMPT_MSG:'I can list <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>topics</b>. What do you prefer?',
-	LIST_ORDER_MSG: 'Which sorting option do you prefer between <b>publications</b>, <b>citations</b>, <b>publications in the last 5 years</b> and <b>citations in the last 5 years</b>?',//'Do you want your list of the top ${num} ${sub} to be sorted by publications, by publications in the last 5 years, by citations or by citations in the last 5 years?',
-	LIST_PAPERS_ORDER_MSG:'Which sorting option do you prefer between <b>citations</b> and <b>citations in the last 5 years?</b>',//'Do you want your list of the top ${num} ${sub} to be sorted by citations or by citations in the last 5 years?',
-	LIST_PAPERS_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by <b>citations</b> and by <b>citations in the last 5 years</b>. What do you prefer?',
-	LIST_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by <b>publications</b>, by <b>publications in the last 5 years</b>, by <b>citations</b> and by <b>citations in the last 5 years</b>. What do you prefer?',
+	LIST_ORDER_MSG: 'Which sorting option do you prefer between: <br/>(1) <b>publications</b>, <br/>(2) <b>citations</b>, <br/>(3) <b>publications in the last 5 years</b>, <br/>(4) <b>citations in the last 5 years</b>?',//'Do you want your list of the top ${num} ${sub} to be sorted by publications, by publications in the last 5 years, by citations or by citations in the last 5 years?',
+	LIST_PAPERS_ORDER_MSG:'Which sorting option do you prefer between: (1) <b>citations</b> and (2) <b>citations in the last 5 years?</b>',//'Do you want your list of the top ${num} ${sub} to be sorted by citations or by citations in the last 5 years?',
+	LIST_PAPERS_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by (1)  <b>citations</b> and by (2) <b>citations in the last 5 years</b>. What do you prefer?',
+	LIST_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by: (1) <b>publications</b>, (2) <b>publications in the last 5 years</b>, (3) <b>citations</b>, (4) <b>citations in the last 5 years</b>. What do you prefer?',
 	LIST_INSTANCE_MSG:'what is the <b>name</b> of the ${list} for which <b>${sub}</b> should be in the top ${num}? You can say <b>all</b> for the full list',
 	LIST_INTENT_CONFIRMATION_1_MSG: 'Do you want to know which are the top ${num} <b>${sub}</b> ${prep} ${obj}, by number of <b>${order}</b>, in the AIDA database?',
 	LIST_INTENT_CONFIRMATION_2_MSG: 'Do you want to know which are the top ${num} <b>${sub}</b>, by number of <b>${order}</b>, ${prep} <b>${ins}</b> ${obj} in the Aida database?',
@@ -527,7 +527,7 @@ const list_order=['publication','citation','publication in the last 5 years', 'c
 
 const cancel_words = ['cancel','stop', 'enough','no'];
 
-const dsc_list=[' is an author',' affiliated to ',' affiliated to the ','Author rating: ','Publications: ' ,'Citations: ','Total number of co-authors: ','The top topic in terms of publications is: ','The top topics in terms of publications are: ','The top conference in terms of publications is: ', 'The top conferences in terms of publications are: ', 'The top journal in terms of publications is: ', 'The top journals in terms of publications are: ',', acronym of ',', is a conference whose focus areas are: ', 'The rankings are: ','citations in the last 5 years: ','Years of activity: from ',' to ','Number of publications in the last year: ', 'The top country in terms of publications is: ', 'The top countries in terms of publications are: ', 'The top organization in education is: ', 'The top organizations in education are: ', 'The top organization in industry is: ', 'The top organizations in industry are: ','publications in the last 5 years: ','number of affiliated authors: '];
+const dsc_list=[' is an author',' affiliated to ',' affiliated to the ','Author rating: ','Publications: ' ,'Citations: ','Total number of co-authors: ','The top topic in terms of publications is: ','The top topics in terms of publications are: ','The top conference in terms of publications is: ', 'The top conferences in terms of publications are: ', 'The top journal in terms of publications is: ', 'The top journals in terms of publications are: ',', acronym of ',', is a conference whose main topics are: ', 'The rankings are: ','citations in the last 5 years: ','Years of activity: from ',' to ','Number of publications in the last year: ', 'The top country in terms of publications is: ', 'The top countries in terms of publications are: ', 'The top organization in education is: ', 'The top organizations in education are: ', 'The top organization in industry is: ', 'The top organizations in industry are: ','publications in the last 5 years: ','number of affiliated authors: '];
 
 function getIntent(msg){
 	let message = msg.toLowerCase().split(" ");
@@ -554,8 +554,13 @@ function getIntent(msg){
 function getUserDescribeQueryText(msg){
 	let query = msg;
 	for(let i in intents['describe']){
-		if (query.indexOf(intents['describe'][i])==0){
+		let idx = query.indexOf(intents['describe'][i])
+		if (idx == 0){
 			query=query.substr(+intents['describe'][i].length+1,query.length);
+			return query
+		}
+		if (idx > 0){
+			query=query.substr(idx+intents['describe'][i].length+1,query.length);
 			return query
 		}
 	}
@@ -605,6 +610,14 @@ function setMessage(msg,options){
 			value = value.replace(lst[i],'');
 		}
 	}
+	
+	while(value.indexOf('  ') > -1){
+		value = value.replace('  ',' ');
+	}
+	
+	value = value.replaceAll(' . ', '. ');
+	value = value.replaceAll(' , ', ', ');
+	
 	appendMessage([value,speak])
 }	
 
@@ -712,7 +725,7 @@ function homonyms(speak){
         } else {
             msg+="; ";
         }
-        if (i>8){
+        if (i>9){
             return msg;
         }
     }
