@@ -879,9 +879,9 @@ def dsc_finder(query):
             if data[1] > (threshold - 15):
                 flat.append(data[0])
             found[i] = flat[:3]
-
+    
     num = [len(a) for a in found]
-
+    
     if sum(num) == 1:
         obj_id = num.index(1)
         item = found[obj_id][0]
@@ -894,17 +894,19 @@ def dsc_finder(query):
 
     if sum(num) > 1 and sum(num) < 10:
         keys = [[], [], [], []]
-        names = ['last affiliation', 'acronym', 'acronym','name']
+        names = ['last affiliation', 'acronym', 'acronym','country']
         for i in range(len(dsc_indexes)):
             for element in found[i]:
                 ok_res = es.search(index=dsc_indexes[i], body={"track_total_hits": "true", "query": {"match_phrase": {dsc_exact_fields[i]: element}}})
                 for data in ok_res['hits']['hits']:
                     item = data['_source']
                     key = {'id': item['id'], 'name': item['name']}
-                    
+               
                     if names[i] in item:
                         key[names[i]] = item[names[i]]
                     keys[i].append(key)
+        
+        num = [len(a) for a in keys]
         result = {'result': 'k2', 'num': num, 'keys': keys}
         return json.dumps(result)
 
