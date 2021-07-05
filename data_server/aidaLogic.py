@@ -894,17 +894,22 @@ def dsc_finder(query):
 
     if sum(num) > 1 and sum(num) < 10:
         keys = [[], [], [], []]
-        names = ['last affiliation', 'acronym', 'acronym','country']
+        names = ['', 'acronym', 'acronym','']
         for i in range(len(dsc_indexes)):
             for element in found[i]:
+                duplicate_name_control = []
                 ok_res = es.search(index=dsc_indexes[i], body={"track_total_hits": "true", "query": {"match_phrase": {dsc_exact_fields[i]: element}}})
                 for data in ok_res['hits']['hits']:
+                    
                     item = data['_source']
-                    key = {'id': item['id'], 'name': item['name']}
+                    key = {'name': item['name']} 
                
-                    if names[i] in item:
+                    if len(names[i])>0 and names[i] in item:
                         key[names[i]] = item[names[i]]
-                    keys[i].append(key)
+                    if item['name'] not in duplicate_name_control:
+                        keys[i].append(key)
+                        duplicate_name_control.append(item['name'])
+                    print (duplicate_name_control)
         
         num = [len(a) for a in keys]
         result = {'result': 'k2', 'num': num, 'keys': keys}
