@@ -15,6 +15,7 @@ function describe(msg){
 		}
 		
 		if(!ins && msg.length==0){
+			session.confirmation = false;
 			setMessage('DESCRIBE_INSTANCE_MSG')
 			return
 		}
@@ -50,8 +51,11 @@ function describe(msg){
 			} else {
 				message_ins += msg.item.name+'</b> conference'
 			}
-			
-			setMessage("DESCRIBE_CONFIRM_MSG",{'ins': message_ins});
+			if(session.confirmation){
+				setMessage("DESCRIBE_CONFIRM_MSG",{'ins': message_ins});
+			} else {
+				describe('')
+			}
 			return
 		}
 		
@@ -74,6 +78,7 @@ function describe(msg){
 		
 		//caso k2 (risultati multipli ricerca dsc)
 		if(msg.result=='k2'){
+			session.confirmation = false;
 			msg.cmd='dsc';
 			/* if(msg.num[1]>0){
                 ins=msg.keys[1][0]['acronym'];
@@ -87,6 +92,7 @@ function describe(msg){
 		
 		//caso ka (omonimie ricerca dsc)
 		if(msg.result=='ka'){
+			session.confirmation = false;
 			session.intent.homonyms_list = msg;
             let message=homonyms(msg);
             setMessage('HOMONYMS_MSG',{'msg':message});
@@ -132,7 +138,7 @@ function describe(msg){
 			return
 		}
 		
-		let num=get_number(msg);
+		let num = get_number(msg);
 		if(!isNaN(num) && num <= session.intent.items_list.num.reduce((a, b) => a + b, 0)){
 			ins = get_choice(session.intent.items_list,num);
 			session.intent.slots.ins = ins.name;

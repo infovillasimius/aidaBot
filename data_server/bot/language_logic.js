@@ -1,11 +1,12 @@
 
 const intents = {
-	'cancel': ['bye','goodbye'],
+	'cancel': ['bye','goodbye','see you','see you later'],
 	'help': ['help'],
 	'count': ['count', 'how many'],
-	'list': ['list'],
+	'list': ['list','enumerate'],
 	'describe': ['describe','who is','what about','what is','what','who'],
-	'hello' : ['hello','hi']
+	'hello' : ['hello','hi'],
+	'reset' : ['cancel','stop']
 }
 
 const slots = {
@@ -60,11 +61,11 @@ const templates = {
 	REPROMPT_END_MSG: 'You could ask me for another query or say stop to quit',
 	NO_SENSE_MSG:'I\'m sorry but the query resulting from the chosen options doesn\'t make sense. Try again. <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
 	
-	LIST_WRONG_NUMBER_MSG:'The number ${num} is too big or too small, you should tell me a number higher than one and smaller than six',
+	LIST_WRONG_NUMBER_MSG:'The number ${num} , you should tell me a number higher than one and smaller than eleven.',
 	LIST_SUBJECT_REQUEST_MSG:'I can list <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>topics</b>. What do you want me to list?',
 	LIST_SUBJECT_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b>. I can list <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>topics</b>. What do you prefer?',
 	LIST_SUBJECT_REQUEST_REPROMPT_MSG:'I can list <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>topics</b>. What do you prefer?',
-	LIST_ORDER_MSG: 'Which sorting option do you prefer between: <br/>(1) <b>publications</b>, <br/>(2) <b>citations</b>, <br/>(3) <b>publications in the last 5 years</b>, <br/>(4) <b>citations in the last 5 years</b>?',//'Do you want your list of the top ${num} ${sub} to be sorted by publications, by publications in the last 5 years, by citations or by citations in the last 5 years?',
+	LIST_ORDER_MSG: 'Which sorting option do you prefer between: (1) <b>publications</b>, (2) <b>citations</b>, (3) <b>publications in the last 5 years</b> and (4) <b>citations in the last 5 years</b>?',//'Do you want your list of the top ${num} ${sub} to be sorted by publications, by publications in the last 5 years, by citations or by citations in the last 5 years?',
 	LIST_PAPERS_ORDER_MSG:'Which sorting option do you prefer between: (1) <b>citations</b> and (2) <b>citations in the last 5 years?</b>',//'Do you want your list of the top ${num} ${sub} to be sorted by citations or by citations in the last 5 years?',
 	LIST_PAPERS_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by (1)  <b>citations</b> and by (2) <b>citations in the last 5 years</b>. What do you prefer?',
 	LIST_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by: (1) <b>publications</b>, (2) <b>publications in the last 5 years</b>, (3) <b>citations</b>, (4) <b>citations in the last 5 years</b>. What do you prefer?',
@@ -1007,6 +1008,10 @@ function fuzzy_search(list,string){
 	return ''
 }
 
-
-
+function is_list_legal(sub,obj,order){
+	if(order){
+		return list_legal_queries[sub][obj][orders.indexOf(order.split(' ')[0])]
+	}
+	return list_legal_queries[sub][obj][0] || list_legal_queries[sub][obj][1]
+}
 

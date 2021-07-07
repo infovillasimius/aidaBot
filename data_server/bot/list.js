@@ -23,23 +23,26 @@ function list(msg){
 			return
 		}
 		
-		if (num && (parseInt(num) > 5 || parseInt(num)< 2)){
-            if(msg.length==0){
-				setMessage('LIST_WRONG_NUMBER_MSG', {'num': num.toString()})
+		if (num && (parseInt(num) > 10 || parseInt(num)< 2)){
+            session.confirmation = false;
+			if(msg.length==0){
+				setMessage('LIST_WRONG_NUMBER_MSG', {'num': num.toString()+(num>10?' is too big':' is too small')})
 				return
 			}
-			else if(parseInt(msg) > 1 && parseInt(msg) < 6){
+			else if(parseInt(msg) > 1 && parseInt(msg) <= 10){
 				num = parseInt(msg)
 				session.intent.slots.num = num;
 				msg='';
 			} else {
-				setMessage('LIST_WRONG_NUMBER_MSG', {'num': num.toString()})
+				num = parseInt(msg)
+				setMessage('LIST_WRONG_NUMBER_MSG', {'num': num.toString()+(num>10?' is too big':' is too small')})
 				msg='';
 				return
 			}
         }
 		
 		if(!sub && msg.length==0){
+			session.confirmation = false;
 			setMessage('LIST_SUBJECT_REQUEST_MSG');
 			return
 		}
@@ -58,6 +61,7 @@ function list(msg){
 		}
 		
 		if(sub && list_subject_categories.indexOf(sub)==-1){
+			session.confirmation = false;
 			setMessage('LIST_SUBJECT_WRONG_MSG',{'sub':sub});
 			delete session.intent.slots.sub;
 			return
@@ -81,6 +85,7 @@ function list(msg){
 		}
 		
 		if(!ins && msg.length==0){
+			session.confirmation = false;
 			let message='LIST_INSTANCE_MSG'
 			setMessage(message,{'list':list_item_question(sub), 'sub':sub, 'num':num});
 			return
@@ -110,6 +115,12 @@ function list(msg){
 			
 			if(obj_id == 2 || obj_id == 4){
 				session.intent.slots.id = msg.id;
+			}
+			
+			if(!is_list_legal(sub,obj)){
+				setMessage('NO_SENSE_MSG')
+				session_reset();
+				return
 			}
 			
 			session.intent.level = 2;
@@ -163,6 +174,7 @@ function list(msg){
 		}
 		
 		if(!order && msg.length==0){
+			session.confirmation = false;
 			let message='LIST_ORDER_MSG';
 			if(sub && list_subject_categories.indexOf(sub)==1){
 				message='LIST_PAPERS_ORDER_MSG';
@@ -205,13 +217,19 @@ function list(msg){
 		}
 		
 		if(ins && ins=='all') {
-			if(!list_legal_queries[sub]['all'][orders.indexOf(order.split(' ')[0])]){
+			if(!is_list_legal(sub,'all',order)){
 				setMessage('NO_SENSE_MSG')
 				session_reset();
 				return
 			}
-			setMessage('LIST_INTENT_CONFIRMATION_1_MSG', {'order':order, 'num':num, 'sub':(list_dict[order.split(' ')[0]]['sub'][sub][sub]), 'prep': list_dict[order.split(' ')[0]]['prep'][sub][sub], 'obj':list_dict[order.split(' ')[0]]['obj'][sub][sub]});		
+			
 			session.intent.level=5
+			
+			if(session.confirmation){
+				setMessage('LIST_INTENT_CONFIRMATION_1_MSG', {'order':order, 'num':num, 'sub':(list_dict[order.split(' ')[0]]['sub'][sub][sub]), 'prep': list_dict[order.split(' ')[0]]['prep'][sub][sub], 'obj':list_dict[order.split(' ')[0]]['obj'][sub][sub]});		
+			} else {
+				list('')
+			}
 			return
 		}
 		
@@ -225,8 +243,13 @@ function list(msg){
 			if (obj_id == 4){
 				msg_ins = upper_first(ins);
 			}
-			setMessage('LIST_INTENT_CONFIRMATION_2_MSG', {'ins': msg_ins,'order':order, 'num':num, 'sub':(list_dict[order.split(' ')[0]]['sub'][sub][obj]), 'prep': list_dict[order.split(' ')[0]]['prep'][sub][obj], 'obj':list_dict[order.split(' ')[0]]['obj'][sub][obj]});		
 			session.intent.level=5
+			
+			if(session.confirmation){
+				setMessage('LIST_INTENT_CONFIRMATION_2_MSG', {'ins': msg_ins,'order':order, 'num':num, 'sub':(list_dict[order.split(' ')[0]]['sub'][sub][obj]), 'prep': list_dict[order.split(' ')[0]]['prep'][sub][obj], 'obj':list_dict[order.split(' ')[0]]['obj'][sub][obj]});		
+			} else {
+				list('')
+			}
 			return
 		}
 		
@@ -297,7 +320,10 @@ function list(msg){
 		
 	//verifica conferma e visualizzazione risultati
 	if(session.intent.level == 5){
-		setUserMessage(msg);
+		if (msg.length>0){
+			setUserMessage(msg);
+		}
+		
 		
 		if(cancel_words.indexOf(msg) != -1){
 			setMessage('REPROMPT_MSG');

@@ -371,6 +371,11 @@ def how(sub, obj, ins):
 
 # finds correspondence between the parameter and one of the database fields in the fields list
 def find_match(ins):
+    
+    # da eliminare una volta corretti i dati su elasticsearch
+    if ins == 'eswc' or ins == 'ESWC':
+        return json.dumps({"result": "ok", "object": "conferences", "obj_id": 2, "item": "ESWC", "id": "1180003657"})
+
     fields = ["cso_enhanced_topics", "confseries", "affiliation", "name"]
     es_index = [index, index, author_index, author_index]
     objects = ["topics", "conferences", "organizations", "authors"]
@@ -528,6 +533,11 @@ def find_match(ins):
 
 # disambiguazione conferenze omonime per ricerca fnd
 def check_conference(result):
+    
+    # da eliminare una volta corretti i dati su elasticsearch
+    if result['item'] == 'ESWC':
+        return json.dumps(result)
+        
     res = es.search(index=dsc_conferences_index,
                     body={"track_total_hits": "true", "query": {"match_phrase": {"acronym": result['item']}}})
     hits = res['hits']['total']['value']
@@ -724,6 +734,11 @@ def author_data(author_id):
 
 
 def dsc_finder(query):
+    
+    # da eliminare una volta corretti i dati su elasticsearch
+    if query == 'eswc' or query == 'Extended Semantic Web Conference':
+        query = 'European Semantic Web Conference'
+    
     dsc_indexes = [dsc_authors_index, dsc_conferences_index, dsc_conferences_index,dsc_organizations_index]
     dsc_exact_fields = ['name.keyword', 'acronym', 'name.keyword','name.keyword']
     dsc_fields = ['name', 'acronym', 'name','name']

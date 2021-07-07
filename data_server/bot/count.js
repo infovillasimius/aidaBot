@@ -22,9 +22,11 @@ function count(msg){
 		
 		if(!sub && msg.length==0){
 			setMessage('SUBJECT_REQUEST_MSG');
+			session.confirmation = false;
 			return
 		}
 		if(!sub && msg.length>0){
+			session.confirmation = false;
 			let word = fuzzy_search(subject_categories,msg);
 			if (word.length>0){
 				sub = word;
@@ -39,6 +41,7 @@ function count(msg){
 		}
 		
 		if(sub && subject_categories.indexOf(sub)==-1){
+			session.confirmation = false;
 			setMessage('SUBJECT_WRONG_MSG',{'sub':sub});
 			delete session.intent.slots.sub;
 			return
@@ -54,6 +57,7 @@ function count(msg){
 		}
 		
 		if(!ins && msg.length==0){
+			session.confirmation = false;
 			let message='INSTANCE_MSG'
 			if(sub_id==5){
 				message='INSTANCE2_MSG'
@@ -81,9 +85,14 @@ function count(msg){
 			obj = combinations[sub]
 			session.intent.slots.obj = obj;
 			session.intent.slots.ins = 'no';
-			setMessage('INTENT_CONFIRMATION_1_MSG',{'sub': dict['sub'][sub][obj], 'prep': dict['prep'][sub][obj], 'obj':dict['obj'][sub][obj]});		
 			session.intent.level=2
-			return
+			if (session.confirmation){
+				setMessage('INTENT_CONFIRMATION_1_MSG',{'sub': dict['sub'][sub][obj], 'prep': dict['prep'][sub][obj], 'obj':dict['obj'][sub][obj]});	
+				return
+			} else {
+				count('');
+				return
+			}
 		}
 	}
 	
@@ -111,10 +120,14 @@ function count(msg){
 			if(obj_id == 4){
 				ins = upper_first(ins)
 			}
-			
-			setMessage('INTENT_CONFIRMATION_2_MSG',{'sub': dict['sub'][sub][obj], 'prep': dict['prep'][sub][obj], 'obj':dict['obj'][sub][obj],'ins': ins});		
 			session.intent.level = 2
-			return
+			if (session.confirmation){
+				setMessage('INTENT_CONFIRMATION_2_MSG',{'sub': dict['sub'][sub][obj], 'prep': dict['prep'][sub][obj], 'obj':dict['obj'][sub][obj],'ins': ins});		
+				return
+			} else {
+				count('');
+				return
+			}
 		}
 		
 		//caso kk (troppi risultati ricerca fnd)
@@ -155,7 +168,9 @@ function count(msg){
 	
 	//verifica conferma e visualizzazione risultati
 	if(session.intent.level == 2){
-		setUserMessage(msg);
+		if (msg.length > 0){
+			setUserMessage(msg);
+		}
 		
 		if(cancel_words.indexOf(msg) != -1){
 			setMessage('REPROMPT_MSG');
