@@ -62,6 +62,7 @@ function describe(msg){
 		//caso kk (troppi risultati ricerca dsc)
 		if(msg.result=='kk'){
 			let message=kk_message(msg,0);
+			session.confirmation = false;
             setMessage('DSC_TOO_GENERIC_MSG',{'ins': ins, results:message});
             delete session.intent.level;
 			delete session.intent.slots.ins;
@@ -171,8 +172,9 @@ function describe(msg){
 		if(!isNaN(num) && num <= (session.intent.homonyms_list.item.length-1)){
 			// ins = session.intent.homonyms_list.item[num].name;
 			id = session.intent.homonyms_list.item[num].id;
+			alert(id)
 			if(session.intent.homonyms_list.obj_id==4){
-				id='00'+id
+				id='0000000000'+id
 			}
 			delete session.intent.homonyms_list;
 			const url = encodeURI(api+'cmd=dsc&ins='+ id);
