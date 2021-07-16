@@ -172,7 +172,7 @@ function describe(msg){
 		if(!isNaN(num) && num <= (session.intent.homonyms_list.item.length-1)){
 			// ins = session.intent.homonyms_list.item[num].name;
 			id = session.intent.homonyms_list.item[num].id;
-			alert(id)
+			//alert(id)
 			if(session.intent.homonyms_list.obj_id==4){
 				id='0000000000'+id
 			}

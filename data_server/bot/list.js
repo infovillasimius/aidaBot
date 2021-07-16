@@ -147,6 +147,30 @@ function list(msg){
 		
 		//caso k2 (risultati multipli ricerca fnd)
 		if(msg.result=='k2'){
+			let num_res = 0
+			for (let i in msg.num){
+				let obj = object_categories[i]
+				if(!is_list_legal(sub,obj)){
+					msg.num[i] = 0;
+					msg.keys[i]=[];
+				}
+				num_res += msg.num[i];
+			}
+			if(num_res == 0){
+				setMessage('NO_SENSE_MSG')
+				session_reset();
+				return
+			} else if (num_res == 1){
+				for (let i in msg.num){
+					if (msg.num[i] == 1){
+						session.intent.slots.ins = msg.keys[i][0];
+						delete session.intent.level;
+						$('#thinker').remove();
+						list('');
+						return
+					}
+				}
+			}
 			session.intent.items_list = msg;
             let message = choice_list(msg);
             setMessage('ITEM_MSG',{'ins': ins, 'msg':message});
@@ -156,6 +180,12 @@ function list(msg){
 		
 		//caso ka (omonimie ricerca fnd)
 		if(msg.result=='ka'){
+			let obj = msg.object
+			if(!is_list_legal(sub,obj)){
+				setMessage('NO_SENSE_MSG')
+				session_reset();
+				return
+			}
 			session.intent.homonyms_list = msg;
             let message=homonyms(msg);
             setMessage('HOMONYMS_MSG',{'msg':message, 'obj':homonyms_objects[msg.obj_id-1]});

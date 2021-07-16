@@ -694,7 +694,11 @@ function choice_list(speak){
         if (speak.num[i]>0){
             msg+='<ol start='+(+1+n)+'>'
 			for(let j in speak.keys[i]){
-                msg+='<li>'+(speak.cmd ? speak.keys[i][j]['name'] : speak.keys[i][j]) + ';</li>';
+				item = speak.cmd ? speak.keys[i][j]['name'] : speak.keys[i][j]
+				if ((!speak.cmd && i == 3) || (speak.cmd && i == 0)){
+					item = upper_first(item)
+				} 
+                msg+='<li>' + item + ';</li>';
 				message+=numbers[n]+', ' +(speak.cmd ? speak.keys[i][j]['name'] : speak.keys[i][j]) + '; ';
                 n+=1
             }
@@ -710,10 +714,14 @@ function choice_list(speak){
 function homonyms(speak){
     let msg='';
     let num=0;
-    let item=speak.item;
+    let item = speak.item;
     for(let i in item){
         num = '<br/>say '+'<b>'+numbers[i]+'</b>'+' for ';
-        msg += num+'<b>'+item[i].name+'</b>';
+        let name = item[i].name
+		if (speak.object=='authors'){
+			name = upper_first(name)
+		}
+		msg += num + '<b>' + name + '</b>';
 		/* if(item[i].publications) {
             msg += homonyms_list[2]+'<b>'+item[i].publications+'</b>'+homonyms_list[3]+", ";
 		} */
@@ -866,7 +874,6 @@ function list_elements(list,element){
 
 function upper_first(str){
 	s=str.split(' ');
-	console.log(s)
 	let result = ''
 	for(let i in s){
 		result+=' '+s[i][0].toUpperCase()+s[i].slice(1);

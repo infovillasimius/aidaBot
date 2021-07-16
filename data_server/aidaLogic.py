@@ -25,7 +25,6 @@ def lst(sub, obj, ins, num='5', order='1'):
     result = json.dumps({'result': 'Query not implemented yet'})
     num = int(num)
     if ins=='all' and opt:
-        #print(lst_results[sub].get(order))
         q = lst_results[sub].get(order)
         if q is not None:
             q['lst']=q['lst'][0:num]
@@ -369,6 +368,38 @@ def how(sub, obj, ins):
     return result
 
 
+def result_combinator(res1,res2,res3):
+    
+    if res2 is None or res3 is None:
+        return res1
+    results = [json.loads(res1), json.loads(res2), json.loads(res3)]
+    keys = [[], [], [], []]
+    num = [0, 0, 0, 0]
+    for res in results:
+        if res['result'] == 'ok' and res['item'] not in keys[res['obj_id'] - 1]:
+            num[res['obj_id'] - 1] += 1
+            keys[res['obj_id'] - 1].append(res['item'])
+        if res['result'] == 'k2':
+            for i in range(len(res['num'])):
+                for key in res['keys'][i]:
+                    if key not in keys[i]:
+                        keys[i].append(key)
+                        num[i] += 1
+    
+    if sum(num) == 1:
+        obj_id = num.index(1)
+        item = keys[obj_id][0]
+        return json.dumps({'result': 'ok', 'object': objects[obj_id], 'obj_id': obj_id + 1, 'item': item})
+
+    if sum(num) > 1 and sum(num) < 11:
+        return json.dumps({'result': 'k2', 'num': num, 'keys': keys})
+
+    if sum(num) > 10:
+        return json.dumps({'result': 'kk', 'num': num})
+    
+    # nessun risultato
+    return json.dumps({'result': 'ko', 'object': '', 'obj_id': 0, 'keys': [], 'num': 0})
+
 # finds correspondence between the parameter and one of the database fields in the fields list
 def find_match(ins):
     
@@ -376,6 +407,13 @@ def find_match(ins):
     if ins == 'eswc' or ins == 'ESWC':
         return json.dumps({"result": "ok", "object": "conferences", "obj_id": 2, "item": "ESWC", "id": "1180003657"})
 
+    if '-' in ins:
+        result1 = find_match(ins.replace('-',''))
+        result2 = find_match(ins.replace('-',' '))
+    else:
+        result1 = None
+        result2 = None
+    
     fields = ["cso_enhanced_topics", "confseries", "affiliation", "name"]
     es_index = [index, index, author_index, author_index]
     objects = ["topics", "conferences", "organizations", "authors"]
@@ -394,11 +432,9 @@ def find_match(ins):
     keys2 = [[], [], [], []]
 
     # ricerca per chiave esatta
-    for i in range(4):
-        res0.append(es.search(index=es_index[i], body={"track_total_hits": 'true', "size": 0,
-                                                       "query": {"match_phrase": {fields[i] + ".keyword": ins}},
-                                                       "aggs": {
-                                                           "A": {"cardinality": {"field": fields[i] + ".keyword"}}}}))
+    for i in range(4): 
+        query_body = {"track_total_hits": 'true', "size": 0, "query": {"match_phrase": {fields[i] + ".keyword": ins}}, "aggs": {"A": {"cardinality": {"field": fields[i] + ".keyword"}}}}
+        res0.append(es.search(index=es_index[i], body=query_body))
         found_keywords.append(res0[i]['aggregations']['A']['value'])
 
         if found_keywords[i] > 0:
@@ -406,7 +442,9 @@ def find_match(ins):
 
     if keywords_found == 1:
         obj_id = found_keywords.index(max(found_keywords))
-        return json.dumps({'result': 'ok', 'object': objects[obj_id], 'obj_id': obj_id + 1, 'item': ins})
+        result = json.dumps({'result': 'ok', 'object': objects[obj_id], 'obj_id': obj_id + 1, 'item': ins})
+        result = result_combinator(result,result1,result2)
+        return result
 
     # ricerca per frase
     for i in range(4):
@@ -441,11 +479,18 @@ def find_match(ins):
 
     # caso con più di tre risultati in una categoria
     if max(found_hits) > 3 and cat_found > 1:
-        return json.dumps({'result': 'kk', 'num': found_hits})
+        # result = json.dumps({'result': 'kk', 'num': found_hits})
+        keys = [keys[0][:3], keys[1][:3], keys[2][:3], keys[3][:3]]
+        found_hits = [len(a) for a in keys]
+        result = json.dumps({'result': 'k2', 'num': found_hits, 'keys': keys})
+        result = result_combinator(result,result1,result2)
+        return result
 
     # caso con 3 o meno risultati in più di una categoria
     if cat_found > 1:
-        return json.dumps({'result': 'k2', 'num': found_hits, 'keys': keys})
+        result = json.dumps({'result': 'k2', 'num': found_hits, 'keys': keys})
+        result = result_combinator(result,result1,result2)
+        return result 
 
     # caso con 1 risultato utile
     num = found_hits[obj_id]
@@ -456,11 +501,19 @@ def find_match(ins):
             item = keys[obj_id][keys2[obj_id].index(ins.lower())]
         else:
             item = keys[obj_id][0]
-        return json.dumps({'result': 'ok', 'object': objects[obj_id], 'obj_id': obj_id + 1, 'item': item})
+        
+        result = json.dumps({'result': 'ok', 'object': objects[obj_id], 'obj_id': obj_id + 1, 'item': item})
+        result = result_combinator(result,result1,result2)
+        return result 
 
     # caso con più di tre risultati in una sola categoria
     elif num > 3 or sum(found_hits)>10:
-        return json.dumps({'result': 'kk', 'num': found_hits})
+        keys = [keys[0][:3], keys[1][:3], keys[2][:3], keys[3][:3]]
+        found_hits = [len(a) for a in keys]
+        result = json.dumps({'result': 'k2', 'num': found_hits, 'keys': keys})
+        # result = json.dumps({'result': 'kk', 'num': found_hits})
+        result = result_combinator(result,result1,result2)
+        return result
 
     # ricerca fuzzy
     res0 = []
@@ -519,10 +572,16 @@ def find_match(ins):
     if sum(num) == 1:
         obj_id = num.index(1)
         item = found[obj_id][0]
-        return json.dumps({'result': 'ok', 'object': objects[obj_id], 'obj_id': obj_id + 1, 'item': item})
+        
+        result = json.dumps({'result': 'ok', 'object': objects[obj_id], 'obj_id': obj_id + 1, 'item': item})
+        result = result_combinator(result,result1,result2)
+        return result 
+
 
     if sum(num) > 1 and sum(num) < 11:
-        return json.dumps({'result': 'k2', 'num': num, 'keys': found})
+        result = json.dumps({'result': 'k2', 'num': num, 'keys': found})
+        result = result_combinator(result,result1,result2)
+        return result 
 
     if sum(num) > 10:
         return json.dumps({'result': 'kk', 'num': num})
@@ -570,8 +629,6 @@ def get_last_affiliation(id):
     return None
 
 
-
-
 # disambiguazione autori omonimi per ricerca fnd
 def check_author(result):
     query_body = {"track_total_hits": "true", "query": {"bool": {"must": [{"match_phrase": {"name.keyword": result['item']}}, {"exists": {"field": "name"}}]}}, "aggs": {"a": {"terms": {"field": "id","size": 100}}}}
@@ -600,7 +657,6 @@ def check_author(result):
                 aut_ind = affiliations.index(last_affiliation)
                 
                 if author_publications > authors[aut_ind]['publications']:
-                    #print(author_publications, authors[aut_ind]['publications'])
                     authors[aut_ind] = {'name': result['item'], 'id': author['key'], 'affiliation': last_affiliation, 'publications': author_publications, 'paper': paper}
             elif last_affiliation is not None:
                 affiliations.append(last_affiliation)
@@ -611,7 +667,6 @@ def check_author(result):
             else:
                 authors2.append({'name': result['item'], 'id': author['key'], 'publications': author_publications, 'paper': paper})
 
-        #print(authors2)
         if len(authors) > 1:
             result['result'] = 'ka'
             result['item'] = sorted(authors, key=lambda k: k['publications'], reverse=True)[:9]
@@ -739,6 +794,13 @@ def dsc_finder(query):
     if query == 'eswc' or query == 'Extended Semantic Web Conference':
         query = 'European Semantic Web Conference'
     
+    if '-' in query:
+        result1 = dsc_finder(query.replace('-',''))
+        result2 = dsc_finder(query.replace('-',' '))
+    else:
+        result1 = None
+        result2 = None
+    
     dsc_indexes = [dsc_authors_index, dsc_conferences_index, dsc_conferences_index,dsc_organizations_index]
     dsc_exact_fields = ['name.keyword', 'acronym', 'name.keyword','name.keyword']
     dsc_fields = ['name', 'acronym', 'name','name']
@@ -764,7 +826,6 @@ def dsc_finder(query):
         query=int(query)
         res = es.search(index=dsc_organizations_index,
                         body={"track_total_hits": "true", "query": {"match_phrase": {'id': query}}})
-        #print(res)
         if res['hits']['total']['value'] == 1:
             result = ({'result': 'ok', 'obj_id': 4, 'object': objects[3],
                        'item': res['hits']['hits'][0]['_source']})
@@ -778,14 +839,14 @@ def dsc_finder(query):
         num.append(res[i]['hits']['total']['value'])
 
     obj_id = num.index(max(num))
-    #print(obj_id,num)
     if sum(num) == 1:
         result = ({'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id],
                    'item': res[obj_id]['hits']['hits'][0]['_source']})
         if obj_id == 0:
-            # noinspection PyTypeChecker
             result['item'] = (result['item'] | author_data(res[obj_id]['hits']['hits'][0]['_source']['id']))
-        return json.dumps(result)
+        result = dsc_result_combinator(result,result1,result2)
+        return result
+        
     elif sum(num) > 1 and obj_id == 0:
         auth_list = dsc_check_author(query)
         if len(auth_list) > 1:
@@ -793,7 +854,10 @@ def dsc_finder(query):
         else:
             result = ({'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id],
                        'item': auth_list[0] | author_data(auth_list[0]['id'])})
-        return json.dumps(result)
+        
+        result = dsc_result_combinator(result,result1,result2)
+        return result
+        
     elif sum(num) > 1 and obj_id == 3:
         
         org_list = dsc_check_org(query)
@@ -801,7 +865,9 @@ def dsc_finder(query):
             result = {'result': 'ka', 'obj_id': obj_id + 1, 'object': objects[obj_id], 'item': org_list}
         else:
             result = {'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id], 'item': org_list[0]}
-        return json.dumps(result)
+        
+        result = dsc_result_combinator(result,result1,result2)
+        return result
 
     # ricerca per frase
     res = []
@@ -811,13 +877,16 @@ def dsc_finder(query):
                              body={"track_total_hits": "true", "query": {"match_phrase": {dsc_fields[i]: query}}}))
         num.append(res[i]['hits']['total']['value'])
     obj_id = num.index(max(num))
+    
     if sum(num) == 1:
         result = ({'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id],
                    'item': res[obj_id]['hits']['hits'][0]['_source']})
         if obj_id == 0:
             # noinspection PyTypeChecker
             result['item'] = result['item'] | author_data(res[obj_id]['hits']['hits'][0]['_source']['id'])
-        return json.dumps(result)
+        
+        result = dsc_result_combinator(result,result1,result2)
+        return result
 
     if max(num)>1 and max(num) <= 3:
         names = ['last affiliation', 'acronym', 'acronym','name']
@@ -829,7 +898,9 @@ def dsc_finder(query):
                     key[names[i]] = item[names[i]]
                 keys[i].append(key)
         result = {'result': 'k2', 'num': num, 'keys': keys}
-        return json.dumps(result)
+        
+        result = dsc_result_combinator(result,result1,result2)
+        return result
 
     if max(num) > 3 and obj_id == 3:
         org_list = dsc_check_org(query)
@@ -837,11 +908,15 @@ def dsc_finder(query):
             result = {'result': 'ka', 'obj_id': obj_id + 1, 'object': objects[obj_id], 'item': org_list}
         else:
             result = {'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id], 'item': org_list[0]}
-        return json.dumps(result)
+        
+        result = dsc_result_combinator(result,result1,result2)
+        return result
     
     if max(num) > 3:
         result = {'result': 'kk', 'num': num}
-        return json.dumps(result)
+        
+        result = dsc_result_combinator(result,result1,result2)
+        return result
     
     # ricerca fuzzy
     es_index=[dsc_authors_index,dsc_conferences_index,dsc_conferences_index,dsc_organizations_index]
@@ -875,7 +950,7 @@ def dsc_finder(query):
 
     # prende solo i primi tre valori per ogni campo e verifica se siamo in presenza
     # di un unico valore candidato e in tal caso lo restituisce
-    keys = [keys[0][:2], keys[1][:2], keys[2][:2],keys[3][:2]]
+    keys = [keys[0][:3], keys[1][:3], keys[2][:3],keys[3][:3]]
     num = [len(a) for a in keys]
     if sum(num) == 1:
         obj_id = num.index(1)
@@ -886,7 +961,9 @@ def dsc_finder(query):
         result = ({'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id], 'item': ok_res['hits']['hits'][0]['_source']})
         if i == 0:
             result['item'] = result['item'] | author_data(ok_res['hits']['hits'][0]['_source']['id'])
-        return json.dumps(result)
+        
+        result = dsc_result_combinator(result,result1,result2)
+        return result
 
     for i in range(4):
         flat = []
@@ -905,7 +982,9 @@ def dsc_finder(query):
         result = ({'result': 'ok', 'obj_id': obj_id + 1, 'object': objects[obj_id], 'item': ok_res['hits']['hits'][0]['_source']})
         if i == 0:
             result['item'] = result['item'] | author_data(ok_res['hits']['hits'][0]['_source']['id'])
-        return json.dumps(result)
+        
+        result = dsc_result_combinator(result,result1,result2)
+        return result
 
     if sum(num) > 1 and sum(num) < 10:
         keys = [[], [], [], []]
@@ -917,25 +996,63 @@ def dsc_finder(query):
                 for data in ok_res['hits']['hits']:
                     
                     item = data['_source']
-                    key = {'name': item['name']} 
+                    key = {'id': item['id'],'name': item['name']} 
                
                     if len(names[i])>0 and names[i] in item:
                         key[names[i]] = item[names[i]]
                     if item['name'] not in duplicate_name_control:
                         keys[i].append(key)
                         duplicate_name_control.append(item['name'])
-                    print (duplicate_name_control)
         
         num = [len(a) for a in keys]
         result = {'result': 'k2', 'num': num, 'keys': keys}
-        return json.dumps(result)
+        result = dsc_result_combinator(result,result1,result2)
+        return result
 
     if sum(num) > 10:
+        
         return json.dumps({'result': 'kk', 'num': num})
 
     # nessun risultato
     return json.dumps({'result': 'ko', 'object': '', 'obj_id': 0, 'keys': [], 'num': 0})
 
 
+def dsc_result_combinator(res1,res2,res3):
+    
+    if res2 is None or res3 is None:
+        return json.dumps(res1)
+    results = [res1, json.loads(res2), json.loads(res3)]
+    keys = [[], [], [], []]
+    ids = [[], [], [], []]
+    items = [[], [], [], []]
+    num = [0, 0, 0, 0]
+    for res in results:
+        if res['result'] == 'ok':
+            if res['item']['id'] not in ids[res['obj_id'] - 1]:
+                num[res['obj_id'] - 1] += 1
+                items[res['obj_id'] - 1].append(res['item'])
+                item = {'id':res['item']['id'], 'name': res['item']['name']}
+                if 1<res['obj_id']<4:
+                    item['acronym'] = res['item']['acronym']
+                keys[res['obj_id'] - 1].append(item)
+        if res['result'] == 'k2':
+            for i in range(len(res['num'])):
+                for key in res['keys'][i]:
+                    if key not in keys[i]:
+                        keys[i].append(key)
+                        num[i] += 1
+    
+    if sum(num) == 1:
+        obj_id = num.index(1)
+        item = items[obj_id][0]
+        return json.dumps({'result': 'ok', 'object': objects[obj_id], 'obj_id': obj_id + 1, 'item': item})
 
+    if sum(num) > 1 and sum(num) < 11:
+        return json.dumps({'result': 'k2', 'num': num, 'keys': keys})
+
+    if sum(num) > 10:
+        return json.dumps({'result': 'kk', 'num': num})
+    
+    # nessun risultato
+    return json.dumps({'result': 'ko', 'object': '', 'obj_id': 0, 'keys': [], 'num': 0})
 
