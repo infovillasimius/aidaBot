@@ -369,10 +369,11 @@ def how(sub, obj, ins):
 
 
 def result_combinator(res1,res2,res3):
-    
+    objects = ["topics", "conferences", "organizations", "authors"]
     if res2 is None or res3 is None:
         return res1
     results = [json.loads(res1), json.loads(res2), json.loads(res3)]
+    print(results)
     keys = [[], [], [], []]
     num = [0, 0, 0, 0]
     for res in results:
@@ -1018,7 +1019,7 @@ def dsc_finder(query):
 
 
 def dsc_result_combinator(res1,res2,res3):
-    
+    objects = ["topics", "conferences", "organizations", "authors"]
     if res2 is None or res3 is None:
         return json.dumps(res1)
     results = [res1, json.loads(res2), json.loads(res3)]
@@ -1029,6 +1030,7 @@ def dsc_result_combinator(res1,res2,res3):
     for res in results:
         if res['result'] == 'ok':
             if res['item']['id'] not in ids[res['obj_id'] - 1]:
+                ids[res['obj_id'] - 1].append(res['item']['id'])
                 num[res['obj_id'] - 1] += 1
                 items[res['obj_id'] - 1].append(res['item'])
                 item = {'id':res['item']['id'], 'name': res['item']['name']}
@@ -1038,7 +1040,10 @@ def dsc_result_combinator(res1,res2,res3):
         if res['result'] == 'k2':
             for i in range(len(res['num'])):
                 for key in res['keys'][i]:
-                    if key not in keys[i]:
+                    #print(key)
+                    #print(keys[i])
+                    if key['id'] not in ids[i]:
+                        ids[i].append(key['id'])
                         keys[i].append(key)
                         num[i] += 1
     

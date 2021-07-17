@@ -94,6 +94,7 @@ function cycle(){
 		let intent = getIntent(msg)[0];
 		if(intent!='fallback'){
 			session.level = 0;
+			session.confirmation = true
 			delete session.intent.level;
 			delete session.intent.homonyms_list;
 			delete session.intent.items_list;
