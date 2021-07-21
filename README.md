@@ -1,15 +1,5 @@
 # AidaBot Chat
 
-<h3>Web Server</h3>
-The skill uses the data from our web server. If you want yours you have to:
-<ol>
-<li>install elasticsearch on a Linux machine with an ip address reachable from the web server (point 5)</li>
-<li>download sample data from https://github.com/infovillasimius/aidaBot/tree/main/data_sample (the authors data for index "authors" are in a splitted zip file which has to be unzipped only once before use with import_dsc_authors_zip.py script)</li>
-<li>create five indexes named authors, authors2, aida2, conferences and organizations</li>
-<li>index data on elasticsearch using the five python scripts provided (you have to install elasticsearch python client)</li>
-<li>run the web server, provided at https://github.com/infovillasimius/aidaBot/tree/main/data_server, on a Linux machine - with an ip address reachable from the internet and elasticsearch python client installed - by launching web_server.py script (configuration options are in config.py and conf.js)</li>
-</ol>
-
 <h3><a href="https://aidabot.ddns.net" target="_blank">The web application</a></h3>
 The Web Browser application is based onJavascript and JQuery and offers roughly the same functionality as the Alexa skill.
 The database can be queried about authors, papers, conferences, organizations, citations and topics.
@@ -42,4 +32,12 @@ To import AIDA Alexa-hosted skill (see https://youtu.be/7ANn_u-zX1Q)
   <li>Click Continue. The message Creating your Alexa-hosted skill appears. If Alexa validates that the Git repository contains an Alexa skill that it can import, Alexa creates       your Alexa-hosted skill.</li>
 </ol>
 
-
+<h3>Web Server</h3>
+The skill uses the data from our web server. If you want yours you have to:
+<ol>
+<li>install elasticsearch on a Linux machine with an ip address reachable from the web server (point 5)</li>
+<li>download sample data from https://github.com/infovillasimius/aidaBot/tree/main/data_sample (the authors data for index "authors" are in a splitted zip file which has to be unzipped only once before use with import_dsc_authors_zip.py script)</li>
+<li>create five indexes named authors, authors2, aida2, conferences and organizations</li>
+<li>index data on elasticsearch using the five python scripts provided (you have to install elasticsearch python client)</li>
+<li>run the web server, provided at https://github.com/infovillasimius/aidaBot/tree/main/data_server, on a Linux machine - with an ip address reachable from the internet and elasticsearch python client installed - by launching web_server.py script (configuration options are in config.py and conf.js)</li>
+</ol>
