@@ -11,3 +11,5 @@ var audio_recognitions_enabled = false
 if(api.indexOf('https')>-1){
 	audio_recognitions_enabled= true
 } 
+
+millisec_to_timeout = 15000

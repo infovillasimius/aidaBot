@@ -69,7 +69,7 @@ function list(msg){
 		
 		if(ins && ins != 'all'){
 			const url=encodeURI(api+'cmd=fnd&ins='+ins);
-			$.getJSON(url,function(data, status){
+			json_call = $.getJSON(url,function(data, status){
 				session.intent.level=1;
 				list(data);
 			});
@@ -94,7 +94,7 @@ function list(msg){
 		if(!ins && msg.length>0 && msg!='all'){
 			const url=encodeURI(api+'cmd=fnd&ins='+msg);
 			session.intent.slots.ins = msg;
-			$.getJSON(url,function(data, status){
+			json_call = $.getJSON(url,function(data, status){
 				session.intent.level=1;
 				list(data);
 			});
@@ -366,7 +366,7 @@ function list(msg){
 			inst=id;
 		}
 		const url=encodeURI(api+'cmd=lst&sub='+sub_id+'&obj='+obj_id+'&ins='+inst+'&ord='+order_id+'&num='+num);
-		$.getJSON(url,function(data, status){
+		json_call = $.getJSON(url,function(data, status){
 			
 			if(obj=='all'){
                 obj=sub;

@@ -6,7 +6,7 @@ const intents = {
 	'list': ['list','enumerate'],
 	'describe': ['describe','who is','what about','what is','what','who'],
 	'hello' : ['hello','hi'],
-	'reset' : ['cancel','stop']
+	'reset' : ['cancel','stop','restart']
 }
 
 const slots = {
@@ -159,14 +159,14 @@ const dict = {
 	'obj':{
 		'authors':{
 			'topics':'topic',
-			'conferences':'conferences',
+			'conferences':'conference',
 			'organizations':'',
 			'authors':'',
 			'papers':''
 		},
 		'papers':{
 			'topics':'topic',
-			'conferences':'conferences',
+			'conferences':'conference',
 			'organizations':'',
 			'authors':'',
 			'papers':'papers'
@@ -180,14 +180,14 @@ const dict = {
 		},
 		'organizations':{
 			'topics':'',
-			'conferences':'conferences',
+			'conferences':'conference',
 			'organizations':'',
 			'authors':'among their affiliated authors',
 			'papers':''
 		},
 		'citations':{
 			'topics':'topic',
-			'conferences':'conferences',
+			'conferences':'conference',
 			'organizations':'',
 			'authors':'',
 			'papers':''
@@ -366,14 +366,14 @@ const list_dict = {
 		'obj':{
 			'authors':{
 				'topics':'topic',
-				'conferences':'conferences',
+				'conferences':'conference',
 				'organizations':'',
 				'authors':'',
 				'papers':''
 			},
 			'papers':{
 				'topics':'topic',
-				'conferences':'conferences',
+				'conferences':'conference',
 				'organizations':'',
 				'authors':'',
 				'papers':'papers'
@@ -387,14 +387,14 @@ const list_dict = {
 			},
 			'organizations':{
 				'topics':'',
-				'conferences':'conferences',
+				'conferences':'conference',
 				'organizations':'',
 				'authors':'among their affiliated authors',
 				'papers':''
 			},
 		   'topics':{
 				'topics':'',
-				'conferences':'conferences',
+				'conferences':'conference',
 				'organizations':'',
 				'authors':'',
 				'papers':''
@@ -479,14 +479,14 @@ const list_dict = {
 		'obj':{
 			'authors':{
 				'topics':'topics',
-				'conferences':'conferences',
+				'conferences':'conference',
 				'organizations':'',
 				'authors':'',
 				'papers':''
 			},
 			'papers':{
 				'topics':'topics',
-				'conferences':'conferences',
+				'conferences':'conference',
 				'organizations':'',
 				'authors':'',
 				'papers':'papers'
@@ -500,14 +500,14 @@ const list_dict = {
 			},
 			'organizations':{
 				'topics':'',
-				'conferences':'conferences',
+				'conferences':'conference',
 				'organizations':'',
 				'authors':'among their affiliated authors',
 				'papers':''
 			},
 		   'topics':{
 				'topics':'',
-				'conferences':'conferences',
+				'conferences':'conference',
 				'organizations':'',
 				'authors':'',
 				'papers':''
@@ -528,7 +528,7 @@ const list_order=['publication','citation','publication in the last 5 years', 'c
 
 const cancel_words = ['cancel','stop', 'enough','no'];
 
-const dsc_list=[' is an author',' affiliated to ',' affiliated to the ','Author rating: ','Publications: ' ,'Citations: ','Total number of co-authors: ','The top topic in terms of publications is: ','The top topics in terms of publications are: ','The top conference in terms of publications is: ', 'The top conferences in terms of publications are: ', 'The top journal in terms of publications is: ', 'The top journals in terms of publications are: ',', acronym of ',', is a conference whose main topics are: ', 'The rankings are: ','citations in the last 5 years: ','Years of activity: from ',' to ','Number of publications in the last year: ', 'The top country in terms of publications is: ', 'The top countries in terms of publications are: ', 'The top organization in education is: ', 'The top organizations in education are: ', 'The top organization in industry is: ', 'The top organizations in industry are: ','publications in the last 5 years: ','number of affiliated authors: '];
+const dsc_list=[' is an author',' affiliated to ',' affiliated to the ','Author rating: ','Publications: ' ,'Citations: ','Total number of co-authors: ','The top topic in terms of publications is: ','The top topics in terms of publications are: ','The top conference in terms of publications is: ', 'The top conferences in terms of publications are: ', 'The top journal in terms of publications is: ', 'The top journals in terms of publications are: ',', acronym of ',', is a conference', 'The rankings are: ','citations in the last 5 years: ','Years of activity: from ',' to ','Number of publications in the last year: ', 'The top country in terms of publications is: ', 'The top countries in terms of publications are: ', 'The top organization in education is: ', 'The top organizations in education are: ', 'The top organization in industry is: ', 'The top organizations in industry are: ','publications in the last 5 years: ','number of affiliated authors: ',', active between ',' whose main topics are: '];
 
 function getIntent(msg){
 	let message = msg.toLowerCase().split(" ");
@@ -569,9 +569,11 @@ function getUserDescribeQueryText(msg){
 }
 
 function setUserMessage(msg){
+	$('#thinker').remove();
 	$('#bot').append('<div class="container"><img src="user.svg" alt="Avatar" class="right"><p>'+msg+'</p></div>')
 	$('#bot').scrollTop($('#bot')[0].scrollHeight - $('#bot')[0].clientHeight);
 	setAnimation();
+	set_timeout();
 }
 
 function setAnimation(){
@@ -634,6 +636,22 @@ function appendMessage(value){
 	$('#bot').append('<div class="container darker"><div class="logo"><img src="nao.svg" alt="Avatar"></div><div class="msg"><p>' + value + '</p></div></div>');
 	$('#bot').scrollTop($('#bot')[0].scrollHeight - $('#bot')[0].clientHeight);
 	say(speak);
+	cancel_timeout()
+}
+
+function set_timeout(){
+	let new_systemTimeout = setTimeout(function(){ 
+		json_call.abort();
+		setMessage("ERROR_MSG");
+		session_reset()
+	}, millisec_to_timeout);
+	systemTimeout.push(new_systemTimeout);
+}
+
+function cancel_timeout(){
+	for(let i in systemTimeout){
+		clearTimeout(systemTimeout[i]);
+	}
 }
 
 function say(msg){
@@ -931,6 +949,10 @@ function dsc(query){
         } 
     } else if (query.obj_id===2 || query.obj_id===3){
         msg+='<b>'+item.acronym+'</b>'+dsc_list[13]+'<b>'+item.name+'</b>'+ dsc_list[14];
+		if(item['activity_years']){
+            msg+=dsc_list[28]+item['activity_years']['from']+' and '+item['activity_years']['to']+', ';
+        }
+		msg+=dsc_list[29];
         msg+='<ul>'+list_elements(item.topics,'')+'</ul>';
         msg+=dsc_list[15];
         msg+='<ul>';
@@ -940,9 +962,7 @@ function dsc(query){
         if(item['citationcount_5']){
             msg+='<li>'+dsc_list[16]+item['citationcount_5']+'; </li>';
         }
-        if(item['activity_years']){
-            msg+='<li>'+dsc_list[17]+item['activity_years']['from']+dsc_list[18]+item['activity_years']['to']+'; </li>';
-        }
+        
         if(item.last_year_publications){
             msg+='<li>'+dsc_list[19]+item.last_year_publications+'; </li>';
         }
@@ -1020,5 +1040,9 @@ function is_list_legal(sub,obj,order){
 		return list_legal_queries[sub][obj][orders.indexOf(order.split(' ')[0])]
 	}
 	return list_legal_queries[sub][obj][0] || list_legal_queries[sub][obj][1]
+}
+
+function get_help(){
+	setMessage('HELP_MSG');
 }
 

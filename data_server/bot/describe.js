@@ -25,7 +25,7 @@ function describe(msg){
 				session.intent.slots.ins = session.original_input; //msg;
 			}
 			const url = encodeURI(api+'cmd=dsc&ins='+(ins ? ins : session.original_input));
-			$.getJSON(url,function(data, status){
+			json_call = $.getJSON(url,function(data, status){
 				session.intent.level = 1;
 				describe(data);
 			});
@@ -178,7 +178,7 @@ function describe(msg){
 			}
 			delete session.intent.homonyms_list;
 			const url = encodeURI(api+'cmd=dsc&ins='+ id);
-			$.getJSON(url,function(data, status){
+			json_call = $.getJSON(url,function(data, status){
 				session.intent.level = 1;
 				describe(data);
 			});

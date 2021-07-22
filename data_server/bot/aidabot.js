@@ -12,7 +12,10 @@ var session={
 
 var audio_resume=setInterval(audio_reset,10000);
 var mic_animation;
-var mic_image = 'microphone-on1.svg'
+var mic_image = 'microphone-on1.svg';
+
+var systemTimeout = [];
+var json_call;
 
 //variabili per speech to text
 var recognizing;
@@ -92,12 +95,8 @@ function cycle(){
 	// trasferisce controllo agli intenti complessi in base al nome dell'intento
 	if(session.level == 1){
 		let intent = getIntent(msg)[0];
-		if(intent!='fallback'){
-			session.level = 0;
-			session.confirmation = true
-			delete session.intent.level;
-			delete session.intent.homonyms_list;
-			delete session.intent.items_list;
+		
+		if(intent!='fallback'){			
 			intent_verify(msg)
 			return
 		}
@@ -133,7 +132,7 @@ function intent_verify(msg){
 	} 
 	
 	else if(intent == 'help'){
-		setMessage('HELP_MSG')
+		get_help()
 	}
 	
 	else if(intent == 'cancel'){
@@ -143,14 +142,16 @@ function intent_verify(msg){
 	}
 	
 	else if(intent == 'count' || intent == 'list'){
-		session.level=1;
+		session_reset();
+		session.level = 1;
 		const url=encodeURI(api+'cmd=parser&ins='+msg);
-		$.getJSON(url,function(data, status){
+		json_call = $.getJSON(url,function(data, status){
 			setIntentSlots(data);
 		});
 	} 
 	
 	else if(intent == 'describe'){
+		session_reset();
 		session.intent.name = 'describe';
 		session.level = 1
 		let query = getUserDescribeQueryText(msg);
@@ -196,9 +197,12 @@ function setIntentSlots(data){
 	
 	if(cmd=='list'){
 		session.intent.name='list'
-		if(data.num){
+		if(data.num && data.num.pos!=-1){
 			num = data.num.value;
 			session.intent.slots.num = num;
+		} else {
+			num = 10;
+			session.intent.slots.num = 10;
 		}
 		if(data.sub){
 			sub = data.sub.value;

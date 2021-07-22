@@ -49,7 +49,7 @@ function count(msg){
 		
 		if(ins && ins!='all'){
 			const url=encodeURI(api+'cmd=fnd&ins='+ins);
-			$.getJSON(url,function(data, status){
+			json_call = $.getJSON(url,function(data, status){
 				session.intent.level=1;
 				count(data);
 			});
@@ -69,7 +69,7 @@ function count(msg){
 		if(!ins && msg.length>0 && msg!='all'){
 			const url=encodeURI(api+'cmd=fnd&ins='+msg);
 			session.intent.slots.ins = msg;
-			$.getJSON(url,function(data, status){
+			json_call = $.getJSON(url,function(data, status){
 				session.intent.level=1;
 				count(data);
 			});
@@ -214,7 +214,7 @@ function count(msg){
 			inst=id;
 		}
 		const url=encodeURI(api+'cmd=how&sub='+sub_id+'&obj='+obj_id+'&ins='+inst);
-		$.getJSON(url,function(data, status){
+		json_call = $.getJSON(url,function(data, status){
 			if (data.result != 'ok'){
 				setMessage('NO_QUERY_MSG');
 				session_reset();
