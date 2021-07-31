@@ -25,10 +25,12 @@ def query_parser(query, lng):
                      "through", "till", "to", "toward", "under", "underneath", "unlike", "until", "up", "upon",
                      "versus", "via", "with", "within", "without"],
             'sub': {
-                'list': ['authors', 'papers', 'conferences', 'organizations', 'topics', 'author', 'paper', 'conference',
-                         'organization', 'topic'],
-                'count': ['authors', 'papers', 'conferences', 'organizations', 'citations', 'author', 'paper',
-                          'conference', 'organization', 'citation']
+                'list': ['authors', 'papers', 'conferences', 'organizations', 'topics', 
+                         'author', 'paper', 'conference', 'organization', 'topic',
+                         '', 'publications'],
+                'count': ['authors', 'papers', 'conferences', 'organizations', 'citations', 
+                          'author', 'paper', 'conference', 'organization', 'citation', 
+                          '', 'publications']
             },
             'obj': ['topics', 'conferences', 'organizations', 'authors', 'papers', 'topic', 'conference',
                     'organization', 'author', 'paper'],

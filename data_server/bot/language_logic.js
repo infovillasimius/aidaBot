@@ -6,7 +6,8 @@ const intents = {
 	'list': ['list','enumerate'],
 	'describe': ['describe','who is','what about','what is','what','who'],
 	'hello' : ['hello','hi'],
-	'reset' : ['cancel','stop','restart']
+	'reset' : ['cancel','stop'],
+	'clear' : ['clear','restart']
 }
 
 const slots = {
@@ -26,8 +27,9 @@ const combinations = {
 const subject_categories =['authors', 'papers', 'conferences', 'organizations', 'citations'];
 const object_categories =['topics','conferences','organizations','authors','papers'];
 const list_subject_categories = ['authors', 'papers', 'conferences', 'organizations', 'topics'];
-const tags_list = ['<br/>','<b>','</b>','<br/>','<ul>','</ul>','<li>','</li>','<i>','</i>'];
+const tags_list = ['<br/>','<b>','</b>','<br/>','<ul>','</ul>','<li>','</li>','<i>','</i>','</a>'];
 const marks_list = ['.','?',';',','];
+const grid_marks_list = ['?',';',','];
 
 
 const templates = {
@@ -75,9 +77,9 @@ const templates = {
 	LIST_QUERY_MSG:'In the AIDA database, the top ${num} <b>${sub}</b> ${prep} <b>${ins}</b> ${obj} - by number of <b>${order}</b> - ${verb}: ${lst} <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
 	LIST_NO_RESULT_MSG:'In the AIDA database, there are no <b>${sub}</b> ${prep} <b>${ins}</b> ${obj}. <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
 	
-	DSC_TOO_GENERIC_MSG:'Your search for <b>${ins}</b> got ${results}. You need to try again and to be more specific. What is the <b>name</b> of the <b>author</b> or <b>conference</b> or <b>organization</b> you want to know about?',
-	DSC_NO_RESULT_MSG:'Your search for <b>${ins}</b> got no result. You need to try again. What is the name of the author or conference you want to know about?',
-	DESCRIBE_INSTANCE_MSG: 'What is the <b>name</b> of the <b>author</b> or <b>conference</b> or <b>organization</b> you want to know about?',
+	DSC_TOO_GENERIC_MSG:'Your search for <b>${ins}</b> got ${results}. You need to try again and to be more specific. What is the <b>name</b> of the <b>author</b> or <b>conference</b> or <b>organization</b> you want to know about? <br/>(for organizations you can enter the grid id)',
+	DSC_NO_RESULT_MSG:'Your search for <b>${ins}</b> got no result. You need to try again. What is the name of the author or conference or organization you want to know about? <br/>(for organizations you can enter the grid id)',
+	DESCRIBE_INSTANCE_MSG: 'What is the <b>name</b> of the <b>author</b> or <b>conference</b> or <b>organization</b> you want to know about? <br/>(for organizations you can enter the grid id)',
 	DESCRIBE_CONFIRM_MSG : 'Do you want to know something about ${ins}?'
 }
 
@@ -662,6 +664,12 @@ function say(msg){
 	for(let i in tags_list){
 		msg = msg.replaceAll(tags_list[i],'');
 	}
+	
+	while(msg.indexOf('<a') != -1){
+		let i = msg.indexOf('<a');
+		let f = msg.indexOf('>',i);
+		msg = msg.replace(msg.substring(i,+f+1),'')
+	}
 
 	window.speechSynthesis.cancel();
 	let voice_msg = new SpeechSynthesisUtterance(msg);
@@ -979,6 +987,8 @@ function dsc(query){
             msg+=(item.top_3_company.length==1 ? dsc_list[24]:dsc_list[25]);
             msg+='<ul>'+list_elements(item.top_3_company,'')+'</ul>';
         }
+		let url = encodeURI('http://aida.kmi.open.ac.uk/dashboard/' + item.name + ' ('+item.acronym+')');
+		msg +='More information on <a href="'+ url +'" + target="_blank">AIDA Dashboard. </a><br/>'
         
     } else if (query.obj_id===4){
         msg+='<b>'+item.name+'</b>'+ (item.country ? ' - ' + item.country + ' -':'')+' is an organization';
@@ -1045,4 +1055,5 @@ function is_list_legal(sub,obj,order){
 function get_help(){
 	setMessage('HELP_MSG');
 }
+
 

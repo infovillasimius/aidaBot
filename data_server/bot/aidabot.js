@@ -80,10 +80,17 @@ function cycle(){
 	}
 	let msg=$('#user_input').val();
 	$('#user_input').val("");
-	for(let i in marks_list){
-		msg = msg.replaceAll(marks_list[i],'');
+	if(msg.indexOf('grid.') != -1){
+		for(let i in marks_list){
+			msg = msg.replaceAll(grid_marks_list[i],'');
+		}
+	} else {
+		for(let i in marks_list){
+			msg = msg.replaceAll(marks_list[i],'');
+		}
+	
 	}
-	session.original_input = msg
+	session.original_input = msg;
 	msg = msg.toLowerCase();
 	
 	//verifica intento
@@ -140,6 +147,14 @@ function intent_verify(msg){
 		setMessage('GOODBYE_MSG')
 		session_reset();
 	}
+	
+	if (intent == 'clear'){
+		$('#bot').text("");
+		$('.help_text').empty();
+		resize();
+		setMessage('WELCOME_MSG');
+		session_reset();
+	} 
 	
 	else if(intent == 'count' || intent == 'list'){
 		session_reset();
@@ -235,7 +250,7 @@ function help(cmd){
 	}	
 	else if(cmd==1){
 		$('.help_text').empty();
-		$('.help_text').append('<p class="help_text_p">The database can be queried about <b>authors</b>, <b>papers</b>, <b>conferences</b>, <b>organizations</b>, <b>citations</b> and <b>topics</b>.<br/>It is possible to further filter the queries by specifying the <b>name</b> of a particular <b>topic</b>, <b>conference</b>, <b>organization</b> or <b>author</b>.<br/>The results can be sorted according to one of the following four options: <b>publications</b>, <b>citations</b>, <b>publications in the last 5 years</b>, <b>citations in the last 5 years</b><br/>There are three types of queries:<br/>1. <b>Describe</b> (e.g .: "describe ISWC")<br/>2. <b>Count</b> (e.g .: "count the papers on machine learning")<br/>3. <b>List</b> (e.g .: "list the top 5 conferences with papers on rdf graph sorted by publications").<br/>You can enter a query all at once in natural language or through a wizard by entering one of the three activation words: <b>describe</b>, <b>count</b> or <b>list</b>. <br/>To listen to aidabot messages, enable the speech synthesizer (speaker icon at the top right). <br/>To use the voice recognition functions click on the microphone icon (bottom right).<br/>You can use <b>stop</b> to cancel the current request and start a new query.</p><a class="right" onclick="help(0)" href="javascript:void(0)" title="close help">close</a>');
+		$('.help_text').append('<p class="help_text_p">The database can be queried about <b>authors</b>, <b>papers</b>, <b>conferences</b>, <b>organizations</b>, <b>citations</b> and <b>topics</b>.<br/>It is possible to further filter the queries by specifying the <b>name</b> of a particular <b>topic</b>, <b>conference</b>, <b>organization</b> or <b>author</b>.<br/>The results can be sorted according to one of the following four options: <b>publications</b>, <b>citations</b>, <b>publications in the last 5 years</b>, <b>citations in the last 5 years</b><br/>There are three types of queries:<br/>1. <b>Describe</b> (e.g .: "describe ISWC")<br/>2. <b>Count</b> (e.g .: "count the papers on machine learning")<br/>3. <b>List</b> (e.g .: "list the top 5 conferences with papers on rdf graph sorted by publications").<br/>You can enter a query all at once in natural language or through a wizard by entering one of the three activation words: <b>describe</b>, <b>count</b> or <b>list</b>. <br/>To listen to aidabot messages, enable the speech synthesizer (speaker icon at the top right). <br/>To use the voice recognition functions click on the microphone icon (bottom right).<br/>You can use <b>stop</b> to cancel the current request and start a new query.<br/>You can use <b>clear</b> or <b>restart</b> to clear the screen and start a new session.</p><a class="right" onclick="help(0)" href="javascript:void(0)" title="close help">close</a>');
 	} 
 	else if(cmd==2){
 		$('.help_text').empty();

@@ -370,10 +370,11 @@ def how(sub, obj, ins):
 
 def result_combinator(res1,res2,res3):
     objects = ["topics", "conferences", "organizations", "authors"]
-    if res2 is None or res3 is None:
-        return res1
-    results = [json.loads(res1), json.loads(res2), json.loads(res3)]
-    print(results)
+    res1 = json.loads(res1)
+    if res2 is None or res3 is None or (res1['result'] == 'ok' and '-' in res1['item']):
+        return json.dumps(res1)
+    results = [res1, json.loads(res2), json.loads(res3)]
+    
     keys = [[], [], [], []]
     num = [0, 0, 0, 0]
     for res in results:
@@ -811,6 +812,13 @@ def dsc_finder(query):
     keys = [[], [], [],[]]
     result = {'result': 'ko'}
 
+    # ricerca esatta per gridid per organizzazione
+    if 'grid.' in query and query.index('grid.') == 0:
+        res = es.search(index=dsc_organizations_index, body={"track_total_hits": "true", "query": {"match_phrase": {"gridid": query}}})
+        if res['hits']['total']['value'] == 1:
+            result = ({'result': 'ok', 'obj_id': 4, 'object': objects[3],
+                       'item': res['hits']['hits'][0]['_source']})
+        return json.dumps(result)
     
     # ricerca esatta per id per autore
     if query.isnumeric() and len(query) <= 10:
@@ -1020,7 +1028,7 @@ def dsc_finder(query):
 
 def dsc_result_combinator(res1,res2,res3):
     objects = ["topics", "conferences", "organizations", "authors"]
-    if res2 is None or res3 is None:
+    if res2 is None or res3 is None or (res1['result'] == 'ok' and '-' in res1['item']['name']):
         return json.dumps(res1)
     results = [res1, json.loads(res2), json.loads(res3)]
     keys = [[], [], [], []]
