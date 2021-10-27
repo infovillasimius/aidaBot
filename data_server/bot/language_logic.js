@@ -47,8 +47,8 @@ const templates = {
 	SUBJECT_REQUEST_MSG:'I can count <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>citations</b>. What do you want me to count?',
 	SUBJECT_WRONG_MSG:"Sorry, I can\'t count <b>${sub}</b>. I can count <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>citations</b>. What do you prefer?",
 	SUBJECT_REQUEST_REPROMPT_MSG:'I can count <b>papers</b>, <b>authors</b>, <b>conferences</b>, <b>organizations</b> and <b>citations</b>. What do you prefer?',
-	INSTANCE_MSG:"what is the <b>name</b> of the ${list} whose <b>${sub}</b> I should count? You can say <b>all</b> for the full list",
-	INSTANCE2_MSG:"what is the <b>name</b> of the ${list} whose <b>${sub}</b> I should count?",
+	INSTANCE_MSG:"I am sorry, I didn't understand. What is the <b>name</b> of the ${list} whose <b>${sub}</b> I should count? You can say <b>all</b> for the full list",
+	INSTANCE2_MSG:"I am sorry, I didn't understand. What is the <b>name</b> of the ${list} whose <b>${sub}</b> I should count?",
 	ITEM_MSG:"Searching for <b>${ins}</b>, I got: ${msg}. <br/>To choose, say the number. Which one is correct?",
 	INTENT_CONFIRMATION_1_MSG: "Do you want to know how many <b>${sub}</b> ${prep} ${obj} are in the AIDA database?",
 	INTENT_CONFIRMATION_2_MSG: "Do you want to know how many <b>${sub}</b> ${prep} <b>${ins}</b> ${obj} are in the AIDA database?",
@@ -71,7 +71,7 @@ const templates = {
 	LIST_PAPERS_ORDER_MSG:'Which sorting option do you prefer between: (1) <b>citations</b> and (2) <b>citations in the last 5 years?</b>',//'Do you want your list of the top ${num} ${sub} to be sorted by citations or by citations in the last 5 years?',
 	LIST_PAPERS_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by (1)  <b>citations</b> and by (2) <b>citations in the last 5 years</b>. What do you prefer?',
 	LIST_ORDER_WRONG_MSG:'Sorry, I can\'t list <b>${sub}</b> sorted by <b>${order}</b>. I can sort them by: (1) <b>publications</b>, (2) <b>publications in the last 5 years</b>, (3) <b>citations</b>, (4) <b>citations in the last 5 years</b>. What do you prefer?',
-	LIST_INSTANCE_MSG:'what is the <b>name</b> of the ${list} for which <b>${sub}</b> should be in the top ${num}? You can say <b>all</b> for the full list',
+	LIST_INSTANCE_MSG:"I am sorry, I didn't understand. What is the <b>name</b> of the ${list} for which <b>${sub}</b> should be in the top ${num}? You can say <b>all</b> for the full list",
 	LIST_INTENT_CONFIRMATION_1_MSG: 'Do you want to know which are the top ${num} <b>${sub}</b> ${prep} ${obj}, by number of <b>${order}</b>, in the AIDA database?',
 	LIST_INTENT_CONFIRMATION_2_MSG: 'Do you want to know which are the top ${num} <b>${sub}</b>, by number of <b>${order}</b>, ${prep} <b>${ins}</b> ${obj} in the Aida database?',
 	LIST_QUERY_MSG:'In the AIDA database, the top ${num} <b>${sub}</b> ${prep} <b>${ins}</b> ${obj} - by number of <b>${order}</b> - ${verb}: ${lst} <br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. What would you like to try?',
@@ -79,7 +79,7 @@ const templates = {
 	
 	DSC_TOO_GENERIC_MSG:'Your search for <b>${ins}</b> got ${results}. You need to try again and to be more specific. What is the <b>name</b> of the <b>author</b> or <b>conference</b> or <b>organization</b> you want to know about? <br/>(for organizations you can enter the grid id)',
 	DSC_NO_RESULT_MSG:'Your search for <b>${ins}</b> got no result. You need to try again. What is the name of the author or conference or organization you want to know about? <br/>(for organizations you can enter the grid id)',
-	DESCRIBE_INSTANCE_MSG: 'What is the <b>name</b> of the <b>author</b> or <b>conference</b> or <b>organization</b> you want to know about? <br/>(for organizations you can enter the grid id)',
+	DESCRIBE_INSTANCE_MSG: "I am sorry, I didn't understand. What is the <b>name</b> of the <b>author</b> or <b>conference</b> or <b>organization</b> you want to know about? <br/>(for organizations you can enter the grid id)",
 	DESCRIBE_CONFIRM_MSG : 'Do you want to know something about ${ins}?'
 }
 

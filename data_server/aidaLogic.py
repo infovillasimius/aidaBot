@@ -1069,3 +1069,12 @@ def dsc_result_combinator(res1,res2,res3):
     # nessun risultato
     return json.dumps({'result': 'ko', 'object': '', 'obj_id': 0, 'keys': [], 'num': 0})
 
+
+def check_topic(data,ins):
+    if data['num'][0] == 1 and data['keys'][0][0] == ins:
+        return json.dumps({"result": "ok", "object": "topics", "obj_id": 1, "item": ins})
+    for topic in data['keys'][0]:
+        if topic in data['keys'][3]:
+            data['keys'][3].remove(topic)
+            data['num'][3]-=1
+    return json.dumps(data)

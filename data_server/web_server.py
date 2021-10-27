@@ -38,6 +38,8 @@ def query(cmd,sub,obj,ins,order,num,lng):
             result=check_author(data)
         if data['result']=='ok' and data['obj_id']==2:
             result=check_conference(data)
+        if data['result']=='k2':
+            result=check_topic(data,ins)
 
     elif cmd == 'parser':
         result = query_parser(ins, lng)

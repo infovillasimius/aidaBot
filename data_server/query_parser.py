@@ -39,7 +39,9 @@ def query_parser(query, lng):
                 'verbs': ['order', 'ordered', 'sort', 'sorted', 'arrange', 'arranged'],
                 'ways': ['publications', 'citations', 'publications in the last 5 years',
                          'citations in the last 5 years', 'publication', 'citation', 'publication in the last 5 years',
-                         'citation in the last 5 years']
+                         'citation in the last 5 years','publications', 'citations', 'publications in the last five years',
+                         'citations in the last five years','publication', 'citation', 'publication in the last five years',
+                         'citation in the last five years']
             }
         }
     }
@@ -86,7 +88,7 @@ def query_parser(query, lng):
                     if t[i] in phrase_parts[lng]['order']['ways']:
                         pos2 = i
                         j = (phrase_parts[lng]['order']['ways'].index(t[i])) % 4
-                    if t[i].isnumeric() and int(t[i]) == 5:
+                    if (t[i].isnumeric() and int(t[i]) == 5) or t[i]=='five':
                         j += 2
                     if t[i] == 'years':
                         pos2 = i
@@ -98,7 +100,7 @@ def query_parser(query, lng):
                 pos2 = pos
                 j = (phrase_parts[lng]['order']['ways'].index(w)) % 4
                 for i in range(pos + 1, len(t)):
-                    if t[i].isnumeric() and int(t[i]) == 5:
+                    if (t[i].isnumeric() and int(t[i]) == 5) or t[i]=='five':
                         j += 2
                     if t[i] == 'years':
                         pos2 = i
@@ -152,13 +154,17 @@ def query_parser(query, lng):
         prob_ins.append(part[:-1])
 
     result = []
-    if len(prob_ins) == 1:
-        result.append(find_match(prob_ins[0]))
-    elif len(prob_ins) > 1:
+    
+    if len(prob_ins) > 0:
         for p_ins in prob_ins:
-            result.append(find_match(p_ins))
+            resp = find_match(p_ins)
+            r = json.loads(resp)
+            if r['result'] == 'k2':
+                resp = check_topic(r,p_ins)
+            result.append(resp)
     for res in result:
         r = json.loads(res)
+         
         if r['result'] == 'ok':
             phrase['ins'] = {'value': r['item'], 'pos': -1}
             phrase['obj'] = {'value': r['object']}
