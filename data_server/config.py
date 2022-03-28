@@ -40,6 +40,7 @@ resources = {
     '/aidabot.js': {'file':'aidabot.js','mime':'text/javascript; charset=utf-8'},
     '/count.js': {'file':'count.js','mime':'text/javascript; charset=utf-8'},
     '/describe.js': {'file':'describe.js','mime':'text/javascript; charset=utf-8'},
+    '/compare.js': {'file':'compare.js','mime':'text/javascript; charset=utf-8'},
     '/language_logic.js': {'file':'language_logic.js','mime':'text/javascript; charset=utf-8'},
     '/list.js': {'file':'list.js','mime':'text/javascript; charset=utf-8'},
     '/jquery-3.6.0.min.js': {'file':'jquery-3.6.0.min.js','mime':'text/javascript; charset=utf-8'},
