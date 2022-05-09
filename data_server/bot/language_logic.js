@@ -94,9 +94,9 @@ const templates = {
 	COMPARE_NO_RESULT_SECOND_MSG: 'Your search for <b>${ins}</b> got no result. You need to try again. What is the <b> name </b> of the <b> ${obj} </b> that you want to use as the second term for the comparison? <br/>(for organizations you can enter the grid id)',
 	COMPARE_SAME_OBJ_MSG: "Hey, it's the same <b>${obj1}</b>! You can try two different ones or ask for Help. <br/>What would you like to try?",
 	COMPARE_WRONG_PAIR_MSG: "Hey, I can't compare <b>${obj1}</b> to <b>${obj2}</b>! You can try two entities of the same type or ask for Help. <br/>What would you like to try?",
-	COMPARE_AUTHORS_MSG: "<b>${author1}</b> has ${publications}, ${citations} and ${h_index} <b>${author2}</b>. ${topics}<br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. <br/>What would you like to try?",
-	COMPARE_CONFERENCE_MSG: "${conf1} started ${years} ${conf2} and has ${citations} citations in the last 5 years. ${name1} also has ${h5_index} ${name2}. ${topics}<br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. <br/>What would you like to try?",
-	COMPARE_ORGANIZATIONS_MESSAGE: "${org1} has ${publications} and ${citations} in the last 5 years. It also has ${h5_index} ${org2}. ${topics}<br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. <br/>What would you like to try?"
+	COMPARE_AUTHORS_MSG: "<b>${author1}</b> has ${publications}, ${citations} and ${h_index} <b>${author2}</b> ${h_index_compare}. ${topics}<br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. <br/>What would you like to try?",
+	COMPARE_CONFERENCE_MSG: "${conf1} started ${years} ${conf2} and has ${citations} citations in the last 5 years. ${name1} also has ${h5_index} ${name2} ${h_index_compare}. ${topics}<br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. <br/>What would you like to try?",
+	COMPARE_ORGANIZATIONS_MESSAGE: "${org1} has ${publications} and ${citations} in the last 5 years. It also has ${h5_index} ${org2} ${h_index_compare}. ${topics}<br/>You can ask to perform another query on the data contained in the AIDA database or ask for Help. <br/>What would you like to try?"
 }
 
 const dict = {
@@ -1138,11 +1138,14 @@ function cmp(term1, term2) {
 		let h_index_diff = term1.item['h-index'] - term2.item['h-index'];
 		let h_index;
 		if (h_index_diff != 0) {
-			h_index = 'an h-index ' + Math.abs(h_index_diff) + ' points' + (h_index_diff < 0 ? ' lower ' : ' higher ') + '(' + term1.item['h-index'] + ' vs ' + term2.item['h-index'] + ') than';
+			h_index = 'an h-index ' + Math.abs(h_index_diff) + ' points' + (h_index_diff < 0 ? ' lower ' : ' higher ') + ' than ';
+			h_index_compare = ' (' + term1.item['h-index'] + ' vs ' + term2.item['h-index'] + ') '
 		} else {
-			h_index = 'the same h-index ' + '(' + term1.item['h-index'] + ') as';
+			h_index = 'the same h-index as ';
+			h_index_compare = ' (' + term1.item['h-index'] + ') '
 		}
 		parameters.h_index = h_index
+		parameters.h_index_compare = h_index_compare;
 
 		let topics = '';
 		let name1 = '<b>' + parameters.author1.split(' ')[0] + '</b>';
@@ -1203,12 +1206,17 @@ function cmp(term1, term2) {
 
 		let h_index_diff = term1.item['h5_index'] - term2.item['h5_index'];
 		let h_index;
+		let h_index_compare;
 		if (h_index_diff != 0) {
-			h_index = 'an h-index ' + Math.abs(h_index_diff) + ' points' + (h_index_diff < 0 ? ' lower ' : ' higher ') + '(' + term1.item['h5_index'] + ' vs ' + term2.item['h5_index'] + ') than';
+			h_index = 'an h5-index ' + Math.abs(h_index_diff) + ' points' + (h_index_diff < 0 ? ' lower ' : ' higher ') + ' than ';
+			h_index_compare = '(' + term1.item['h5_index'] + ' vs ' + term2.item['h5_index'] + ')'
+			
 		} else {
-			h_index = 'the same h-index ' + '(' + term1.item['h5_index'] + ') as';
+			h_index = 'the same h5-index ' + ' as ';
+			h_index_compare = '(' + term1.item['h5_index'] + ') '
 		}
 		parameters.h5_index = h_index
+		parameters.h_index_compare = h_index_compare;
 
 		let topics1 = term1.item.topics
 		let topics2 = term2.item.topics
@@ -1264,11 +1272,14 @@ function cmp(term1, term2) {
 		let h_index_diff = term1.item['h5-index'] - term2.item['h5-index'];
 		let h_index;
 		if (h_index_diff != 0) {
-			h_index = 'an h-index ' + Math.abs(h_index_diff) + ' points' + (h_index_diff < 0 ? ' lower ' : ' higher ') + '(' + term1.item['h5-index'] + ' vs ' + term2.item['h5-index'] + ') than';
+			h_index = 'an h5-index ' + Math.abs(h_index_diff) + ' points' + (h_index_diff < 0 ? ' lower ' : ' higher ') + ' than ';
+			h_index_compare = ' (' + term1.item['h5-index'] + ' vs ' + term2.item['h5-index'] + ') ';
 		} else {
-			h_index = 'the same h-index ' + '(' + term1.item['h-index'] + ') as';
+			h_index = 'the same h5-index ' + ' as ';
+			h_index_compare = ' (' + term1.item['h5-index'] + ') ';
 		}
 		parameters.h5_index = h_index
+		parameters.h_index_compare = h_index_compare;
 
 		let topics = '';
 		let topics1 = term1.item.top_3_topics
