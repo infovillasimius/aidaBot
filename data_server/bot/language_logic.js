@@ -42,7 +42,7 @@ const templates = {
 	HELP_MSG: ['You can ask to <b>count</b> or <b>list</b> <i>authors</i>, <i>papers</i>, <i>conferences</i>, <i>organizations</i>, <i>topics</i> and <i>citations</i> or to <b>describe</b> and <b>compare</b> <i>authors</i>, <i>conferences</i> or <i>organizations</i>. Start a query with <b>list</b>, <b>count</b>, <b>describe</b> or <b>compare</b>.', 'You can ask a query starting with <b>count</b>, <b>list</b>, <b>describe</b> or <b>compare</b>.'],
 	GOODBYE_MSG: ['Goodbye!', 'Bye!', 'See you later!'],
 	REFLECTOR_MSG: 'You just triggered ${intent}',
-	FALLBACK_MSG: 'Sorry, I don\'t know that. Please try again.',
+	FALLBACK_MSG: "Sorry, I don't know that. Please try again. You can enter one of the activation keys (<b>count</b>, <b>list</b>, <b>describe</b> or <b>compare</b>) to start the wizard that will help you formulate your query.",
 	ERROR_MSG: 'Sorry, there was an error. Please try again.',
 
 	HOMONYMS_MSG: 'I found different homonyms (list sorted by number of publications): ${msg} ',
