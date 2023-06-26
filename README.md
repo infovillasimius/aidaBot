@@ -41,3 +41,6 @@ The skill uses the data from our web server. If you want yours you have to:
 <li>index data on elasticsearch using the five python scripts provided (you have to install elasticsearch python client)</li>
 <li>run the web server, provided at https://github.com/infovillasimius/aidaBot/tree/main/data_server, on a Linux machine - with an ip address reachable from the internet and elasticsearch python client installed - by launching web_server.py script (configuration options are in config.py and conf.js)</li>
 </ol>
+
+
+A paper about AidaBot is available at IEEE: <a href="https://ieeexplore.ieee.org/document/10061222" target="_blank">Integrating Conversational Agents and Knowledge Graphs Within the Scholarly Domain</a>
